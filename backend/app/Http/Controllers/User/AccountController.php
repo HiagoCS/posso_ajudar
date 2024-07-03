@@ -5,6 +5,9 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 
 use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -30,6 +33,42 @@ class AccountController extends Controller
                 'data' => 'Erro no registro de usuário - AccountController',
                 'msg' => $th->getMessage()
             ], 500);
+        }
+    }
+    public function login(Request $request, User $user){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+        if ($validator->fails()) { 
+            $response = [
+                        'status' => '0',
+                        'error' => $validator->errors(),
+                    ];
+
+            return response()->json([ 'validator_failed' => $response], 401);   
+        }
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = $user->where('email', $request->email)->select(['id','name', 'email'])->get()->first();
+            $token = $user->createToken('eight_user_token');
+            return response()->json([
+                'token' => $token->plainTextToken,
+                'data' =>[
+                    'user' => $user
+                ]
+            ]);
+        }else if(count($user->where('email', $request['email'])->get()) <= 0) {
+            // Go back on error (or do what you want)
+            return response()->json([
+                'msg' => 'USUÁRIO NÃO ENCONTRADO',
+                'data' => $request->all()
+            ], 500);
+        } else {
+            // Go back on error (or do what you want)
+            return response()->json([
+                'msg' => 'DADOS INVÁLIDOS',
+                'data' => $request->all()
+            ], 401);
         }
     }
 }
