@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ktc_menu', function (Blueprint $table) {
+        Schema::create('bar_menu', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->decimal('value');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ktc_menu');
+        Schema::dropIfExists('bar_menu');
     }
 };
