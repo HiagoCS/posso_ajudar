@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_tb', function (Blueprint $table) {
+        Schema::create('roles_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('password');
-            $table->string('email')->unique();
+            $table->int('role_id');
+            $table->int('user_id');
+            $table->foreign('role_id')->references('id')->on('role_tb');
+            $table->foreign('user_id')->references('id')->on('user_tb');
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('roles_user');
     }
 };
