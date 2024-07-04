@@ -53,8 +53,9 @@ class AccountController extends Controller
             $token = $user->createToken('eight_user_token');
             return response()->json([
                 'token' => $token->plainTextToken,
-                'data' =>[
-                    'user' => $user
+                'data' => [
+                    'user' => $user,
+                    'roles_nm' => $user->roles->pluck('name')
                 ]
             ]);
         }else if(count($user->where('email', $request['email'])->get()) <= 0) {
