@@ -111,7 +111,7 @@
             async login(){
                 try{
                     const router = useRouter();
-                const {data, status} = await api.post('/user/login', this.user);
+                const {data, status} = await api.post('/login', this.user);
                 VueCookie.set("token", data.token)
                 this.$root.isLoggedIn = VueCookie.get('token');
                 await this.$router.push("/")
