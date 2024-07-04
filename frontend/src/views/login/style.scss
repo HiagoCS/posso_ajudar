@@ -2,18 +2,25 @@
     color: white;
 }
 .form{
-    background-color: #b60000; 
-    border: solid 5px white; 
+    background-color: $background-blue; 
+    border: solid 5px black; 
     border-radius: 5px;
     .form-title{
         color: white;
-        font-size: 30px;
+        font-size: 40px;
+        font-family: "Brandy";
+        background-color: $background-logo;
+        p{
+            -webkit-text-stroke-width: 2.5px;
+            -webkit-text-stroke-color: black;
+        }
     }
     .input-group{
         width: 90%;
         position: relative;
-        margin: 20px 0;
-
+        margin: 40px 0;
+        border: black solid 3px;
+        border-radius: 5px;
         label{
             position: absolute;
             top:50%;
@@ -24,13 +31,14 @@
             z-index: 1;
             transition: 0.3s;
             font-size: 20px;
+            color: #000;
         }
         input{
             z-index: 0;
             &:focus~label,
             &:valid~label{
                 top: -13px;
-                color: white;
+                color: #000;
                 font-family: "Quicksand-Bold";
             }
         }

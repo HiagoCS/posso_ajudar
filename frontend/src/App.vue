@@ -60,10 +60,10 @@ export default{
 <template>
   <main>
     <div class="d-flex flex-row main-div">
-      <div class="col-3 nav-div">
+      <!-- <div class="col-3 nav-div">
         <NavPage :items="items" @loggout="(value) =>{this.isLoggedIn=value}"/>
-      </div>
-      <div class="d-flex justify-content-center col-9 pages-div">
+      </div> -->
+      <div class="d-flex justify-content-center col-12 pages-div">
         <RouterView :user="user"/>
       </div>
     </div> 
@@ -74,13 +74,14 @@ export default{
   .main-div{
     font-family: 'Quicksand-Regular';
     background-color: $background-black;
-    height: 100vh; width: 100vw;
+    height: 100vh; 
+    width: 100vw;
     .nav-div{
       border-right: 1px white solid;
     }
     .pages-div{
       background: $background-black;
-      background: $gradientbg-black-red;
+      background: $gradientbg-blue-orange;
     }
   }
 </style>

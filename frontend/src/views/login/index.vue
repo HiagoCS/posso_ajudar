@@ -1,11 +1,13 @@
 <template>
-    <div class="d-flex flex-column align-items-center col-12">
-        <div class="d-flex justify-content-end col-12">
+    <div class="d-flex flex-column justify-content-center align-items-center col-7">
+        <!-- <div class="d-flex justify-content-end col-12">
             <h1 class="title">motoBuddy</h1>
-        </div>
+        </div> -->
         <div class="col-6 form">
             <div class="d-flex flex-column align-items-center col-12">
-                <p class="form-title">Já tem conta?</p>
+                <div class="d-flex flex-row justify-content-center col-12 form-title">
+                    <p>Posso Ajudar</p>
+                </div>
                 <div class="d-flex flex-column align-items-center col-12">
                     <div class="d-flex col-11 input-group">
                         <input type="text" @focusout="this.emailVal.focus=false" @focusin="this.emailVal.focus=true" :style="{'border': this.valEmail.border, 'color': this.valEmail.color, 'font-family': this.valEmail.fontFamily}" class="form-control" v-model="user.email" required>
@@ -15,8 +17,11 @@
                         <input type="password" @focusout="this.passVal.focus=false" @focusin="this.passVal.focus=true" :style="{'border': this.valPass.border, 'color': this.valPass.color, 'font-family': this.valPass.fontFamily}" class="form-control" v-model="user.password" required>
                         <label for="">Senha</label>
                     </div>
-                    <div class="d-grid col-6">
-                        <button class="btn btn-success" @click="login">Entrar</button>
+                    <div class="d-flex flex-row justify-content-between col-10">
+                        <div class="d-grid col-4">
+                            <button class="btn btn-success" @click="login">Entrar</button>
+                        </div>
+                            <a style="color:#1973fa;font-family: 'Quicksand-Bold';">Esqueceu a senha?</a>
                     </div>
                     <br>
                 </div>
