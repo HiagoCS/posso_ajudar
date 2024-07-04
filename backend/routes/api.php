@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return ['user' => $request->user(), 'roles_nm' => $request->user()->getRoleNames()];
 });
 Route::post('/store', 'App\Http\Controllers\User\AccountController@store');
 Route::post('/login', 'App\Http\Controllers\User\AccountController@login');

@@ -2,7 +2,7 @@
     <main>
       <div class="d-flex flex-column align-items-center">
         <h3 style="color: white;">Bem-vindo</h3>
-      <h1 style="color: white; 'Quicksand-Bold'"> {{ user.name }}</h1>
+      <h1 style="color: white;"> {{ this.user.user.name }}</h1>
       </div>
     </main>
   </template>
