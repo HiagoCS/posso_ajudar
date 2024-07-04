@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('item_dish_tb', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_ktc_menu');
-            $table->integer('id_ktc_stuff');
+            $table->unsignedBigInteger('id_ktc_menu');
+            $table->unsignedBigInteger('id_ktc_stuff');
             $table->string('item_qnt_used');
             $table->foreign('id_ktc_menu')->references('id')->on('ktc_menu');
             $table->foreign('id_ktc_stuff')->references('id')->on('ktc_stuff');

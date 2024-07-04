@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('item_drink_tb', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_bar_menu');
-            $table->integer('id_bar_stuff');
+            $table->unsignedBigInteger('id_bar_menu');
+            $table->unsignedBigInteger('id_bar_stuff');
             $table->string('item_qnt_used');
             $table->foreign('id_bar_menu')->references('id')->on('bar_menu');
             $table->foreign('id_bar_stuff')->references('id')->on('bar_stuff');
