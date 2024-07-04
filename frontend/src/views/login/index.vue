@@ -6,7 +6,7 @@
         <div class="col-6 form">
             <div class="d-flex flex-column align-items-center col-12">
                 <div class="d-flex flex-row justify-content-center col-12 form-title">
-                    <p>Posso Ajudar</p>
+                    <p>Posso Ajudar?</p>
                 </div>
                 <div class="d-flex flex-column align-items-center col-12">
                     <div class="d-flex col-11 input-group">
