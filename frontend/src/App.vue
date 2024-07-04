@@ -70,18 +70,4 @@ export default{
   </main>
 </template>
 
-<style lang="scss" scoped>
-  .main-div{
-    font-family: 'Quicksand-Regular';
-    background-color: $background-black;
-    height: 100vh; 
-    width: 100vw;
-    .nav-div{
-      border-right: 1px white solid;
-    }
-    .pages-div{
-      background: $background-black;
-      background: $gradientbg-blue-orange;
-    }
-  }
-</style>
+<style lang="scss" src="./style.scss" />
