@@ -16,8 +16,7 @@
           </div>
         </div>
         <div class="d-flex flex-column navlink" style="">
-          <!-- <NavbarLink :items="{'item1':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]}, 'item2':{'name':'String Item 2', 'icon':'cog'}, 'item3':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]}, 'item4':{'name':'String Item 4','icon':'cog'}, 'item5':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]},'item6':{'name':'String Item 6', 'icon':'cog'}, 'item7':{'name':'groupname', 'items' :[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]}}" to="/" icon="cog" :collapsed="collapsed" :nvActive="this.navbarActive" /> -->
-          <NavbarLink :items="link" icon="cog" :collapsed="collapsed" :nvActive="this.navbarActive" />
+          <NavbarLink :items="link" :collapsed="collapsed" :nvActive="this.navbarActive" />
         </div>
         <span class="collapse-icon" @click="toggleNavbar" >
           <font-awesome-icon icon="angle-double-left" :class="`icon ${this.navbarActive}`"></font-awesome-icon>

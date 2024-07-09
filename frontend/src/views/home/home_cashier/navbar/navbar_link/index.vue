@@ -3,15 +3,9 @@ import { collapsed } from '../state';
 
     export default{
         props:{
-            icon:{type:String, required:true},
             collapsed:{type:Boolean, required:true},
             items:{type:Object, required:true},
             nvActive:{type:Boolean, required:true}
-        },
-        data(){
-            return{
-                hoverAct:``
-            }
         }
     }
 </script>
