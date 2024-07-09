@@ -28,8 +28,9 @@
       }
       .profile{
         transition: 0.5s ease-in-out;
+        margin-right: 0.2vw;
         &.active{
-          transform: translatex(-13.2vw);
+          transform: translatex(-12.7vw);
         }
         img{
           border-radius: 50%;

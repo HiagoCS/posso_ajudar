@@ -1,5 +1,4 @@
 <script>
-import { collapsed } from '../state';
 
     export default{
         props:{
