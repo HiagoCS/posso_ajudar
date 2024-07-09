@@ -3,20 +3,12 @@
 
 .navbar{
     background-color: $background-blue-nav;
-  
-    float:left;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    padding: 0.5rem;
-  
+    height: 100vh;
     transition: 0.7s ease;
   
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: space-between;
     width: $NAVBAR_WIDTH;
     border: 3px solid black;
     .navheader{
@@ -24,25 +16,28 @@
       border-bottom: 3px black solid; 
       padding-bottom: 1vw;
       .profile-div{
-        transition: 0.4s ease;
+        transition: 0.4s ease-in-out;
+        opacity: 1;
         &.active{
           transform: translatex(-14vw);
+          opacity: 0;
         }
         .profile-info{
           font-family: 'Nauticus'; 
           font-size: 15px;
         }
       }
-    }
-    .profile{
-      transition: 0.5s ease;
-      &.active{
-        transform: translatex(-13.2vw);
+      .profile{
+        transition: 0.5s ease-in-out;
+        &.active{
+          transform: translatex(-13.2vw);
+        }
+        img{
+          border-radius: 50%;
+        }
       }
-      .img{
-        border-radius: 50%;
-      }
     }
+    
     &.active{
       width: $NAVBAR_WIDTH_COLLAPSED;
     }

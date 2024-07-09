@@ -12,11 +12,13 @@
             </div>
           </div>
           <div :class="`d-flex flex-column align-content-center profile ${this.navbarActive}`">
-            <img src="../default_user.png" width="90px" height="90px">
+            <img src="./user_logo.jpg" width="90px" height="90px">
           </div>
         </div>
-        <NavbarLink to="/" icon="" :collapsed="collapsed">HOME</NavbarLink>
-        <span class="collapse-icon" @click="toggleNavbar">
+        <div class="d-flex flex-column" style="margin-bottom: 5vh; height: 70vh;width: 100%;z-index: 2;">
+          <NavbarLink :items="{'item1':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]}, 'item2':{'name':'String Item 2', 'icon':'cog'}, 'item3':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]}, 'item4':{'name':'String Item 4','icon':'cog'}, 'item5':{'name':'groupname', 'items':[{'name': 'subitem1', 'icon':'cog'}, {'name': 'subitem2', 'icon':'cog'}]},}" to="/" icon="cog" :collapsed="collapsed" :nvActive="this.navbarActive" />
+        </div>
+        <span class="collapse-icon" @click="toggleNavbar" style="z-index: 1;">
           <font-awesome-icon icon="angle-double-left" :class="`icon ${this.navbarActive}`"></font-awesome-icon>
         </span>
       </div>
@@ -31,7 +33,7 @@ export default{
     },
     components:{NavbarLink},
     watch:{
-      collapsed(oldValue, newValue){
+      collapsed(){
         if(!this.collapsed)
         this.navbarActive = ``;
         if(this.collapsed)
