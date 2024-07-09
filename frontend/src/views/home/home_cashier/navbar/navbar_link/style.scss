@@ -9,6 +9,7 @@
         align-items: center;
         width: 22vw;
         padding: 1vh 0;
+        
         &.item-nogroup{
             border-bottom: solid black 2px;
             &:hover{
@@ -24,7 +25,10 @@
             color: white;
             font-size: 20px; 
             padding-right: 3vw;
-            
+            transition: 0.5s opacity ease-in-out;
+            &.active{
+                opacity: 0;
+            }   
         }
         .icon{
             font-size: 20px;
@@ -39,6 +43,17 @@
                 justify-content: end;
                 width: 100%;
                 border-bottom: solid black 2px;
+                text-decoration: none;
+                .icon{
+                    color: white;
+                    margin-right: 1vw;
+                    transition: 0.2s font-size ease-in-out;
+                }
+                .icon.active{
+                    transform: translateX(-20px);
+                    font-size: 40px;
+                    width: 10%;
+                }
             }
             .item-group:hover{
                 background-color: #5792c0;
@@ -60,6 +75,9 @@
                 border-radius: 0;
                 margin-right: 0.1vw;
                 border-bottom: solid black 2px;
+                &.active{
+                    opacity: 0;
+                } 
                 i{
                     transition: 0.2s font-size ease-in-out;
                     font-size: 25px;
@@ -73,7 +91,7 @@
     }
     color: white;
     width: 100%;
-    text-decoration: none;
+    
     
     &.active{
         background-color: white;
