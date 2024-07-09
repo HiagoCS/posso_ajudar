@@ -1,9 +1,9 @@
 <template>
-    <div class="d-flex flex-column justify-content-center align-items-center col-7">
+    <div class="d-flex flex-column justify-content-center align-items-center col-12">
         <!-- <div class="d-flex justify-content-end col-12">
             <h1 class="title">motoBuddy</h1>
         </div> -->
-        <div class="col-6 form">
+        <div class="col-4 form">
             <div class="d-flex flex-column align-items-center col-12">
                 <div class="d-flex flex-row justify-content-center col-12 form-title">
                     <p>Posso Ajudar?</p>
@@ -114,7 +114,10 @@
                 const {data, status} = await api.post('/login', this.user);
                 VueCookie.set("token", data.token)
                 this.$root.isLoggedIn = VueCookie.get('token');
-                await this.$router.push("/")
+                console.log(data.data.roles_nm);
+                if(data.data.roles_nm.includes('cashier'))
+                    await this.$router.push("/cashier/home");
+                /* await this.$router.push("/") */
                 }catch({response}){
                     if(response.data.hasOwnProperty('validator_failed')){
                         const validator = response.data.validator_failed.error;

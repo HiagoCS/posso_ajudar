@@ -1,0 +1,39 @@
+.v-enter-active,
+.v-leave-active{
+    transition: opacity 1s;
+}
+.v-enter,
+.v-leave-to{
+    opacity: 0;
+}
+.link{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    cursor: pointer;
+    position: relative;
+    font-weight: 400;
+    user-select: none;
+
+    margin: 0.1em 0;
+    padding: 0.4em;
+    border-radius: 0.25em;
+    height: 1.5em;
+
+    color: white;
+    width: 100%;
+    text-decoration: none;
+    &:hover{
+        background-color: black;
+    }
+    &.active{
+        background-color: white;
+        color:black;
+    }
+    .icon{
+        flex-shrink: 0;
+        width: 25px;
+        margin-right: 10px;
+    }
+}

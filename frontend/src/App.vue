@@ -51,7 +51,8 @@ export default{
       if(this.isLoggedIn){
         const {data} = await axios.get('user', {headers:{'Authorization':`Bearer ${VueCookie.get('token')}`}});
         this.user = data;
-      }else this.user = {};
+        return data;
+      }else {this.user = {}; return {}};
     }
   }
 }
@@ -59,13 +60,8 @@ export default{
 
 <template>
   <main>
-    <div class="d-flex flex-row main-div">
-      <!-- <div class="col-3 nav-div">
-        <NavPage :items="items" @loggout="(value) =>{this.isLoggedIn=value}"/>
-      </div> -->
-      <div class="d-flex justify-content-center col-12 pages-div">
-        <RouterView :user="user"/>
-      </div>
+    <div class="d-flex flex-row main-div col-12">
+      <RouterView :user="user"/>
     </div> 
   </main>
 </template>

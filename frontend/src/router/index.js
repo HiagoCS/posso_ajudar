@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/home/index.vue'
+import CashierView from '../views/home/home_cashier/index.vue'
 import ProfileView from '../views/profile/index.vue'
 import VeiculosView from '../views/veiculos/index.vue'
 import ConfigView from '../views/config/index.vue'
@@ -13,6 +14,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+      props:true
+    },
+    {
+      path: '/cashier/home',
+      name: 'cashier',
+      component: CashierView,
       props:true
     },
     {
