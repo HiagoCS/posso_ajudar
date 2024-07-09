@@ -4,17 +4,17 @@
         "items":[
             {
                 "name":"Relatórios",
-                "icon":"cog",
+                "icon":"file",
                 "to":"cashier/products/report"
             },
             {
                 "name":"Estoque",
-                "icon":"cog",
+                "icon":"box",
                 "to":"cashier/products/stock"
             },
             {
                 "name":"Visão Geral",
-                "icon":"cog",
+                "icon":"eye",
                 "to":"cashier/products/general"
             }
             
@@ -26,17 +26,17 @@
         "items":[
             {
                 "name":"Clientes",
-                "icon":"cog",
+                "icon":"users",
                 "to":"cashier/config/clients"
             },
             {
                 "name":"Mesas",
-                "icon":"cog",
+                "icon":"table-cells-large",
                 "to":"cashier/config/tables"
             },
             {
                 "name":"Agenda",
-                "icon":"cog",
+                "icon":"calendar",
                 "to":"cashier/config/diary"
             }
         ]
