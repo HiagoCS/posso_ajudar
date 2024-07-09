@@ -1,0 +1,44 @@
+{
+    "item1":{
+        "name":"Produtos",
+        "items":[
+            {
+                "name":"Relatórios",
+                "icon":"cog",
+                "to":"cashier/products/report"
+            },
+            {
+                "name":"Estoque",
+                "icon":"cog",
+                "to":"cashier/products/stock"
+            },
+            {
+                "name":"Visão Geral",
+                "icon":"cog",
+                "to":"cashier/products/general"
+            }
+            
+            
+        ]
+    },
+    "item2":{
+        "name":"Config. Geral",
+        "items":[
+            {
+                "name":"Clientes",
+                "icon":"cog",
+                "to":"cashier/config/clients"
+            },
+            {
+                "name":"Mesas",
+                "icon":"cog",
+                "to":"cashier/config/tables"
+            },
+            {
+                "name":"Agenda",
+                "icon":"cog",
+                "to":"cashier/config/diary"
+            }
+        ]
+    }
+}
