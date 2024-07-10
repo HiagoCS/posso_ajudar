@@ -1,0 +1,19 @@
+.logo{
+    background-color: $background-logo;
+    border-bottom: solid 3px black;
+    i{
+        font-family: 'Quicksand-Bold'; 
+        font-size: 40px;
+        color:black;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: white;
+        padding-left: 5vw;
+    }
+    h4{
+        font-family: 'Brandy'; 
+        font-size: 60px;
+        color:black;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: white;
+    }
+}

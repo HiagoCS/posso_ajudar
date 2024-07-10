@@ -1,6 +1,6 @@
 <template>
 <div :class="`navbar ${this.navbarActive}`" ref="navbar">
-        <div class="d-flex flex-row justify-content-between navheader">
+        <div :class="`d-flex flex-row justify-content-between navheader ${this.navbarActive}`">
           <div :class="`d-flex flex-column profile-div ${this.navbarActive}`">
             <div class="d-flex flex-column profile-info">
               <i class="text-end text-black">Lennon Santos</i>
@@ -12,10 +12,10 @@
             </div>
           </div>
           <div :class="`d-flex flex-column align-content-center profile ${this.navbarActive}`">
-            <img src="./user_logo.jpg" width="90px" height="90px">
+            <img :class="this.navbarActive" src="./user_logo.jpg" width="90px" height="90px">
           </div>
         </div>
-        <div class="d-flex flex-column navlink" style="">
+        <div :class="`d-flex flex-column navlink ${this.navbarActive}`">
           <NavbarLink :items="link" :collapsed="collapsed" :nvActive="this.navbarActive" />
         </div>
         <span class="collapse-icon" @click="toggleNavbar" >
@@ -51,7 +51,7 @@ export default{
     methods:{
       async toggleNavbar(){
         this.collapsed = !this.collapsed
-        /* this.$emit('toggle-navbarWidth', navbarWidth); */
+        this.$emit("toggleNav");
       }
     }
 

@@ -1,25 +1,18 @@
 <template>
     <main>
       <div class="d-flex flex-row justify-content-between col-12" style="width: 100vw;">
-        <Navbar @toggle-navbarWidth="(newValue) =>{this.navbarWidth === newValue}"></Navbar>
-        <div class="col-5 d-flex flex-column align-items-start" :style="{'margin-left':this.navbarWidth}">
-            <h3 style="color: white;">Bem-vindo Caixa</h3>
-            <h1 style="color: white;"> {{ this.user.name }}</h1>
-        </div>
+        <h4 style="font-size: 50px; font-family: 'Quicksand-Bold';">CAIXA</h4>
       </div>
-      
     </main>
   </template>
 
 <script>
 import axios from 'axios'
 import VueCookie from 'vue-cookie';
-import Navbar from './navbar/index.vue'
+/* import Navbar from './navbar/index.vue' */
+import logoComponent from '@/components/vue/logoComponent.vue';
 export default{
-  /* setup(){
-    return {navbarWidth}
-  }, */
-  components:{Navbar},
+  components:{logoComponent},
   async created(){
     if(!this.$root.isLoggedIn) await this.$router.go(-1);
     const {data} = await axios.get('user', {headers:{'Authorization':`Bearer ${VueCookie.get('token')}`}});
@@ -32,11 +25,7 @@ export default{
     return{
         user:{},
         roles:[],
-        items:[{
-          title:'Veiculos',
-          route:'/home/veiculos'
-        }],
-        navbarWidth:''
+        active:""
     }
   }
 }

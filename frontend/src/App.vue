@@ -1,12 +1,12 @@
 <script>
 import { RouterView } from 'vue-router'
-import NavPage from './views/nav-page/index.vue'
 import axios from 'axios'
 import VueCookie from 'vue-cookie';
+import Navbar from "@/components/vue/navbar/index.vue"
 
 export default{
   components:{
-    NavPage
+    Navbar
   },
   data(){
     return{
@@ -61,7 +61,8 @@ export default{
 <template>
   <main>
     <div class="d-flex flex-row main-div col-12">
-      <RouterView :user="user"/>
+      <Navbar @toggleNav="() =>{this.active=='active'}"></Navbar>
+      <!-- <RouterView :user="user"/> -->
     </div> 
   </main>
 </template>

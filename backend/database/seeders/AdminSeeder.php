@@ -46,7 +46,7 @@ class AdminSeeder extends Seeder
             'name' => 'JoelsonSantos', 
             'password' => bcrypt('123456'),
             'email' => 'lennin@gmail.com'
-        ])->assignRole(['manager', 'bar']);
+        ])->assignRole(['manager', 'bar', 'cashier']);
         User::create([
             'id' => '4',
             'name' => 'Japinhaks', 
