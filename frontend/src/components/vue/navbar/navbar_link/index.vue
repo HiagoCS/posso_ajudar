@@ -9,7 +9,7 @@
     }
 </script>
 <template>
-    <div class="link d-flex flex-column" :class="{active:isActive}">
+    <div :class="`link d-flex flex-column ${nvActive} ${{ active:isActive }}`">
         <div v-for="item in items">
             <div v-if="!item['items']" class="item item-nogroup">
                 <router-link :to="item.to" :class="`rt ${nvActive}`" style="">{{item.name}}</router-link>

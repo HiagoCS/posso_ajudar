@@ -2,12 +2,15 @@
     display: flex;
     flex-direction: column;
     align-items: end;
+    margin-top: 20vh;
+    color: white;
+    width: 100%;
     .item{
         display: flex;
         flex-direction: row;
         justify-content: end;
         align-items: center;
-        width: 22vw;
+        width: 297px;
         padding: 1vh 0;
         
         &.item-nogroup{
@@ -25,7 +28,7 @@
             color: white;
             font-size: 20px; 
             padding-right: 3vw;
-            transition: 0.5s opacity ease-in-out;
+            transition: 0.1s opacity ease-in-out;
             &.active{
                 opacity: 0;
             }   
@@ -89,12 +92,5 @@
         }
         
     }
-    color: white;
-    width: 100%;
     
-    
-    &.active{
-        background-color: white;
-        color:black;
-    }
 }

@@ -12,7 +12,8 @@ export default{
     return{
       items:[],
       isLoggedIn: !!VueCookie.get('token'),
-      user:{}
+      user:{},
+      active:'active'
     }
   },
   computed:{
@@ -61,8 +62,10 @@ export default{
 <template>
   <main>
     <div class="d-flex flex-row main-div col-12">
-      <Navbar @toggleNav="() =>{this.active=='active'}"></Navbar>
-      <!-- <RouterView :user="user"/> -->
+      <div class="d-flex flex-row">
+        <Navbar @toggleNav="() =>{this.active=='active'}"></Navbar>
+      </div>
+      <RouterView :user="user"/>
     </div> 
   </main>
 </template>
