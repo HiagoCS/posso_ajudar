@@ -11,8 +11,11 @@ import '@/api/axios.js';
 
 import { createI18n } from 'vue-i18n'
 import {pt_BR} from '@/components/locales/pt_BR'
+import {en} from '@/components/locales/en'
+
 const languages ={
-    pt_BR
+    pt_BR,
+    en
 }
 const i18n = createI18n({
     locale:'pt_BR',

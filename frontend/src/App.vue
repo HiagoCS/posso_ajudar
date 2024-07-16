@@ -10,40 +10,13 @@ export default{
   },
   data(){
     return{
-      items:[],
       isLoggedIn: !!VueCookie.get('token'),
       user:{},
       active:'active'
     }
   },
-  computed:{
-    updateNav(){
-      if(this.isLoggedIn){
-        return [{
-          title:'Veiculos',
-          route:'/home/veiculos'
-        },{
-          title:'Contatos',
-          route:'/home/contatos'
-        }]
-      }else{
-        return [{
-          title:'Login',
-          route:'/login'
-        },{
-          title:'Cadastro',
-          route:'/register'
-        }]
-      }
-    }
-  },
-  watch:{
-    isLoggedIn(newValue){
-      this.items = this.updateNav;
-    }
-  },
-  created(){
-    this.items = this.updateNav;
+  async created(){
+    await this.userData();
     if(!this.$root.isLoggedIn &&
     this.$router.currentRoute.value.name != "home") this.$router.push("login");
   },
@@ -51,7 +24,9 @@ export default{
     async userData(){
       if(this.isLoggedIn){
         const {data} = await axios.get('user', {headers:{'Authorization':`Bearer ${VueCookie.get('token')}`}});
-        this.user = data;
+        this.user = data.user;
+        this.roles = data.roles_nm;
+        console.log("DATA", data);
         return data;
       }else {this.user = {}; return {}};
     }
@@ -63,7 +38,7 @@ export default{
   <main>
     <div class="d-flex flex-row main-div col-12">
       <div class="d-flex flex-row">
-        <Navbar @toggleNav="() =>{this.active=='active'}"></Navbar>
+        <Navbar @toggleNav="() =>{this.active=='active'}" :user="{'data':this.user, 'roles':this.roles}"></Navbar>
       </div>
       <RouterView :user="user"/>
     </div> 

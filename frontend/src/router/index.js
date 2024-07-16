@@ -17,7 +17,7 @@ const router = createRouter({
       props:true
     },
     {
-      path: '/cashier/home',
+      path: '/cashier/',
       name: 'cashier',
       component: CashierView,
       props:true

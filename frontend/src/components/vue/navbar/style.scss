@@ -1,4 +1,4 @@
- $NAVBAR_WIDTH: 300px;
+ $NAVBAR_WIDTH: 310px;
  $NAVBAR_WIDTH_COLLAPSED: 100px;
 
 .navbar{
@@ -21,20 +21,45 @@
       padding:1vh 1vw 1vh 1vw ;
       border-bottom: 3px black solid; 
       width: 100%;
+      height: 160px;
+      transition: height 0.5s ease;
       &.active{
         width: 100%;
+        height: 20%;
       }
       .profile-div{
+        
         transition: 0.4s ease-in-out;
         opacity: 1;
+        width: 68%;
         
         &.active{
           transform: translatex(-14vw);
           opacity: 0;
         }
         .profile-info{
+          
           font-family: 'Nauticus'; 
           font-size: 15px;
+        }
+        .act-btn{
+          .module-btn{
+            margin-top: 1vh;
+            .btn.active{
+              display: none;
+            }
+            .modules{
+              opacity: 0;
+            }
+            .btn.active ~ .modules{
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              width: 290px;
+              background-color: red;
+              opacity: 1;
+            }
+          }
         }
       }
       .profile{
