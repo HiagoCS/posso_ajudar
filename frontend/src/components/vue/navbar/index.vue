@@ -17,16 +17,7 @@
                 <button class="btn btn-primary">CONFIGURAÇÕES</button>
               </div>
               <div class="module-btn col-12">
-                <button :class="`btn btn-primary text-nowrap ${this.moduleActv}`" @click="async () =>{this.moduleActv='active'}">ALTERNAR MÓDULO</button>
-                <span class="d-flex flex-row modules">
-                  <router-link :to="roles" class="btn btn-primary" 
-                    style="text-transform: capitalize;" 
-                    v-for="roles in this.user.roles"
-                    @click="">{{ roles}}</router-link>
-                  <!-- <span class="btn btn-primary">MANAGER</span>
-                  <span class="btn btn-primary">BAR</span>
-                  <span class="btn btn-primary">CASHIER</span> -->
-                </span>
+                <button :class="`btn btn-primary text-nowrap`" @click=" async () =>{this.changeModule()}">ALTERNAR MÓDULO</button>
               </div>
             </div>
           </div>
@@ -68,19 +59,37 @@ export default{
       return{
         collapsed: ref(false),
         navbarActive: ``,
-        link: links,
-        moduleActv:``
+        link: links
       }
     },
     methods:{
+      async click(){
+        console.log("Hello World");
+      },
       async toggleNavbar(){
         this.collapsed = !this.collapsed
         this.moduleActv = '';
         this.$emit("toggleNav");
       },
-      async changeModule(module){
-        console.log(module)
-        this.$router.push({path: module+"/home"})
+      async changeModule(){
+        let htmlTEXT = "";
+        console.log()
+        this.user.roles.forEach((role) =>{
+          htmlTEXT = `${htmlTEXT}<div class='d-grid col-${12 / this.user.roles.length - 1}'><button class='btn btn-primary btn-lg text-capitalize' id="${role}" onclick="$(location).attr('href',$('#${role}').attr('id'))">${this.$t(`roles.${role}`)}</button></div>`
+        })
+        this.$swal({
+          icon:'question',
+          confirmButtonText:`Voltar`,
+          html:`
+            <div class='d-flex flex-column'>
+              <div class='d-flex flex-row justify-content-center'>
+                <h2>Você deseja trocar de módulo?</h2>
+              </div>
+              <div class='d-flex flex-row justify-content-between'>
+                ${htmlTEXT}
+              </div>
+            </div>`
+        });
       }
     }
 

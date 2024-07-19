@@ -12,7 +12,7 @@ import '@/api/axios.js';
 import { createI18n } from 'vue-i18n'
 import {pt_BR} from '@/components/locales/pt_BR'
 import {en} from '@/components/locales/en'
-
+import $ from  'jquery'
 const languages ={
     pt_BR,
     en
@@ -23,10 +23,14 @@ const i18n = createI18n({
     messages: languages
 })
 
-
 library.add(faCog, faCamera, faAngleDoubleLeft, faEye, faBox, faFile, faCalendar, faTableCellsLarge, faUsers);
 
-const app = Vue.createApp(App).use(i18n).component("font-awesome-icon", FontAwesomeIcon).use(VueSweetalert2)
+window.$ = window.jQuery = $;
+const app = 
+Vue.createApp(App)
+    .use(i18n)
+    .component("font-awesome-icon", FontAwesomeIcon)
+    .use(VueSweetalert2);
 
 app.use(router)
 
