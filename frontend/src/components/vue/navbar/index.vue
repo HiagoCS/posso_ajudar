@@ -73,7 +73,6 @@ export default{
       },
       async changeModule(){
         let htmlTEXT = "";
-        console.log()
         this.user.roles.forEach((role) =>{
           htmlTEXT = `${htmlTEXT}<div class='d-grid col-${12 / this.user.roles.length - 1}'><button class='btn btn-primary btn-lg text-capitalize' id="${role}" onclick="$(location).attr('href',$('#${role}').attr('id'))">${this.$t(`roles.${role}`)}</button></div>`
         })

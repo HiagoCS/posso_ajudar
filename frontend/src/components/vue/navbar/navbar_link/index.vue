@@ -1,10 +1,13 @@
 <script>
-
     export default{
         props:{
             collapsed:{type:Boolean, required:true},
             items:{type:Object, required:true},
-            nvActive:{type:Boolean, required:true}
+            nvActive:{type:Boolean, required:true},
+            uRoles:{type:Array, required:true}
+        },
+        async created(){
+            /* console.log("uRoles", this.uRoles) */
         }
     }
 </script>
@@ -17,7 +20,7 @@
             </div>
 
             <div v-else class="d-flex flex-column-reverse item group">
-                <router-link v-for="subitem in item.items" :to="subitem.to" class="d-flex flex-row align-items-center item-group">
+                <router-link v-for="subitem in item.items" :to="`${item.to}${subitem.to}`" class="d-flex flex-row align-items-center item-group">
                     <i :class="`rt ${nvActive}`" >{{ subitem.name }}</i>
                     <font-awesome-icon :icon="subitem.icon" :class="`icon ${nvActive}`"></font-awesome-icon>
                 </router-link>

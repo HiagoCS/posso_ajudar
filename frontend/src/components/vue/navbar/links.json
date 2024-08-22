@@ -1,21 +1,22 @@
 {
     "item1":{
         "name":"Produtos",
+        "to":"/products",
         "items":[
             {
                 "name":"Relatórios",
                 "icon":"file",
-                "to":"cashier/products/report"
+                "to":"/report"
             },
             {
                 "name":"Estoque",
                 "icon":"box",
-                "to":"cashier/products/stock"
+                "to":"/stock"
             },
             {
                 "name":"Visão Geral",
                 "icon":"eye",
-                "to":"cashier/products/general"
+                "to":"/general"
             }
             
             
@@ -23,21 +24,23 @@
     },
     "item2":{
         "name":"Config. Geral",
+        "to":"/config",
         "items":[
             {
                 "name":"Clientes",
                 "icon":"users",
-                "to":"cashier/config/clients"
+                "to":"/clients"
+                
             },
             {
                 "name":"Mesas",
                 "icon":"table-cells-large",
-                "to":"cashier/config/tables"
+                "to":"/tables"
             },
             {
                 "name":"Agenda",
                 "icon":"calendar",
-                "to":"cashier/config/diary"
+                "to":"/diary"
             }
         ]
     }

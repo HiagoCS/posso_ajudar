@@ -18,10 +18,10 @@ class RoleSeeder extends Seeder
     public function run()
     {
         //managements
-        Role::create(['name' => 'developer', 'level' => 1]);
-        Role::create(['name' => 'boss', 'level' => 1]);
-        Role::create(['name' => 'manager', 'level' => 2]);
-        Role::create(['name' => 'cashier', 'level' => 2]);
+        Role::create(['name' => 'developer']);
+        Role::create(['name' => 'boss']);
+        Role::create(['name' => 'manager']);
+        Role::create(['name' => 'cashier']);
         
         //employes
         Role::create(['name' => 'kitchen']);
