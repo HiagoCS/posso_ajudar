@@ -1,5 +1,16 @@
 {
-    "item1":{
+    "modules":{
+        "name":"Módulos",
+        "to":"",
+        "items":[
+            {
+                "name":"Caixa",
+                "icon":"cash-register",
+                "to":"/cashier"
+            }
+        ]
+    },
+    "prodcts":{
         "name":"Produtos",
         "to":"/products",
         "items":[
@@ -22,7 +33,7 @@
             
         ]
     },
-    "item2":{
+    "configs":{
         "name":"Config. Geral",
         "to":"/config",
         "items":[

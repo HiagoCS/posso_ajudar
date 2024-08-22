@@ -115,8 +115,8 @@
                 VueCookie.set("token", data.token)
                 this.$root.isLoggedIn = VueCookie.get('token');
                 console.log(data.data.roles_nm);
-                if(data.data.roles_nm.includes('cashier'))
-                    await this.$router.push("/cashier/home");
+                if(data.data.roles.includes('cashier'))
+                    await this.$router.push("/cashier");
                 /* await this.$router.push("/") */
                 }catch({response}){
                     if(response.data.hasOwnProperty('validator_failed')){

@@ -3,11 +3,11 @@
         <div :class="`d-flex flex-row justify-content-between navheader ${this.navbarActive}`">
           <div :class="`d-flex flex-column profile-div ${this.navbarActive}`">
             <div class="d-flex flex-column profile-info">
-              <i class="text-end text-black">{{this.user.data.name}}</i>
-              <div class="d-flex flex-row">
-                <i class="text-end text-white" v-for="roles in this.user.roles">
+              <i class="text-end text-black">{{this.user.name}}</i>
+              <div class="d-flex flex-row justify-content-end">
+                <i class="text-end text-white" v-for="roles in this.roles">
                 <span class="text-white">{{ $t(`roles.${roles}`) }}</span>
-                <span class="text-black">{{ `${roles === this.user.roles[this.user.roles.length - 1] ? ' ' : '/'} `}}</span>
+                <span class="text-black">{{ `${roles === this.roles[this.roles.length - 1] ? ' ' : '/'} `}}</span>
               </i>
               </div>
               <i class="text-end text-nowrap">Kiosque 18 Ikigai Mió</i>
@@ -15,9 +15,6 @@
             <div class="act-btn d-flex flex-column col-12">
               <div class="col-12">
                 <button class="btn btn-primary">CONFIGURAÇÕES</button>
-              </div>
-              <div class="module-btn col-12">
-                <button :class="`btn btn-primary text-nowrap`" @click=" async () =>{this.changeModule()}">ALTERNAR MÓDULO</button>
               </div>
             </div>
           </div>
@@ -37,13 +34,16 @@
 <script>
 import NavbarLink from './navbar_link/index.vue'
 import links from "./links.json"
+import api from 'axios'
 import {ref} from 'vue';
+import VueCookie from 'vue-cookie';
 export default{
-    props:['user'],
     async created(){
-      this.collapsed === ref(false);
-      await this.user;
-      console.log('user', this.user);
+      api.defaults.headers.common['Authorization'] = `Bearer ${VueCookie.get('token')}`;
+      const user = await api.get('/user');
+      this.user = user.data
+      const roles = await api.get('/user/roles')
+      this.roles = roles.data
 
     },
     components:{NavbarLink},
@@ -57,9 +57,11 @@ export default{
     },
     data(){
       return{
-        collapsed: ref(false),
-        navbarActive: ``,
-        link: links
+        collapsed: ref(true),
+        navbarActive: `active`,
+        link: links,
+        user:[],
+        roles:[]
       }
     },
     methods:{

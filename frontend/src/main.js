@@ -3,7 +3,7 @@ import * as Vue from 'vue'
 import App from './App.vue'
 import router from '@/router'
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCog, faCamera, faAngleDoubleLeft, faEye, faBox, faFile, faCalendar, faTableCellsLarge, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faCamera, faAngleDoubleLeft, faEye, faBox, faFile, faCalendar, faTableCellsLarge, faUsers, faCashRegister } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -23,7 +23,7 @@ const i18n = createI18n({
     messages: languages
 })
 
-library.add(faCog, faCamera, faAngleDoubleLeft, faEye, faBox, faFile, faCalendar, faTableCellsLarge, faUsers);
+library.add(faCog, faCamera, faAngleDoubleLeft, faEye, faBox, faFile, faCalendar, faTableCellsLarge, faUsers, faCashRegister);
 
 window.$ = window.jQuery = $;
 const app = 

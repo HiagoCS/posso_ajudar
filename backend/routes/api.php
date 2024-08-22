@@ -14,8 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return ['user' => $request->user(), 'roles_nm' => $request->user()->getRoleNames()];
+Route::middleware('auth:sanctum')->prefix('user')->group(function(){
+    Route::get('/', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('/roles', function (Request $request) {
+        return $request->user()->getRoleNames();
+    });
 });
+Route::get('/theroute', function(Request $request){
+    return "HELLO WORLD";
+})->middleware("roles");
+
 Route::post('/store', 'App\Http\Controllers\User\AccountController@store');
 Route::post('/login', 'App\Http\Controllers\User\AccountController@login');

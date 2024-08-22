@@ -37,8 +37,8 @@ export default{
 <template>
   <main>
     <div class="d-flex flex-row main-div col-12">
-      <div class="d-flex flex-row">
-        <Navbar @toggleNav="() =>{this.active=='active'}" :user="{'data':this.user, 'roles':this.roles}"></Navbar>
+      <div class="d-flex flex-row" v-if="this.$route.name!='login'">
+        <Navbar @toggleNav="() =>{this.active=='active'}"></Navbar>
       </div>
       <RouterView :user="user"/>
     </div> 
