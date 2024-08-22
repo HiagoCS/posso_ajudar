@@ -1,6 +1,9 @@
 .logo{
     background-color: $background-logo;
     border-bottom: solid 3px black;
+    width: 76.5vw !important;
+    position: absolute;
+    
     i{
         font-family: 'Quicksand-Bold'; 
         font-size: 40px;
@@ -8,12 +11,56 @@
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: white;
         padding-left: 5vw;
+        @media (max-width: 1210px){
+            font-size: 55px;
+        }
+        @media (max-width: 1080px){
+            font-size: 50px;
+        }
+        @media (max-width: 946px){
+            font-size: 45px;
+        }
+        @media (max-width: 878px){
+            font-size: 40px;
+        }
+        @media (max-width: 816px){
+            font-size: 35px;
+        }
+        @media (max-width: 744px){
+            font-size: 30px;
+        }
+        @media (max-width: 684px){
+            font-size: 25px;
+        }
+        
     }
     h4{
         font-family: 'Brandy'; 
         font-size: 60px;
         color:black;
+        text-wrap: nowrap !important;
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: white;
+        @media (max-width: 1210px){
+            font-size: 55px;
+        }
+        @media (max-width: 1080px){
+            font-size: 50px;
+        }
+        @media (max-width: 946px){
+            font-size: 45px;
+        }
+        @media (max-width: 878px){
+            font-size: 40px;
+        }
+        @media (max-width: 816px){
+            font-size: 35px;
+        }
+        @media (max-width: 744px){
+            font-size: 30px;
+        }
+        @media (max-width: 684px){
+            font-size: 25px;
+        }
     }
 }

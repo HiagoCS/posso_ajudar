@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex flex-row-reverse align-items-center justify-content-between logo">
         <h4>Posso Ajudar?</h4>
-        <i>- MÓDULO {{ module }}</i>
+        <i style="text-transform: capitalize;">{{ this.$t(`roles.${module}`) }}</i>
     </div>
 </template>
 <script>

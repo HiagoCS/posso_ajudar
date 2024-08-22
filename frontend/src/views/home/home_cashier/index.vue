@@ -1,7 +1,15 @@
 <template>
     <main>
-      <div class="d-flex flex-row justify-content-between col-12" style="width: 100vw;">
-        <h4 style="font-size: 50px; font-family: 'Quicksand-Bold';">CAIXA</h4>
+      <div class="d-flex flex-column col-12">
+        <div class="d-flex flex-row col-12">
+          <logoComponent :module="this.$route.name"></logoComponent>
+        </div>
+        <div class="d-flex flex-row col-12">
+          <!--SELETOR DE MESA-->
+        </div>
+        <div class="d-flex flex-row col-12">
+          
+        </div>
       </div>
     </main>
   </template>
