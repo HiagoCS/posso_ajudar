@@ -1,23 +1,72 @@
 .cashier-table{
     position: relative;
-    background-color: #d5e1e9;
+    
     width: 90%;
     margin: 1vh 1vw 1vh 1vw;
     border: solid 2px black;
-    &.table{
-        height: 70vh !important;
-        position: relative;
-        font-size: 20px;
-        .table-header{
-            font-size: 1.5pc;
-            padding: 1vh 1vw 1vh 1vw;
+    z-index: 2 !important;
+    
+    &.product-table-container {
+        width: 90%;
+       /*  height: 380px;  */
+        height: 60vh;
+        padding: 1vh 1vw;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        border: 2px solid #000;
+        .table-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto; /* Adiciona rolagem vertical */
+            .product-table {
+                width: 100%;
+                border-collapse: collapse;
+                background-color: #e6e6e6;
+                font-size: 1.5pc;
+              
+                th, td {
+                  padding: 10px;
+                  border: 1px solid #000;
+                  text-align: center;
+                }
+              
+                th {
+                  background-color: #d5e1e9;
+                  color: #000;
+                  font-weight: bold;
+                  position: sticky;
+                  top: 0;
+                  z-index: 1;
+                }
+              
+                td {
+                  background-color: #fff;
+                  color: #000;
+              
+                  &:hover {
+                    background-color: #f2f2f2;
+                  }
+                }
+              
+                tbody tr:nth-child(odd) {
+                  background-color: #d5e1e9;
+                }
+              
+                tbody tr:nth-child(even) {
+                  background-color: #e6e6e6;
+                }
+              }
         }
-    }
-    .act-btn{
-        font-size: 2pc;
-        padding: 5px 1px 5px 1px;
-        &:hover{
-            background-color: #979899;
+        
+      }
+    .act{
+        background-color: #d5e1e9;
+        .act-btn{
+            font-size: 2pc;
+            padding: 5px 1px 5px 1px;
+            &:hover{
+                background-color: #979899;
+            }
         }
     }
 }
