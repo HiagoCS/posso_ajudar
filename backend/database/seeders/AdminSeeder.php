@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UserPersonalData;
 
-use App\Models\User;
+use App\Models\Account\User;
 
 class AdminSeeder extends Seeder
 {

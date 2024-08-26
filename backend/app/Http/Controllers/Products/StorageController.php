@@ -5,14 +5,20 @@ namespace App\Http\Controllers\Products;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Storage\ProductsModel;
+use App\Models\Account\RolesModel;
 
 class StorageController extends Controller
 {
-    public function index(Request $request, ProductsModel $prdModel){
-        return $request->user()->getRoleNames();
+    /* if(!$roles->bossAccess($request->user()))
+            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"; */
+    public function index(Request $request, ProductsModel $prdModel, RolesModel $roles){
+        if(!$roles->admAccess($request->user()))
+            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         return response()->json(["request" => $prdModel->get()->all()]);
     }
     public function insert(Request $request, ProductsModel $prdModel){
+        if(!$roles->admAccess($request->user()))
+            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{
             $products = $request->all();
             $bcode = $products['bar_code'];
@@ -36,6 +42,8 @@ class StorageController extends Controller
         }
     }
     public function update($id, Request $request, ProductsModel $prdModel){
+        if(!$roles->admAccess($request->user()))
+            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{
             $product = $prdModel->find($id);
             $bcode = $product['bar_code'];
@@ -59,6 +67,8 @@ class StorageController extends Controller
         }
     }
     public function delete($id, ProductsModel $prdModel){
+        if(!$roles->admAccess($request->user()))
+            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{
             $product = $prdModel->find($id);
             if(!isset($product)) return response()->json([
