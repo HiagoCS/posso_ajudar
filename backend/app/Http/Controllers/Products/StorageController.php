@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ProductsModel;
+use App\Models\Storage\ProductsModel;
 
 class StorageController extends Controller
 {
-    public function index(ProductsModel $prdModel){
+    public function index(Request $request, ProductsModel $prdModel){
+        return $request->user()->getRoleNames();
         return response()->json(["request" => $prdModel->get()->all()]);
     }
     public function insert(Request $request, ProductsModel $prdModel){
