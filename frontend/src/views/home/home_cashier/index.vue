@@ -16,11 +16,15 @@
               <span class="d-flex justify-content-center col-1 act-btn">
                 <font-awesome-icon icon="ban"/>
               </span>
-              <span class="d-flex col-5 act-btn">
+              <span class="d-flex col-3 act-btn">
                 <font-awesome-icon icon="magnifying-glass"/>
                 <a style="font-size: 70%;">Código de Barra</a>
               </span>
-              <span class="d-flex col-5 act-btn">
+              <span class="d-flex col-3 act-btn">
+                <font-awesome-icon icon="magnifying-glass"/>
+                <a style="font-size: 70%;">Código Reduzido</a>
+              </span>
+              <span class="d-flex col-4 act-btn">
                 <font-awesome-icon icon="magnifying-glass"/>
                 <a style="font-size: 70%;">Produto</a>
               </span>
