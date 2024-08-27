@@ -23,6 +23,21 @@ class ProductsModel extends Model
 
     public $timestamps = false;
 
+    public function searchName($search){
+        return $this->where(function ($query) use($search){
+            $query->orWhere("name", "like", "%".$search."%")->orderBy("name");
+        })->get()->all();
+    }
+    public function searchSmallCode($search){
+        return $this->where(function ($query) use($search){
+            $query->orWhere("sm_code", "like", "%".$search."%")->orderBy("sm_code");
+        })->get()->all();
+    }
+    public function searchBarCode($search){
+        return $this->where(function ($query) use($search){
+            $query->orWhere("bar_code", "like", "%".$search."%")->orderBy("bar_code");
+        })->get()->all();
+    }
     public function EAN13Validation($bcode){
             $bcde = preg_replace("/\D/",'', $bcode);
             if(strlen($bcde) != 13){

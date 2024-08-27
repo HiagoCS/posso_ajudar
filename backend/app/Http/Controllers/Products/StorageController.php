@@ -16,6 +16,15 @@ class StorageController extends Controller
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         return response()->json(["request" => $prdModel->get()->all()]);
     }
+    public function search(Request $request, ProductsModel $prdModel){
+        $search = $request->all();
+        $results = [];
+        if(!empty($search['name'])) $results['name'] = $prdModel->searchName($search['name']);
+        if(!empty($search['sm_code'])) $results['sm_code'] = $prdModel->searchSmallCode($search['sm_code']);
+        if(!empty($search['bar_code'])) $results['bar_code'] = $prdModel->searchBarCode($search['bar_code']);
+        if(empty($results)) return $prdModel->all();
+        return response()->json($results);
+    }
     public function insert(Request $request, ProductsModel $prdModel){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
