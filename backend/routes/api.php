@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->
             Route::post('/update/{id}', 'App\Http\Controllers\Products\StorageController@update');
             Route::delete('/delete/{id}', 'App\Http\Controllers\Products\StorageController@delete');
 
-            Route::post('/search', 'App\Http\Controllers\Products\StorageController@search');
+            Route::get('/search/{term}/{search}', 'App\Http\Controllers\Products\StorageController@search');
         });
     });
 Route::get('/theroute', function(Request $request){

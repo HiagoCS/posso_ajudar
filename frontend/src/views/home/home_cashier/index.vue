@@ -9,31 +9,22 @@
         </div>
         <div class="d-flex flex-column align-items-center">
           <div class="d-flex flex-row cashier-table">
-            <div class="d-flex col-12 flex-row act">
+            <div class="d-flex col-12 flex-row act" >
               <span class="d-flex justify-content-center col-1 act-btn">
                 <font-awesome-icon icon="filter"/>
               </span>
               <span class="d-flex justify-content-center col-1 act-btn">
                 <font-awesome-icon icon="ban"/>
               </span>
-              <span class="d-flex col-3 act-btn">
-                <font-awesome-icon icon="magnifying-glass"/>
-                <a style="font-size: 70%;">Código de Barra</a>
-              </span>
-              <span class="d-flex col-3 act-btn">
-                <font-awesome-icon icon="magnifying-glass"/>
-                <a style="font-size: 70%;">Código Reduzido</a>
-              </span>
-              <span class="d-flex col-4 act-btn">
-                <font-awesome-icon icon="magnifying-glass"/>
-                <a style="font-size: 70%;">Produto</a>
-              </span>
+              <searchComponent placeholder="Código de Barras" search-term="bar_code" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Código Reduzido" search-term="sm_code" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Produto" search-term="name" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
             </div>
           </div>
           <div class="d-flex flex-row cashier-table product-table-container">
             <div class="table-wrapper">
               <table class="product-table">
-              <thead>
+              <thead style="font-size: 20px;">
                 <tr>
                   <th>#</th>
                   <th>Cód. Reduzido</th>
@@ -44,15 +35,15 @@
                   <th>Quant.</th>
                 </tr>
               </thead>
-              <tbody>
-              <tr v-for="(product, index) in products" :key="index">
+              <tbody style="font-size: 15px;">
+              <tr v-for="(product, index) in products" :key="index" >
                 <td>{{ index + 1 }}</td>
-                <td>{{ product.codReduzido }}</td>
-                <td>{{ product.codBarra }}</td>
-                <td>{{ product.nome }}</td>
-                <td>{{ product.descricao }}</td>
-                <td>{{ product.preco }}</td>
-                <td>{{ product.quantidade }}</td>
+                <td>{{ product.sm_code }}</td>
+                <td>{{ product.bar_code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.value }}</td>
+                <td>{{ product.product_amount }}</td>
               </tr>
             </tbody>
             </table>
@@ -63,32 +54,20 @@
       </div>
     </main>
   </template>
-<!-- <tr>
-  <td>#</td>
-  <td>Cód. Reduzido</td>
-  <td>Cód. Barra</td>
-  <td>Produto</td>
-  <td>Descrição</td>
-  <td>R$</td>
-  <td>Quant.</td>
-</tr> -->
 <script>
-import axios from 'axios'
-import VueCookie from 'vue-cookie';
-/* import Navbar from './navbar/index.vue' */
 import logoComponent from '@/components/vue/logoComponent.vue';
+import searchComponent from "@/components/vue/productsSearch/index.vue";
 export default{
-  components:{logoComponent},
+  components:{logoComponent, searchComponent},
   data(){
     return{
         user:{},
         roles:[],
         active:"",
-        count: 30
+        count: 30,
+        products: [],
+        
     }
-  },
-  async created(){
-    console.log('CASHIER HOMEEE')
   }
 }
 </script>
