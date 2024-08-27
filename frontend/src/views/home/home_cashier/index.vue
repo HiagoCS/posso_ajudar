@@ -84,17 +84,7 @@ export default{
         user:{},
         roles:[],
         active:"",
-        count: 30,
-        products: [
-        { codReduzido: '001', codBarra: '123456789', nome: 'Produto 1', descricao: 'Descrição 1', preco: '10.00', quantidade: 1 },
-        { codReduzido: '002', codBarra: '987654321', nome: 'Produto 2', descricao: 'Descrição 2', preco: '15.00', quantidade: 2 },
-        { codReduzido: '001', codBarra: '123456789', nome: 'Produto 1', descricao: 'Descrição 1', preco: '10.00', quantidade: 1 },
-        { codReduzido: '002', codBarra: '987654321', nome: 'Produto 2', descricao: 'Descrição 2', preco: '15.00', quantidade: 2 },
-        { codReduzido: '001', codBarra: '123456789', nome: 'Produto 1', descricao: 'Descrição 1', preco: '10.00', quantidade: 1 },
-        { codReduzido: '002', codBarra: '987654321', nome: 'Produto 2', descricao: 'Descrição 2', preco: '15.00', quantidade: 2 },
-        { codReduzido: '001', codBarra: '123456789', nome: 'Produto 1', descricao: 'Descrição 1', preco: '10.00', quantidade: 1 },
-        { codReduzido: '002', codBarra: '987654321', nome: 'Produto 2', descricao: 'Descrição 2', preco: '15.00', quantidade: 2 }
-      ]
+        count: 30
     }
   },
   async created(){
