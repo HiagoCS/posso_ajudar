@@ -16,9 +16,9 @@
               <span class="d-flex justify-content-center col-1 act-btn">
                 <font-awesome-icon icon="ban"/>
               </span>
-              <searchComponent placeholder="Código de Barras" search-term="bar_code" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
-              <searchComponent placeholder="Código Reduzido" search-term="sm_code" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
-              <searchComponent placeholder="Produto" search-term="name" @result="(resul) =>{ this.products.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Código de Barras" search-term="bar_code" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Código Reduzido" search-term="sm_code" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Produto" search-term="name" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
             </div>
           </div>
           <div class="d-flex flex-row cashier-table product-table-container">
@@ -42,8 +42,8 @@
                 <td>{{ product.bar_code }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
-                <td>{{ product.value }}</td>
-                <td>{{ product.product_amount }}</td>
+                <td>{{ product.value * product.quantity}}</td>
+                <td>{{ product.quantity }}</td>
               </tr>
             </tbody>
             </table>
@@ -65,10 +65,28 @@ export default{
         roles:[],
         active:"",
         count: 30,
-        products: [],
+        rawproducts: [],
         
     }
-  }
+  },
+  computed: {
+    // Computed property to consolidate products
+    products() {
+      const productMap = new Map();
+      this.rawproducts.forEach(product => {
+        const key = `${product.bar_code}-${product.sm_code}-${product.name}`;
+        if (productMap.has(key)) {
+          productMap.get(key).quantity += 1;
+        } else {
+          productMap.set(key, {
+            ...product,
+            quantity: 1
+          });
+        }
+      });
+      return Array.from(productMap.values());
+    }
+  },
 }
 </script>
 <style lang="scss" src="./style.scss" scoped></style>
