@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float("total_value");
             $table->unsignedBigInteger("id_pg_method");
             $table->foreign('id_pg_method')->references('id')->on('pg_method');
-            $table->unsignedBigInteger("id_client");
+            $table->unsignedBigInteger("id_client")->nullable();
             $table->foreign('id_client')->references('id')->on('client');
             $table->timestamps();
         });

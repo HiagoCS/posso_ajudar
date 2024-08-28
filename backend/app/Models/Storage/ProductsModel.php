@@ -19,7 +19,6 @@ class ProductsModel extends Model
         'product_amount',
         'status',
       ];
-    protected $hidden = ['password'];
 
     public $timestamps = false;
 

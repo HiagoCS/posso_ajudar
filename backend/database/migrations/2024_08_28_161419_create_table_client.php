@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('client', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->unsignedBigInteger("id_fav_pg_method")->nulable();
+            $table->unsignedBigInteger("id_fav_pg_method")->nullable()->default(null);
             $table->foreign('id_fav_pg_method')->references('id')->on('pg_method');
-            $table->string("cpf");
+            $table->string("cpf")->nullable();
             $table->timestamps();
         });
     }

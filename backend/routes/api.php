@@ -23,6 +23,10 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function(){
     });
 });
 Route::middleware('auth:sanctum')->
+    prefix('cashier')->group(function(){
+        Route::post("/sale", 'App\Http\Controllers\Cashier\SaleController@insert');
+    });
+Route::middleware('auth:sanctum')->
     prefix('manager')->group(function(){
         Route::prefix('products')->group(function(){
             Route::get('/', 'App\Http\Controllers\Products\StorageController@index');
@@ -33,6 +37,7 @@ Route::middleware('auth:sanctum')->
             Route::get('/search/{term}/{search}', 'App\Http\Controllers\Products\StorageController@search');
         });
     });
+    
 Route::get('/theroute', function(Request $request){
     return "HELLO WORLD";
 })->middleware("roles");
