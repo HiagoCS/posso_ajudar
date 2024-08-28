@@ -49,7 +49,29 @@
             </table>
             </div>
           </div>
-          
+          <div class="d-flex flex-row cashier-table act-footer">
+            <div class="d-flex col-2 flex-column align-items-center justify-content-center total-item">
+              <span class="title">Total</span>
+              <span class="total">R$120,00</span>
+            </div>
+            <div class="d-flex col-2 flex-column align-items-center justify-content-center troco-item">
+              <span class="title">Troco</span>
+              <span class="troco">R$120,00</span>
+            </div>
+            <div class="d-flex col-3 offset-1 flex-column justify-content-between info-sale">
+              <div class="d-flex col-12 input-group">
+                <input type="text" v-model="client" class="form-control" required>
+                <label class="client-label">Cliente</label>
+              </div>
+              <div class="d-flex col-12 input-group">
+                <input type="text" v-model="pgmethod" class="form-control" required>
+                <label class="pg-label">Método Pagamento</label>
+              </div>
+            </div>
+            <div class="d-flex col-2 offset-1 flex-column justify-content-center">
+              <button class="btn btn-primary">Finalizar</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -66,6 +88,8 @@ export default{
         active:"",
         count: 30,
         rawproducts: [],
+        pgmethod:"",
+        client:""
         
     }
   },
