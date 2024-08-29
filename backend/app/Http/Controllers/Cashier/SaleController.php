@@ -20,8 +20,14 @@ class SaleController extends Controller
         if($sale['client']){
             $client = $clntModel->where(function($query) use ($sale){
                 if($sale['client']['cpf']){
-                    $query->where("cpf", $sale['client']['cpf']);
-                    if(count($query->get()) === 0) $query->create(['name' => $sale['client']['name'], 'cpf' => $sale['client']['cpf']]);
+                    $query->where(function($query) use($sale){
+                        $query->where("cpf", $sale['client']['cpf'])
+                            ->orWhere("name", $sale['client']['name']);
+                        if(count($query->get()) === 0)
+                            $query->create(['name' => $sale['client']['name'], 'cpf' => $sale['client']['cpf']]);
+                        else 
+                            $query->first()->update(['name' => $sale['client']['name'], 'cpf' => $sale['client']['cpf']]);
+                    });
                 }else if(!$sale['client']['cpf'] && $sale['client']['name']){
                     $query->where("name", $sale['client']['name']);
                     if(count($query->get()) === 0) $query->create(['name' => $sale['client']['name'], 'cpf' => null]);

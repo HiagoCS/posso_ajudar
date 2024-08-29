@@ -58,7 +58,7 @@
               <div class="d-flex col-12 input-group autocomplete">
                 <clientsSearchComponent @returnClients="(client) =>{this.client=client}"/>
               </div>
-              <div class="d-flex col-12 input-group autocomplete">
+              <div class="d-flex col-12 input-group autocomplete pg">
                 <pgMethodsComponent @returnPayment="(pgmethod) =>{this.pgmethod=pgmethod}"/>
               </div>
             </div>
@@ -77,26 +77,81 @@ import searchComponent from "@/components/vue/productsSearch/index.vue";
 import pgMethodsComponent from "@/components/vue/pgMethodsSearch/index.vue";
 import clientsSearchComponent from "@/components/vue/clientsSearch/index.vue";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 export default{
   components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent},
   methods:{
+    validateCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
+      return false;
+    }
+    let sum = 0, mod;
+    for (let i = 1; i <= 9; i++) {
+      sum += parseInt(cpf.substring(i-1, i)) * (11 - i);
+    }
+    mod = (sum * 10) % 11;
+    if (mod == 10 || mod == 11) mod = 0;
+    if (mod != parseInt(cpf.substring(9, 10))) return false;
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+      sum += parseInt(cpf.substring(i-1, i)) * (12 - i);
+    }
+    mod = (sum * 10) % 11;
+    if (mod == 10 || mod == 11) mod = 0;
+    return mod == parseInt(cpf.substring(10, 11));
+  },
     async finalize(){
+
       const prdArray = this.products.map(product => {
       return {
         id: product.id,
         qunt: product.quantity
       };
     });
+      if (!this.pgmethod.id) {
+        document.querySelector('.pg').style.borderColor = 'red';
+        document.querySelector('.pg-label').style.color = 'red'; // Deixa o label vermelho
+        return; // Barrar o envio
+      } else {
+       document.querySelector('.pg').style.borderColor = 'black';
+       document.querySelector('.pg-label').style.color = ''; // Reseta o estilo se estiver preenchido
+      }
+
+      if (this.client.name && !this.client.cpf) {
+        const { value: cpf } = await Swal.fire({
+        title: 'Adicionar CPF?',
+        text: "Você deseja adicionar o CPF do cliente?",
+        input: 'text',
+        inputPlaceholder: 'Insira o CPF',
+        showCancelButton: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        inputValidator: (value) => {
+          if (!value) {
+            return 'O CPF é necessário!'
+          } else if (!this.validateCPF(value)) { // Função para validar CPF
+            return 'CPF inválido!'
+          }
+        }
+      });
+      if (cpf) {
+        this.client.cpf = cpf;
+      } else {
+        this.client.cpf = null; // Barrar o envio se o CPF não for fornecido
+      }
+      }
       const request = {
         "total_value":this.total_value.toFixed(2),
         "id_pg_method":this.pgmethod.id===undefined?null:this.pgmethod.id,
-        "client":this.client.name===undefined&&this.client.cpf===undefined?null:{
-          "name":this.client.name===undefined?null:this.client.name,
-          "cpf":this.client.cpf===undefined?null:this.client.cpf
+        "client":{
+          "name":this.client['name'],
+          "cpf":this.client.cpf
         },
         "products": prdArray
       }
       const {data, status} = await axios.post('/cashier/sale',request);
+      
       console.log("response", data);
     }
   },

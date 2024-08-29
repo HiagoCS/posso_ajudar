@@ -37,6 +37,13 @@ import axios from 'axios';
                 this.filteredCli = this.rawclients.filter(method =>
                     method.name.toLowerCase().includes(query)
                 );
+                this.$emit('returnClients', {'name':this.client, 'cpf':null})
+                this.filteredCli.forEach(method =>{
+                    if(method.name === this.client){
+                        this.$emit('returnClients', {'name':method.name, 'cpf':method.cpf});
+                    }
+                })
+                
             },
             hideDropdown() {
                 setTimeout(() => {
