@@ -76,14 +76,15 @@ import logoComponent from '@/components/vue/logoComponent.vue';
 import searchComponent from "@/components/vue/productsSearch/index.vue";
 import pgMethodsComponent from "@/components/vue/pgMethodsSearch/index.vue";
 import clientsSearchComponent from "@/components/vue/clientsSearch/index.vue";
+import axios from 'axios';
 export default{
   components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent},
   methods:{
-    finalize(){
+    async finalize(){
       const prdArray = this.products.map(product => {
       return {
         id: product.id,
-        quantity: product.quantity
+        qunt: product.quantity
       };
     });
       const request = {
@@ -95,7 +96,8 @@ export default{
         },
         "products": prdArray
       }
-      return console.log("request",request)
+      const {data, status} = await axios.post('/cashier/sale',request);
+      console.log("response", data);
     }
   },
   data(){
