@@ -131,6 +131,10 @@
           position: relative;
           border: black solid 2px;
           border-radius: 5px;
+          &.autocomplete{
+            position: relative;
+            
+          }
           label{
               position: absolute;
               top: -5px;

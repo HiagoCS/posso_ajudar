@@ -50,26 +50,21 @@
             </div>
           </div>
           <div class="d-flex flex-row cashier-table act-footer">
-            <div class="d-flex col-2 flex-column align-items-center justify-content-center total-item">
+            <div class="d-flex col-4 flex-column align-items-center justify-content-center total-item">
               <span class="title">Total</span>
-              <span class="total">R$120,00</span>
-            </div>
-            <div class="d-flex col-2 flex-column align-items-center justify-content-center troco-item">
-              <span class="title">Troco</span>
-              <span class="troco">R$120,00</span>
+              <span class="total">R${{ total_value.toFixed(2) }}</span>
             </div>
             <div class="d-flex col-3 offset-1 flex-column justify-content-between info-sale">
-              <div class="d-flex col-12 input-group">
-                <input type="text" v-model="client" class="form-control" required>
-                <label class="client-label">Cliente</label>
+              <div class="d-flex col-12 input-group autocomplete">
+                <clientsSearchComponent @returnClients="(client) =>{this.client=client}"/>
               </div>
-              <div class="d-flex col-12 input-group">
-                <input type="text" v-model="pgmethod" class="form-control" required>
-                <label class="pg-label">Método Pagamento</label>
+              <div class="d-flex col-12 input-group autocomplete">
+                <pgMethodsComponent @returnPayment="(pgmethod) =>{this.pgmethod=pgmethod}"/>
               </div>
             </div>
-            <div class="d-flex col-2 offset-1 flex-column justify-content-center">
-              <button class="btn btn-primary">Finalizar</button>
+            <div class="d-flex col-2 offset-1 flex-column justify-content-between" style="padding:1vh 1vw 1vh 1vw">
+              <button class="btn btn-primary" @click="finalize()">Finalizar</button>
+              <button class="btn btn-primary">Buscar Clientes</button>
             </div>
           </div>
         </div>
@@ -79,8 +74,30 @@
 <script>
 import logoComponent from '@/components/vue/logoComponent.vue';
 import searchComponent from "@/components/vue/productsSearch/index.vue";
+import pgMethodsComponent from "@/components/vue/pgMethodsSearch/index.vue";
+import clientsSearchComponent from "@/components/vue/clientsSearch/index.vue";
 export default{
-  components:{logoComponent, searchComponent},
+  components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent},
+  methods:{
+    finalize(){
+      const prdArray = this.products.map(product => {
+      return {
+        id: product.id,
+        quantity: product.quantity
+      };
+    });
+      const request = {
+        "total_value":this.total_value.toFixed(2),
+        "id_pg_method":this.pgmethod.id===undefined?null:this.pgmethod.id,
+        "client":this.client.name===undefined&&this.client.cpf===undefined?null:{
+          "name":this.client.name===undefined?null:this.client.name,
+          "cpf":this.client.cpf===undefined?null:this.client.cpf
+        },
+        "products": prdArray
+      }
+      return console.log("request",request)
+    }
+  },
   data(){
     return{
         user:{},
@@ -88,13 +105,17 @@ export default{
         active:"",
         count: 30,
         rawproducts: [],
-        pgmethod:"",
-        client:""
-        
+        client:{},
+        pgmethod:{}
     }
   },
+  
   computed: {
-    // Computed property to consolidate products
+    total_value() {
+      return this.products.reduce((acc, product) => {
+        return acc + (product.value * product.quantity);
+      }, 0);
+    },
     products() {
       const productMap = new Map();
       this.rawproducts.forEach(product => {
@@ -113,4 +134,4 @@ export default{
   },
 }
 </script>
-<style lang="scss" src="./style.scss" scoped></style>
+<style lang="scss" src="./style.scss"></style>

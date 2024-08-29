@@ -57,4 +57,10 @@ class SaleController extends Controller
         
         return $csdata;
     }
+    public function getPayments(){
+        return PGModel::all();
+    }
+    public function getClients(){
+        return Client::all();
+    }
 }

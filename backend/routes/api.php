@@ -25,6 +25,10 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function(){
 Route::middleware('auth:sanctum')->
     prefix('cashier')->group(function(){
         Route::post("/sale", 'App\Http\Controllers\Cashier\SaleController@insert');
+        Route::prefix('get')->group(function(){
+            Route::get("/payments", 'App\Http\Controllers\Cashier\SaleController@getPayments');
+            Route::get("/clients", 'App\Http\Controllers\Cashier\SaleController@getClients');
+        });
     });
 Route::middleware('auth:sanctum')->
     prefix('manager')->group(function(){
