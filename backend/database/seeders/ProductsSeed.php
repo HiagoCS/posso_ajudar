@@ -23,7 +23,7 @@ class ProductsSeed extends Seeder
             'description' => 'Bolacha Maria tradicional, pacote de 400g',
             'value' => 3.99,
             'product_amount' => 150,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -33,7 +33,7 @@ class ProductsSeed extends Seeder
             'description' => 'Refrigerante Coca-Cola 2L',
             'value' => 7.49,
             'product_amount' => 200,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -43,7 +43,7 @@ class ProductsSeed extends Seeder
             'description' => 'Refrigerante Guaraná Antártica 2L',
             'value' => 6.99,
             'product_amount' => 180,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -53,7 +53,7 @@ class ProductsSeed extends Seeder
             'description' => 'Barra de Chocolate Lacta Ao Leite 170g',
             'value' => 8.99,
             'product_amount' => 120,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -63,7 +63,7 @@ class ProductsSeed extends Seeder
             'description' => 'Margarina Qualy 500g',
             'value' => 4.79,
             'product_amount' => 90,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -73,7 +73,7 @@ class ProductsSeed extends Seeder
             'description' => 'Pão de Forma Pullman Tradicional 500g',
             'value' => 6.49,
             'product_amount' => 80,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -83,7 +83,7 @@ class ProductsSeed extends Seeder
             'description' => 'Creme Dental Colgate Total 12, 90g',
             'value' => 3.29,
             'product_amount' => 160,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -93,7 +93,7 @@ class ProductsSeed extends Seeder
             'description' => 'Sabão em Pó Omo 1kg',
             'value' => 10.99,
             'product_amount' => 130,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -103,7 +103,7 @@ class ProductsSeed extends Seeder
             'description' => 'Café Pilão Torrado e Moído 500g',
             'value' => 12.49,
             'product_amount' => 70,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -113,7 +113,7 @@ class ProductsSeed extends Seeder
             'description' => 'Arroz Branco Tio João Tipo 1, 1kg',
             'value' => 5.99,
             'product_amount' => 200,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -123,7 +123,7 @@ class ProductsSeed extends Seeder
             'description' => 'Feijão Carioca Kicaldo 1kg',
             'value' => 7.89,
             'product_amount' => 190,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -133,7 +133,7 @@ class ProductsSeed extends Seeder
             'description' => 'Açúcar Refinado União 1kg',
             'value' => 4.29,
             'product_amount' => 210,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -143,7 +143,7 @@ class ProductsSeed extends Seeder
             'description' => 'Macarrão Instantâneo Nissin Lámen Galinha 85g',
             'value' => 1.99,
             'product_amount' => 300,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -153,7 +153,7 @@ class ProductsSeed extends Seeder
             'description' => 'Extrato de Tomate Elefante 340g',
             'value' => 2.99,
             'product_amount' => 140,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -163,7 +163,7 @@ class ProductsSeed extends Seeder
             'description' => 'Óleo de Soja Soya 900ml',
             'value' => 8.49,
             'product_amount' => 110,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -173,7 +173,7 @@ class ProductsSeed extends Seeder
             'description' => 'Refrigerante Fanta Laranja 2L',
             'value' => 6.79,
             'product_amount' => 170,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -183,7 +183,7 @@ class ProductsSeed extends Seeder
             'description' => 'Maionese Hellmann\'s Tradicional 500g',
             'value' => 10.49,
             'product_amount' => 100,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -193,7 +193,7 @@ class ProductsSeed extends Seeder
             'description' => 'Farinha de Trigo Dona Benta 1kg',
             'value' => 4.79,
             'product_amount' => 150,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -203,7 +203,7 @@ class ProductsSeed extends Seeder
             'description' => 'Leite Integral Parmalat 1L',
             'value' => 3.49,
             'product_amount' => 130,
-            'status' => 0,
+            'status' => 1,
         ]);
 
         ProductsModel::create([
@@ -213,7 +213,7 @@ class ProductsSeed extends Seeder
             'description' => 'Creme de Leite Nestlé 200g',
             'value' => 4.99,
             'product_amount' => 140,
-            'status' => 0,
+            'status' => 1,
         ]);
     }
 }

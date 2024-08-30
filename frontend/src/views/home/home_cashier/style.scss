@@ -1,174 +1,307 @@
-.cashier-table{
-    position: relative;
-    
+.cashier-table {
+  position: relative;
+  width: 90%;
+  margin: 1vh 1vw 1vh 1vw;
+  border: solid 2px black;
+  z-index: 2 !important;
+
+  &.product-table-container {
     width: 90%;
-    margin: 1vh 1vw 1vh 1vw;
-    border: solid 2px black;
-    z-index: 2 !important;
-    
-    &.product-table-container {
-        width: 90%;
-        height: 50vh;
-        padding: 1vh 1vw;
-        background-color: #f2f2f2;
-        border-radius: 10px;
-        border: 2px solid #000;
-        z-index: 1 !important;
-        .table-wrapper {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto; /* Adiciona rolagem vertical */
-            .product-table {
-                width: 100%;
-                border-collapse: collapse;
-                background-color: #e6e6e6;
-                font-size: 1.5pc;
-              
-                th, td {
-                  padding: 10px;
-                  border: 1px solid #000;
-                  text-align: center;
-                }
-              
-                th {
-                  background-color: #d5e1e9;
-                  color: #000;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 1;
-                }
-              
-                td {
-                  background-color: #fff;
-                  color: #000;
-              
-                  &:hover {
-                    background-color: #f2f2f2;
-                  }
-                }
-              
-                tbody tr:nth-child(odd) {
-                  background-color: #d5e1e9;
-                }
-              
-                tbody tr:nth-child(even) {
-                  background-color: #e6e6e6;
-                }
-              }
+    height: 50vh;
+    padding: 1vh 1vw;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    border: 2px solid #000;
+    z-index: 1 !important;
+
+    .spinner {
+      position: absolute;
+
+      &.active {
+        opacity: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5em;
+        color: #000; /* Ajuste a cor conforme necessário */
+        font-size: 50px;
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
-        
+
+        animation-name: spin;
+        animation-duration: 2000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
       }
-    .act{
-        background-color: #d5e1e9;
-        height: 50px;
-        .act-btn{
-            font-size: 2pc;
-            padding: 5px 1px 5px 1px;
-            position: relative;
-            input {
-              width: 100%;
-              padding: 5px;
-              border: none;
-              outline: none;
+      opacity: 0;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto; /* Adiciona rolagem vertical */
+
+      .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #e6e6e6;
+        font-size: 1.5pc;
+
+        th,
+        td {
+          padding: 10px;
+          border: 1px solid #000;
+          text-align: center;
+          white-space: nowrap; /* Impede a quebra do texto */
+          font-size: clamp(12px, 2vw, 16px); /* Ajusta o tamanho da fonte conforme a largura da tela */
+          text-align: center;
+        }
+
+        th {
+          background-color: #d5e1e9;
+          color: #000;
+          font-weight: bold;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          
+        }
+
+        td {
+          background-color: #fff;
+          color: #000;
+          font-size: 15px;
+          &:hover {
+            background-color: #f2f2f2;
+          }
+        }
+
+        tbody {
+          td {
+            .actions {
+              /* padding: 1vh 1vw 1vh 1vw !important; */
+              white-space: wrap;
+            }
+          }
+          td.value {
+            .form-control {
+              display: none;
+            }
+          }
+        }
+
+        tbody tr:nth-child(odd) {
+          background-color: #d5e1e9;
+        }
+
+        tbody tr:nth-child(even) {
+          background-color: #e6e6e6;
+        }
+      }
+    }
+  }
+
+  .act {
+    background-color: #d5e1e9;
+    height: 50px;
+
+    .act-btn {
+      font-size: 2pc;
+      padding: 5px 1px 5px 1px;
+      position: relative;
+
+      input {
+        width: 100%;
+        padding: 5px;
+        border: none;
+        outline: none;
+      }
+
+      .dropdown {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 48px;
+        font-size: 15px;
+        right: 0;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            padding: 8px 12px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #f1f1f1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.act-footer {
+    height: 20vh;
+    background-color: #d4e1e9;
+
+    .total-item, .troco-item {
+      .title, .total, .troco {
+        white-space: nowrap; /* Impede a quebra do texto */
+        font-size: clamp(12px, 2vw, 45px); /* Ajusta o tamanho da fonte conforme a largura da tela */
+        text-align: center; /* Centraliza o texto */
+      }
+    }
+    .total-item {
+      background-color: #bcdde6;
+      border-right: #000 solid 2px;
+
+      .title {
+        font-family: 'Nauticus-Bold';
+        font-size: 45px;
+        text-transform: uppercase;
+      }
+
+      .total {
+        font-family: 'Quicksand-Bold';
+        font-size: 30px;
+        color: red;
+      }
+    }
+
+    .troco-item {
+      background-color: #bcdde6;
+      border-right: #000 solid 5px;
+
+      .title {
+        font-family: 'Quicksand-Bold';
+        font-size: 15px;
+      }
+
+      .troco {
+        font-family: 'Quicksand-Bold';
+        font-size: 15px;
+        color: red;
+      }
+    }
+
+    .info-sale {
+      .input-group {
+        position: relative;
+        border: black solid 2px;
+        border-radius: 5px;
+
+        &.autocomplete {
+          position: relative;
+        }
+
+        label {
+          position: absolute;
+          top: -5px;
+          left: 5px;
+          padding: 10px 5px;
+          pointer-events: none;
+          z-index: 1;
+          transition: 0.3s;
+          color: #000;
+          white-space: nowrap; /* Impede a quebra do texto */
+          font-size: clamp(12px, 2vw, 20px);
+        }
+
+        input {
+          z-index: 0;
+          font-size: clamp(12px, 2vw, 16px);
+          &:focus~label {
+            &.client-label {
+              left: 14vw;
+              top: 4vh;
+              color: #000;
+              font-family: "Quicksand-Bold";
             }
 
-            .dropdown {
-              position: absolute;
-              background-color: white;
-              border: 1px solid #ccc;
-              border-radius: 4px;
-              margin-top: 48px;
-              font-size: 15px;
-              right: 0;
-              box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-              z-index: 1000;
-              ul{
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                li {
-                  padding: 8px 12px;
-                  cursor: pointer;
-                  &:hover {
-                    background-color: #f1f1f1;
-                  }
-                }
-              }
-            }
-        }
-    }
-    &.act-footer{
-      height: 20vh;
-      background-color: #d4e1e9;
-      .total-item{
-        background-color: #bcdde6;
-        .title{
-          font-family: 'Quicksand-Bold'; 
-          font-size: 25px;
-        }
-        .total{
-          font-family: 'Quicksand-Bold'; 
-          font-size: 35px; 
-          color: red;
-        }
-      }
-      .troco-item{
-        background-color: #bcdde6;
-        border-right: #000 solid 5px;
-        .title{
-          font-family: 'Quicksand-Bold'; 
-          font-size: 15px;
-        }
-        .troco{
-          font-family: 'Quicksand-Bold'; 
-          font-size: 15px; 
-          color: red;
-        }
-      }
-      .info-sale{
-        .input-group{
-          position: relative;
-          border: black solid 2px;
-          border-radius: 5px;
-          &.autocomplete{
-            position: relative;
-            
-          }
-          label{
-              position: absolute;
-              top: -5px;
-              left: 5px;
-              /* transform: translateY(10%); */
-              padding: 10px 5px;
-              pointer-events: none;
-              z-index: 1;
-              transition: 0.3s;
-              font-size: 20px;
+            &.pg-label {
+              top: -7vh;
+              left: -0.5vw;
               color: #000;
-              
+              font-family: "Quicksand-Bold";
+            }
           }
-          input{
-              z-index: 0;
-              &:focus~label{
-                &.client-label{
-                  left:14vw;
-                  top: 4vh;
-                  color: #000;
-                  font-family: "Quicksand-Bold";
-                }
-                &.pg-label{
-                  top: -7vh;
-                  left: -0.5vw;
-                  color: #000;
-                  font-family: "Quicksand-Bold";
-                } 
-              }
-              &:valid~label{
-                  opacity: 0;
-              }
+
+          &:valid~label {
+            opacity: 0;
           }
-      }
+        }
       }
     }
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    margin: 1vh 0;
+    
+    &.product-table-container {
+      padding: 2vh 2vw;
+      height: auto;
+
+      .table-wrapper {
+        .product-table {
+          font-size: 1pc;
+          
+          th, td {
+            padding: 5px;
+          }
+        }
+      }
+    }
+
+    .act {
+      height: auto;
+
+      .act-btn {
+        font-size: 1.5pc;
+        padding: 3px 0;
+      }
+    }
+
+    &.act-footer {
+      height: auto;
+      padding: 2vh 2vw;
+
+      .total-item {
+        .title {
+          font-size: 30px;
+        }
+
+        .total {
+          font-size: 20px;
+        }
+      }
+
+      .troco-item {
+        .title, .troco {
+          font-size: 12px;
+        }
+      }
+
+      .info-sale {
+        .input-group {
+          label {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
 }

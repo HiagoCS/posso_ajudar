@@ -22,6 +22,7 @@ class StorageController extends Controller
         if($term==='name') $results['name'] = $prdModel->searchName($search);
         if($term==='sm_code') $results['sm_code'] = $prdModel->searchSmallCode($search);
         if($term==='bar_code') $results['bar_code'] = $prdModel->searchBarCode($search);
+        if($term==='id') $results['id'] = $prdModel->searchId($search);
         if(empty($results)) return $prdModel->all();
         return response()->json($results);
     }
@@ -50,17 +51,19 @@ class StorageController extends Controller
         ], 500);
         }
     }
-    public function update($id, Request $request, ProductsModel $prdModel){
+    public function update($id, Request $request, ProductsModel $prdModel, RolesModel $roles){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{
             $product = $prdModel->find($id);
-            $bcode = $product['bar_code'];
-            if($bcode != $prdModel->EAN13Validation($bcode))
-                return response()->json([
-                    'status' => 500,
-                    'data' => 'Erro, código de barras não validado!! - ManagerController'
-                ], 500);
+            if($request['bar_code']){
+                $bcode = $product['bar_code'];
+                if($bcode != $prdModel->EAN13Validation($bcode))
+                    return response()->json([
+                        'status' => 500,
+                        'data' => 'Erro, código de barras não validado!! - ManagerController'
+                    ], 500);
+            }
             if($product->update($request->all())) 
                 return response()->json([
                     "status" => 200,

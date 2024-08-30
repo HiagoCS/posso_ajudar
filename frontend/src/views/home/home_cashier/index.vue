@@ -18,32 +18,73 @@
               </span>
               <searchComponent placeholder="Código de Barras" search-term="bar_code" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
               <searchComponent placeholder="Código Reduzido" search-term="sm_code" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
-              <searchComponent placeholder="Produto" search-term="name" @result="(resul) =>{ this.rawproducts.push(resul)}"></searchComponent>
+              <searchComponent placeholder="Produto" search-term="name" @result="(resul) =>{this.rawproducts.push(resul)}"></searchComponent>
             </div>
           </div>
           <div class="d-flex flex-row cashier-table product-table-container">
+            <span class="spinner" >
+                  <font-awesome-icon icon="spinner" spin />
+                </span>
             <div class="table-wrapper">
               <table class="product-table">
               <thead style="font-size: 20px;">
                 <tr>
                   <th>#</th>
                   <th>Cód. Reduzido</th>
-                  <th>Cód. Barra</th>
                   <th>Produto</th>
                   <th>Descrição</th>
                   <th>R$</th>
                   <th>Quant.</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody style="font-size: 15px;">
-              <tr v-for="(product, index) in products" :key="index" >
+                
+              <tr v-for="(product, index) in products" :key="index">
                 <td>{{ index + 1 }}</td>
                 <td>{{ product.sm_code }}</td>
-                <td>{{ product.bar_code }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
-                <td>{{ product.value * product.quantity}}</td>
+                <td class="value">
+                  
+                <span :class="`${index}`">
+                  {{  (product.value * product.quantity).toFixed(2) }}
+                </span>
+                <input
+                  type="number" 
+                  v-model.number="product.value" 
+                  @blur="stopEditing(product, index)" 
+                  @focusout="stopEditing(product, index)"
+                  @keyup.enter="stopEditing(product, index)"
+                  :class="`form-control ${index}`"
+                />
+              </td>
                 <td>{{ product.quantity }}</td>
+                <td>
+                  <div class="d-flex col-12 justify-content-between flex-row actions">
+                    <span 
+                      :class="`btn ${product.quantity < product.product_amount ? 'btn-primary' : 'btn-primary disabled'} col-3`" 
+                      @click="()=>{this.rawproducts.push(product)}">
+                    <font-awesome-icon icon="plus"/>
+                  </span>
+                  <span 
+                    :class="`btn ${product.quantity > 1 ? 'btn-secondary' : 'btn-secondary disabled'} col-3 `"
+                    @click="()=>{this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === product.id), 1);}">
+                    <font-awesome-icon icon="minus"/>
+                  </span>
+                  <span class="d-flex justify-content-center align-items-center btn btn-warning col-3" @click="()=>{if(!product.editing)startEditing(product, index);else stopEditing(product, index);}">
+                    <font-awesome-icon icon="r"/>
+                    <font-awesome-icon icon="dollar-sign"/>
+                  </span>
+                  <span class="btn btn-danger col-3" @click="()=>{
+                      for(let i = this.rawproducts.length - 1; i >= 0; i--) {
+                          if(this.rawproducts[i].id === product.id)this.rawproducts.splice(i, 1);
+                      }
+                  }">
+                    <font-awesome-icon icon="ban"/>
+                  </span>
+                  </div>
+                </td>
               </tr>
             </tbody>
             </table>
@@ -81,6 +122,47 @@ import Swal from 'sweetalert2';
 export default{
   components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent},
   methods:{
+    startEditing(product, index) {
+      this.products[index].editing = true;
+      $(`span.${index}`).css("display","none");
+      $(`input.form-control.${index}`).css("display","flex");
+      this.refreshKey++;
+          this.$forceUpdate();
+      product.new_value = product.new_value || product.value;
+    },
+    async stopEditing(product) {
+       
+       this.$forceUpdate();
+      try{
+        if(product.value) {
+        axios.post(`/manager/products/update/${product.id}`,{"value":product.value})
+        .then(() => {
+          const index = this.rawproducts.findIndex(raw => raw.id === product.id);
+          this.rawproducts.forEach(async(raw, index) =>{
+            
+            if(raw.id==product.id)
+            this.rawproducts[index].status = "0";
+          });
+          $(".spinner").addClass('active');
+          this.rawproducts.forEach(async (raw, index) =>{
+            const {data} = await axios.get(`/manager/products/search/id/${raw.id}`);
+            this.rawproducts[index].value = data.id.value;
+          });
+          console.log('this.rawproducts',this.rawproducts);
+          $(`span.${index}`).css("display","flex");
+          $(`input.form-control.${index}`).css("display","none");
+          this.rawproducts.forEach(async (raw, index) =>{
+            if(raw.id==product.id)
+              await setTimeout(()=>{$(".spinner.active").removeClass('active');}, 800);
+              await setTimeout(()=>{this.rawproducts[index].status = "1"}, 800);
+              
+          });
+        }).catch(err => console.log(err));
+      }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     validateCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
@@ -104,10 +186,11 @@ export default{
     async finalize(){
 
       const prdArray = this.products.map(product => {
-      return {
-        id: product.id,
-        qunt: product.quantity
-      };
+        
+        return {
+          id: product.id,
+          qunt: product.quantity
+        }
     });
       if (!this.pgmethod.id) {
         document.querySelector('.pg').style.borderColor = 'red';
@@ -141,6 +224,7 @@ export default{
         this.client.cpf = null; // Barrar o envio se o CPF não for fornecido
       }
       }
+
       const request = {
         "total_value":this.total_value.toFixed(2),
         "id_pg_method":this.pgmethod.id===undefined?null:this.pgmethod.id,
@@ -150,9 +234,33 @@ export default{
         },
         "products": prdArray
       }
-      const {data, status} = await axios.post('/cashier/sale',request);
+      try {
+        if(prdArray.length<=0) return;
+        const {data, status} = await axios.post('/cashier/sale',request);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Sucesso!',
+          text: 'Compra Finalizada!',
+          confirmButtonText: 'OK'
+        });
+        
+        // Limpa os dados após sucesso
+        this.rawproducts = [];
+        this.client = {};
+        this.pgmethod = {};
+        this.refreshKey++;
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Ocorreu um erro ao enviar os dados.',
+          confirmButtonText: 'OK'
+        });
+        
+        console.error('Erro na requisição', error);
+      }
       
-      console.log("response", data);
     }
   },
   data(){
@@ -163,28 +271,42 @@ export default{
         count: 30,
         rawproducts: [],
         client:{},
-        pgmethod:{}
+        pgmethod:{},
+        editIndex: [],
+        editPrd:false,
+        refreshKey: 0,
+        isLoading: true
     }
   },
   
   computed: {
     total_value() {
+      this.refreshKey;
       return this.products.reduce((acc, product) => {
-        return acc + (product.value * product.quantity);
+        const value = product.new_value || product.value; 
+        return acc + (value * product.quantity);
       }, 0);
     },
     products() {
       const productMap = new Map();
       this.rawproducts.forEach(product => {
-        const key = `${product.bar_code}-${product.sm_code}-${product.name}`;
-        if (productMap.has(key)) {
-          productMap.get(key).quantity += 1;
-        } else {
-          productMap.set(key, {
-            ...product,
-            quantity: 1
-          });
+        if (product.status !== "0") {
+          const key = `${product.bar_code}-${product.sm_code}-${product.name}`;
+          if (productMap.has(key)) {
+            const existingProduct = productMap.get(key);
+            existingProduct.quantity += 1;
+            // Mantém o new_value se o produto já tiver sido editado
+            existingProduct.new_value = existingProduct.new_value || product.new_value;
+          } else {
+            productMap.set(key, {
+              ...product,
+              quantity: 1,
+              editing: false, // Novo campo para controlar a edição
+              new_value: product.new_value || null
+            });
+          }
         }
+        
       });
       return Array.from(productMap.values());
     }

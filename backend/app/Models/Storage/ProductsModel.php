@@ -21,7 +21,11 @@ class ProductsModel extends Model
       ];
 
     public $timestamps = false;
-
+    public function searchId($search){
+        return $this->where(function ($query) use($search){
+            $query->find($search);
+        })->get()->first();
+    }
     public function searchName($search){
         return $this->where(function ($query) use($search){
             $query->orWhere("name", "like", "%".$search."%")->orderBy("name");
