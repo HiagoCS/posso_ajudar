@@ -26,68 +26,32 @@
                   <font-awesome-icon icon="spinner" spin />
                 </span>
             <div class="table-wrapper">
-              <table class="product-table">
-              <thead style="font-size: 20px;">
-                <tr>
-                  <th>#</th>
-                  <th>Cód. Reduzido</th>
-                  <th>Produto</th>
-                  <th>Descrição</th>
-                  <th>R$</th>
-                  <th>Quant.</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody style="font-size: 15px;">
-                
-              <tr v-for="(product, index) in products" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>{{ product.sm_code }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td class="value">
-                  
-                <span :class="`${index}`">
-                  {{  (product.value * product.quantity).toFixed(2) }}
-                </span>
-                <input
-                  type="number" 
-                  v-model.number="product.value" 
-                  @blur="stopEditing(product, index)" 
-                  @focusout="stopEditing(product, index)"
-                  @keyup.enter="stopEditing(product, index)"
-                  :class="`form-control ${index}`"
-                />
-              </td>
-                <td>{{ product.quantity }}</td>
-                <td>
-                  <div class="d-flex col-12 justify-content-between flex-row actions">
-                    <span 
-                      :class="`btn ${product.quantity < product.product_amount ? 'btn-primary' : 'btn-primary disabled'} col-3`" 
-                      @click="()=>{this.rawproducts.push(product)}">
-                    <font-awesome-icon icon="plus"/>
+              <productsTableComponent  ref="productsTableComponent" :rawproducts="rawproducts"  :products="this.products" @index="(index)=>{this.tbIndex=index}">
+                <div class="d-flex col-12 justify-content-between flex-row ">
+                  <span :class="`btn ${this.products[this.tbIndex].quantity < this.products[this.tbIndex].product_amount ? 'btn-primary' : 'btn-primary disabled'} col-3`"
+                    @click="()=>{this.rawproducts.push(this.products[this.tbIndex])}"
+                  ><font-awesome-icon icon="plus"/>
                   </span>
                   <span 
-                    :class="`btn ${product.quantity > 1 ? 'btn-secondary' : 'btn-secondary disabled'} col-3 `"
-                    @click="()=>{this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === product.id), 1);}">
+                    :class="`btn ${this.products[this.tbIndex].quantity > 1 ? 'btn-secondary' : 'btn-secondary disabled'} col-3 `"
+                    @click="()=>{this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === this.products[this.tbIndex].id), 1);}">
                     <font-awesome-icon icon="minus"/>
                   </span>
-                  <span class="d-flex justify-content-center align-items-center btn btn-warning col-3" @click="()=>{if(!product.editing)startEditing(product, index);else stopEditing(product, index);}">
+                  <span class="d-flex justify-content-center align-items-center btn btn-warning col-3" @click="()=>{if(!this.products[this.tbIndex].editing)startEditing(this.products[this.tbIndex], this.tbIndex);else this.$refs.productsTableComponent.stopEditing(this.products[this.tbIndex], this.tbIndex);}">
                     <font-awesome-icon icon="r"/>
                     <font-awesome-icon icon="dollar-sign"/>
                   </span>
                   <span class="btn btn-danger col-3" @click="()=>{
                       for(let i = this.rawproducts.length - 1; i >= 0; i--) {
-                          if(this.rawproducts[i].id === product.id)this.rawproducts.splice(i, 1);
+                          if(this.rawproducts[i].id === this.products[this.tbIndex].id)this.rawproducts.splice(i, 1);
                       }
                   }">
                     <font-awesome-icon icon="ban"/>
                   </span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            </table>
+                </div>
+                               
+                    
+              </productsTableComponent>
             </div>
           </div>
           <div class="d-flex flex-row cashier-table act-footer">
@@ -117,10 +81,11 @@ import logoComponent from '@/components/vue/logoComponent.vue';
 import searchComponent from "@/components/vue/productsSearch/index.vue";
 import pgMethodsComponent from "@/components/vue/pgMethodsSearch/index.vue";
 import clientsSearchComponent from "@/components/vue/clientsSearch/index.vue";
+import productsTableComponent from "@/components/vue/productsTable/index.vue";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 export default{
-  components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent},
+  components:{logoComponent, searchComponent, pgMethodsComponent, clientsSearchComponent,productsTableComponent},
   methods:{
     startEditing(product, index) {
       this.products[index].editing = true;
@@ -275,7 +240,8 @@ export default{
         editIndex: [],
         editPrd:false,
         refreshKey: 0,
-        isLoading: true
+        isLoading: true,
+        tbIndex:""
     }
   },
   

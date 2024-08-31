@@ -27,7 +27,7 @@
             {
                 "name":"Visão Geral",
                 "icon":"eye",
-                "to":"/general"
+                "to":"/"
             }
             
             

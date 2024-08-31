@@ -47,64 +47,6 @@
       width: 100%;
       height: 100%;
       overflow-y: auto; /* Adiciona rolagem vertical */
-
-      .product-table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #e6e6e6;
-        font-size: 1.5pc;
-
-        th,
-        td {
-          padding: 10px;
-          border: 1px solid #000;
-          text-align: center;
-          white-space: nowrap; /* Impede a quebra do texto */
-          font-size: clamp(12px, 2vw, 16px); /* Ajusta o tamanho da fonte conforme a largura da tela */
-          text-align: center;
-        }
-
-        th {
-          background-color: #d5e1e9;
-          color: #000;
-          font-weight: bold;
-          position: sticky;
-          top: 0;
-          z-index: 1;
-          
-        }
-
-        td {
-          background-color: #fff;
-          color: #000;
-          font-size: 15px;
-          &:hover {
-            background-color: #f2f2f2;
-          }
-        }
-
-        tbody {
-          td {
-            .actions {
-              /* padding: 1vh 1vw 1vh 1vw !important; */
-              white-space: wrap;
-            }
-          }
-          td.value {
-            .form-control {
-              display: none;
-            }
-          }
-        }
-
-        tbody tr:nth-child(odd) {
-          background-color: #d5e1e9;
-        }
-
-        tbody tr:nth-child(even) {
-          background-color: #e6e6e6;
-        }
-      }
     }
   }
 
