@@ -1,0 +1,140 @@
+.container-fluid{
+  display: flex;
+  flex-direction: column;
+  
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  .footer{
+    width: 90%;
+    height: 20vh;
+    margin-top: 1pc;
+    border-radius: 5px;
+    .card-product{
+      padding: 1vh 1vw 1vh 1vw;
+      background-color: #ddd;
+      margin: 5px;
+      border-radius: 5px;
+      border: 2px black solid;
+      .bar-code{
+        p{
+          font-family: 'Quicksand-Regular-Oblique';
+        }
+      } 
+      .title{
+        .name{
+          width: 100%; /* Defina a largura máxima do texto */
+          white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+          overflow: hidden; /* Esconde o texto que ultrapassa o limite de largura */
+          text-overflow: ellipsis; 
+          font-family: 'Quicksand-Bold-Oblique';
+        }
+        .id{
+          font-family: 'Quicksand-Bold';
+        }        
+      }
+      .details{
+        width: 100%; /* Defina a largura máxima do texto */
+          white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+          overflow: hidden; /* Esconde o texto que ultrapassa o limite de largura */
+          text-overflow: ellipsis; 
+          font-family: 'Quicksand-Bold-Oblique';
+          .sm_code{
+            font-family: 'Quicksand-Bold';
+          }
+          .amount{
+            color:rgb(218, 61, 55);
+            font-family: 'Quicksand-Bold';
+          }
+          .value{
+            color:rgb(50, 192, 50);
+            font-family: 'Quicksand-Bold';
+          }
+      }
+      
+      .description{
+        height: 100px;
+        overflow: auto;
+      }
+      .actions{
+        height: 100%;
+      }
+    }
+    
+  }
+  .logo-container {
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+  }
+  .table-container{
+    margin-top: 70px; /* Height of the logo component plus some spacing */
+    width: 90%;
+    height: 50vh;
+    min-height: 300px;
+    display: flex;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    .action-menu-container{
+      .action-button {
+        cursor: pointer;
+/*         margin-right: 8px; */
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff; /* Blue color for the icons */
+/*         padding: 8px; */
+        border-radius: 5px;
+        transition: background-color 0.3s;
+
+        &.gear-button{
+          margin-right: 0;
+          &.active{
+            display: none;
+          }
+          
+        }
+        &:hover {
+          background-color: #0056b3; /* Darker blue color on hover */
+        }
+      }
+      .action-menu{
+          display:none;
+          &.active{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* padding: 10px; */
+            z-index: 1000;
+            right: 0;
+            top: 30vh;
+            width: 115px;
+          }
+
+        .action-button {
+          margin: 0;
+          /* Space between buttons */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 30px;
+          width: 30px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

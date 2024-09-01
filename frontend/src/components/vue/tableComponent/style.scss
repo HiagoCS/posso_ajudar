@@ -1,0 +1,33 @@
+
+.product-table {
+    width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  thead {
+    background-color: #f2f2f2;
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover{
+      *{
+        background-color: $background-blue-nav;
+        border-color: $background-blue-nav;
+      }
+    }
+  }
+  }
