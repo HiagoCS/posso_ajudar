@@ -12,6 +12,7 @@ export const pt_BR = {
         roles:{
             manager: "gerente",
             cashier: "caixa",
-            bar: "copa"
+            bar: "copa",
+            "products - general":"Produtos - Geral"
         }
 }

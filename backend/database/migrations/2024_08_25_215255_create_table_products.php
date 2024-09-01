@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string("description");
             $table->string("value");
             $table->string("product_amount");
-            $table->string("status");
+            $table->boolean("status")->default(1);
             $table->timestamps();
         });
     }

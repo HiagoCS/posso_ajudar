@@ -47,11 +47,6 @@
 <script>
 import axios from 'axios';
     export default{
-      watch:{
-        products(){
-          console.log(this.products);
-        }
-      },
         props:['products', 'rawproducts'],
         methods:{
           async stopEditing(product) {

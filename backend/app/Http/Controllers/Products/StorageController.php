@@ -14,7 +14,13 @@ class StorageController extends Controller
     public function index(Request $request, ProductsModel $prdModel, RolesModel $roles){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
-        return response()->json($prdModel->get()->all());
+        $products = $prdModel->get()->all();
+        return response()->json($products); 
+        /* $array = [];
+        foreach($products as $prd){
+            if($prd['id'] == 2) return response()->json($array); 
+            array_push($array, $prd);
+        } */
     }
     public function search($term, $search, ProductsModel $prdModel){
         /* $search = $request->all(); */
