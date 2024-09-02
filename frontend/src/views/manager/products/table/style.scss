@@ -7,7 +7,7 @@
   padding: 0;
   .footer{
     width: 90%;
-    height: 20vh;
+    height: 23vh;
     margin-top: 1pc;
     border-radius: 5px;
     .card-product{
@@ -58,6 +58,10 @@
       }
       .actions{
         height: 100%;
+        span.disabled{
+          opacity: 50%;
+          
+        }
       }
     }
     

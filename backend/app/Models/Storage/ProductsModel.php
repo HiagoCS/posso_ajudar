@@ -23,22 +23,25 @@ class ProductsModel extends Model
     public $timestamps = false;
     public function searchId($search){
         return $this->where(function ($query) use($search){
-            $query->find($search);
+            $query->where('status', '!=', '0')->find($search);
         })->get()->first();
     }
     public function searchName($search){
         return $this->where(function ($query) use($search){
-            $query->orWhere("name", "like", "%".$search."%")->orderBy("name");
+            $query->orWhere("name", "like", "%".$search."%")
+            ->where('status', '!=', '0')->orderBy("name");
         })->get()->all();
     }
     public function searchSmallCode($search){
         return $this->where(function ($query) use($search){
-            $query->orWhere("sm_code", "like", "%".$search."%")->orderBy("sm_code");
+            $query->orWhere("sm_code", "like", "%".$search."%")
+            ->where('status', '!=', '0')->orderBy("sm_code");
         })->get()->all();
     }
     public function searchBarCode($search){
         return $this->where(function ($query) use($search){
-            $query->orWhere("bar_code", "like", "%".$search."%")->orderBy("bar_code");
+            $query->orWhere("bar_code", "like", "%".$search."%")
+            ->where('status', '!=', '0')->orderBy("bar_code");
         })->get()->all();
     }
     public function EAN13Validation($bcode){

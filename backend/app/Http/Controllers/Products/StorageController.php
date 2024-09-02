@@ -11,10 +11,10 @@ class StorageController extends Controller
 {
     /* if(!$roles->bossAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"; */
-    public function index(Request $request, ProductsModel $prdModel, RolesModel $roles){
+    public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
-        $products = $prdModel->get()->all();
+        $products = $prdModel->paginate($perpage, ['*'], 'page', $index);
         return response()->json($products); 
         /* $array = [];
         foreach($products as $prd){
@@ -32,17 +32,11 @@ class StorageController extends Controller
         if(empty($results)) return $prdModel->all();
         return response()->json($results);
     }
-    public function insert(Request $request, ProductsModel $prdModel){
+    public function insert(Request $request, ProductsModel $prdModel, RolesModel $roles){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{
             $products = $request->all();
-            $bcode = $products['bar_code'];
-            if($bcode != $prdModel->EAN13Validation($bcode))
-                return response()->json([
-                    'status' => 500,
-                    'data' => 'Erro, código de barras não validado!! - ManagerController'
-                ], 500);
             if($prdModel->create($products)) 
                 return response()->json([
                     "status" => 200,
@@ -84,7 +78,7 @@ class StorageController extends Controller
         ], 500);
         }
     }
-    public function delete($id, ProductsModel $prdModel){
+    public function delete($id,Request $request, ProductsModel $prdModel,  RolesModel $roles){
         if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
         try{

@@ -1,56 +1,98 @@
   <template>
     <main class="container-fluid d-flex flex-column align-items-center">
       <header class="logo-container">
-        <logoComponent></logoComponent>
+        <logoComponent module="products - general"></logoComponent>
       </header>
       <div class="table-container">
-        <tableComponent :products="this.products" @selected="(product) =>{this.product=product;}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
+        <tableComponent :products="this.products" @selected="(product) =>{selected(product)}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
       </div>
       <div class="d-flex flex-row justify-content-center col-12 footer">
           <div class="d-flex flex-column col-3 card-product">
-            <div class="d-flex flex-row justify-content-around title">
+            <div v-if="!this.editingPrd.status" class="d-flex flex-row justify-content-around title">
               <p class="name" title="Nome">{{this.product.name ? this.product.name : this.rawproduct.name}} </p>
               <p class="id" title="ID">#{{this.product.id ? this.product.id: this.rawproduct.id}}</p>
             </div>
-            <div class="d-flex col-12 justify-content-between flex-row details">
+            <div v-if="this.editingPrd.status" class="d-flex col-11 flex-row align-items-center justify-content-around title">
+              <div class="col-10">
+                <input type="text" v-model="editingPrd['name']" class="col-10 form-control">
+              </div>
+              <div class="d-flex flex-row justify-content-end col-3">
+                <p class="id" title="ID">#{{this.product.id ? this.product.id: this.rawproduct.id}}</p>
+              </div>              
+            </div>
+            <div 
+            v-if="!this.editingPrd.status"
+            class="d-flex col-12 justify-content-between flex-row details">
               <p class="sm_code" title="Código Reduzido">{{this.product.sm_code? this.product.sm_code:this.rawproduct.sm_code}}</p>
               <p>-</p>
               <p class="value" title="Valor do Produto">R${{this.product.value? this.product.value:this.rawproduct.value}}</p>
               <p>-</p>
               <p class="amount" title="Quantidade Total">{{ this.product.product_amount? this.product.product_amount:this.rawproduct.product_amount }} UN</p>
             </div>
-            <div class="d-flex col-12 justify-content-between flex-row bar-code">
+            <div 
+            v-if="this.editingPrd.status"
+            class="d-flex col-12 justify-content-start flex-row details">
+              <div class="col-5">
+                <input type="text" v-model="editingPrd['sm_code']" class="col-5 form-control">
+              </div>
+              <div class="col-3">
+                <input type="text" v-model="editingPrd['value']" class="col-3 form-control">
+              </div>
+              <div class="col-3">
+                <input type="text" v-model="editingPrd['product_amount']" class="col-3 form-control">
+              </div>
+            </div>
+            <div 
+            v-if="!this.editingPrd.status"
+            class="d-flex col-12 justify-content-between flex-row bar-code">
               <p title="Código de Barras">{{ this.product.bar_code? this.product.bar_code:this.rawproduct.bar_code }}</p>
+            </div>
+            <div 
+            v-if="this.editingPrd.status"
+            class="d-flex col-12 justify-content-between flex-row bar-code">
+            <input type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
             </div>
           </div>
           <div class="d-flex flex-column col-4 card-product">
             <div class="d-flex flex-row title">
               <p>Descrição do Produto:</p>
             </div>
-            <div class="d-flex flex-row flex-wrap description">
+            <div v-if="!this.editingPrd.status" 
+            class="d-flex flex-row flex-wrap description">
               <text>{{ this.product.description? this.product.description: this.rawproduct.description }}</text>
             </div>
+            <div v-if="this.editingPrd.status" 
+            class="d-flex flex-row flex-wrap form-outline description">
+                <textarea v-model="editingPrd['description']" class="form-control" id="bar_code" rows="4" placeholder="Código de Barras"></textarea>
+            </div> 
           </div>
           <div class="d-flex flex-column col-4 card-product">
             <div class="d-flex align-items-center justify-content-between flex-row col-12 actions">
-              <span 
-              class="btn btn-primary"
+              <span
+              :class="`btn btn-primary ${this.disabled.plus}`"
               @click="plusProduct">
-                <font-awesome-icon icon="plus"></font-awesome-icon>
+                <font-awesome-icon v-if="this.product.id" icon="plus"></font-awesome-icon>
+                <font-awesome-icon v-if="!this.product.id"icon="arrow-left"></font-awesome-icon>
               </span>
               <span 
-              class="btn btn-primary"
+              :class="`btn btn-primary ${this.disabled.minus}`"
               @click="minusProduct">
-                <font-awesome-icon icon="minus"></font-awesome-icon>
+                <font-awesome-icon v-if="this.product.id"icon="minus"></font-awesome-icon>
+                <font-awesome-icon v-if="!this.product.id"icon="arrow-right"></font-awesome-icon>
               </span>
-              <span class="btn btn-primary">
-                <font-awesome-icon icon="pen-to-square"></font-awesome-icon>
-              </span>
-              <span class="btn btn-primary">
+              <span 
+              :class="`btn btn-primary ${this.disabled.copy}`"
+              @click="copyProduct(!this.editingPrd.status)">
                 <font-awesome-icon icon="copy"></font-awesome-icon>
               </span>
               <span 
-              class="btn btn-primary"
+              :class="`btn btn-primary ${this.disabled.edit}`"
+              @click="editProduct(!this.editingPrd.status)">
+                <font-awesome-icon v-if="!this.editingPrd.status" icon="pen-to-square"></font-awesome-icon>
+                <font-awesome-icon v-if="this.editingPrd.status" icon="check"></font-awesome-icon>
+              </span>
+              <span 
+              :class="`btn btn-primary ${this.disabled.ban}`"
               @click="banProduct">
                 <font-awesome-icon icon="ban"></font-awesome-icon>
               </span>
@@ -67,42 +109,189 @@ import FloatingVue from 'floating-vue';
 export default{
   components:{logoComponent, tableComponent, FloatingVue},
   methods:{
+    async selected(product){
+      if(this.product.id!=product.id){
+        this.product=product;
+        this.disabled={plus:'', minus:'', edit:'', copy:'',ban:''}
+      }else if(this.product.id==product.id){
+        this.product={};
+        this.disabled = {
+        plus: this.page==1?'disabled' :'',
+        ban:'disabled',
+        edit:'disabled',
+        copy:'disabled',
+      }
+      }
+    },
+    async editProduct(status){
+      this.editingPrd.status=status
+      if(this.editingPrd.status){
+        this.disabled = {
+        plus:'disabled',
+        minus:'disabled',
+        copy:'disabled',
+      }
+        const keys = Object.keys(this.product);
+        keys.forEach(key =>{
+          this.editingPrd[key] = this.product[key]
+        })
+      }else if(!this.editingPrd.status && this.product.id != '0'){
+        delete this.editingPrd['status'];
+        const {data} = await axios.post('manager/products/update/'+this.product.id,this.editingPrd);
+        this.disabled = {
+          plus:'',
+          minus:'',
+          copy:'',
+        }
+        this.editingPrd.status =false;
+        this.product = data.data
+        return this.$swal.fire({
+          title: `Produto #${data.data.id}\n${data.data.name}\nAtualizado com sucesso!`,
+          icon:'success',
+          confirmButtonText: 'OK',
+        });
+        
+      }
+      else {
+        delete this.editingPrd['status'];
+        const {data} = await axios.post('manager/products/insert/',this.editingPrd);
+        this.disabled = {
+          plus:'',
+          minus:'',
+          copy:'',
+        }
+        this.editingPrd.status =false;
+        this.product=data.data;
+        this.paginate(parseInt(this.currentpage), 7)
+        return this.$swal.fire({
+          title: `Produto \n${data.data.name}\nCriado com sucesso!`,
+          icon:'success',
+          confirmButtonText: 'OK',
+        });
+        
+      }
+
+    },
+    async copyProduct(status){
+      this.editingPrd.status=status
+      if(this.editingPrd.status){
+        this.disabled = {
+        plus:'disabled',
+        minus:'disabled',
+        copy:'disabled',
+      }
+        this.product.id = 0;
+        const keys = Object.keys(this.product);
+        keys.forEach(key =>{
+          this.editingPrd[key] = this.product[key]
+        })
+      }
+
+    },
     async plusProduct(){
+      if(!this.product.id) {
+        this.currentpage = parseInt(this.currentpage)-1
+        if(this.currentpage==1) this.disabled.plus='disabled';
+        if(this.currentpage<this.lastpage) this.disabled.minus='';
+        return this.paginate(parseInt(this.currentpage), 7)
+      }
       this.product.product_amount++
       const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
       return console.log('plus',data)
     },
     async minusProduct(){
+      if(!this.product.id) {
+        this.currentpage = parseInt(this.currentpage)+1
+        if(this.currentpage>1) this.disabled.plus='';
+        if(this.currentpage===this.lastpage) this.disabled.minus='disabled';
+        return this.paginate(parseInt(this.currentpage), 7)
+      }
       this.product.product_amount--
       const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
       return console.log('minus',data)
     },
     async banProduct(){
-      //Usar chat bct para criar swal de confirmação, OK, NÃO, DESATIVAR APENAS
-      const {data} = await axios.delete('manager/products/delete/'+this.product.id);
-      return console.log('delete',data)
+      if(this.editingPrd.status){
+        this.disabled = {
+          plus:'',
+          minus:'',
+          copy:'',
+        }
+        return this.editingPrd.status =false;
+      }
+      const result = await this.$swal.fire({
+        title: 'Deseja excluir o produto ou só desativá-lo do sistema?',
+        icon: 'warning',
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: this.product.status===0?'Ativar':'Excluir',
+        denyButtonText: this.product.status===0?'Excluir':'Desativar',
+        cancelButtonText: 'Cancelar'
+      });
+      if (result.isConfirmed) {
+        // Código para excluir o produto
+        if(this.product.status===0){
+          const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '1' });
+          this.product.status = 1;
+          return this.$swal.fire({
+          title: `Produto #${data.data.id}\n${data.data.name}\nAtivado com sucesso!`,
+          icon:'success',
+          confirmButtonText: 'OK',
+        });
+        }
+        else{
+          const { data } = await axios.delete('manager/products/delete/' + this.product.id);
+          this.product = {};
+          this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === data.data.id), 1);
+          return this.$swal.fire({
+          title: `Produto #${data.data.id}\n${data.data.name}\nDeletado com sucesso!`,
+          icon:'success',
+          confirmButtonText: 'OK',
+        });
+        }
+      } else if (result.isDenied) {
+        // Código para desativar o produto
+        if(this.product.status===0){
+          const { data } = await axios.delete('manager/products/delete/' + this.product.id);
+          this.product = {};
+          const response = await axios.get('manager/products')
+          this.rawproducts = response.data;
+          this.$forceUpdate();
+          return this.$swal.fire({
+            title: `Produto ${data.data.name}#${data.data.id} deletado com sucesso!`,
+            icon:'success',
+            confirmButtonText: 'OK',
+          });
+        }
+        else{
+          const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '0' });
+          this.product.status = 0;
+          return this.$swal.fire({
+            title: `Produto #${data.data.id}\n${data.data.name}\nDesativado com sucesso!`,
+            icon:'success',
+            confirmButtonText: 'OK',
+          });
+        }
+      } else {
+        return this.$swal.fire({
+          title: `Ação Cancelada!`,
+          icon:'error',
+          confirmButtonText: 'OK',
+        });
+      }
     },
-    toggleMethod(product, active){
-      if(!active){
-        this.activeProduct=true;
-        $(`.gear-button`).removeClass('active');
-        $(`.action-menu`).removeClass('active');
-        $(`#${product.id}.gear-button`).addClass('active');
-        $(`#${product.id}.action-menu`).addClass('active');
-        /* $(`.action-menu#${product.id}`).css('display', 'flex'); */    
-      }
-      else{
-        this.activeProduct=false;
-        $(`#${product.id}.gear-button`).removeClass('active');
-        $(`#${product.id}.action-menu`).removeClass('active');
-      }
+    async paginate(index,$perpage){
+      console.log(this.currentpage)
+      const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
+      this.rawproducts = data.data;
+      this.currentpage = data.current_page;
+      this.lastpage = data.last_page
+      console.log(data);
     }
   },
   async created(){
-    const {data} = await axios.get('manager/products')
-    this.rawproducts = data;
-
-    console.log(this.products);
+    if(this.currentpage==1) this.disabled.plus='disabled';
+    this.paginate(this.currentpage, 7);
   },
   computed:{
     products(){
@@ -115,8 +304,7 @@ export default{
         } else {
             productMap.set(key, {
               ...product,
-              quantity: 1,
-              active:""
+              quantity: 1
             });
           }
       });
@@ -127,7 +315,17 @@ export default{
     return{
       rawproducts:[],
       rawproduct:{},
-      product:{}
+      product:{},
+      editingPrd:{status: false},
+      disabled:{
+        plus:'',
+        minus:'',
+        edit:'disabled',
+        copy:'disabled',
+        ban:'disabled'
+      },
+      currentpage:1,
+      lastpage:0
     }
   }
 }

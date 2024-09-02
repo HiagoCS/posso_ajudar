@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->
 Route::middleware('auth:sanctum')->
     prefix('manager')->group(function(){
         Route::prefix('products')->group(function(){
-            Route::get('/', 'App\Http\Controllers\Products\StorageController@index');
+            Route::get('/{index}/{perpage}', 'App\Http\Controllers\Products\StorageController@index');
             Route::post('/insert', 'App\Http\Controllers\Products\StorageController@insert');
             Route::post('/update/{id}', 'App\Http\Controllers\Products\StorageController@update');
             Route::delete('/delete/{id}', 'App\Http\Controllers\Products\StorageController@delete');

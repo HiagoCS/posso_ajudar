@@ -1,5 +1,5 @@
 <template>
-    <table class="product-table table col-12">
+    <table class="product-table col-12">
           <thead>
             <tr>
               <th> # </th>
@@ -12,11 +12,11 @@
             </tr>
           </thead>
         <tbody>
-          <tr v-for="(product, index) in this.products" :key="index"  
+          <tr v-for="(product, index) in this.products" :class="`${this.selected} ${product.id}`" :key="index"  
             @mouseover="$emit('hovered', product)" 
             @mouseleave="$emit('hovered', {})" 
             @click="$emit('selected', product)">
-            <td>{{ index + 1 }}</td>
+            <td>{{ product.id }}</td>
             <td>{{ product.bar_code }}</td>
             <td>{{ product.sm_code }}</td>
             <td>{{ product.name }}</td>
@@ -30,9 +30,6 @@
 <style src="./style.scss" lang="scss" scoped></style>
 <script>
     export default{
-        created(){
-            console.log(this.products);
-        },
         props: {
             products: {
                 type: Array,

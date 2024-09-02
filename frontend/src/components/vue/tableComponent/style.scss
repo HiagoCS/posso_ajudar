@@ -17,6 +17,9 @@
   
   thead {
     background-color: #f2f2f2;
+    width: 100%;
+    display: table; /* Garantir que o thead ocupe toda a largura */
+    table-layout: fixed;
   }
 
   tbody {
@@ -29,5 +32,17 @@
         border-color: $background-blue-nav;
       }
     }
+    tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed; /* Mantém a largura das colunas fixa */
+      height: calc(100% / 7); /* Altura mínima para comportar 7 itens */
+    }
+    display: block; 
+    height: calc(100% - 45px);
+    width: 100%;
   }
+  display: block;
+  
+  height: 100%;
   }
