@@ -1,9 +1,13 @@
   <template>
     <main class="container-fluid d-flex flex-column align-items-center">
-      <header class="logo-container">
+      <header class="logo-container" >
         <logoComponent module="products - general"></logoComponent>
       </header>
-      <div class="table-container">
+      <br>
+      <div class="d-flex col-10 flex-row justify-content-end">
+          <span class="btn btn-primary" @click="newProduct">Novo Produto</span>
+        </div>
+      <div class="d-flex flex-column table-container">
         <tableComponent :products="this.products" @selected="(product) =>{selected(product)}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
       </div>
       <div class="d-flex flex-row justify-content-center col-12 footer">
@@ -14,7 +18,7 @@
             </div>
             <div v-if="this.editingPrd.status" class="d-flex col-11 flex-row align-items-center justify-content-around title">
               <div class="col-10">
-                <input type="text" v-model="editingPrd['name']" class="col-10 form-control">
+                <input type="text" placeholder="Nome do Produto" title="Nome" v-model="editingPrd['name']" class="col-10 form-control">
               </div>
               <div class="d-flex flex-row justify-content-end col-3">
                 <p class="id" title="ID">#{{this.product.id ? this.product.id: this.rawproduct.id}}</p>
@@ -33,13 +37,13 @@
             v-if="this.editingPrd.status"
             class="d-flex col-12 justify-content-start flex-row details">
               <div class="col-5">
-                <input type="text" v-model="editingPrd['sm_code']" class="col-5 form-control">
+                <input type="text"  placeholder="Cód. Redu" title="Código Reduzido"  v-model="editingPrd['sm_code']" class="col-5 form-control">
               </div>
               <div class="col-3">
-                <input type="text" v-model="editingPrd['value']" class="col-3 form-control">
+                <input type="text"  placeholder="R$0" title="(R$) Preço" v-model="editingPrd['value']" class="col-3 form-control">
               </div>
               <div class="col-3">
-                <input type="text" v-model="editingPrd['product_amount']" class="col-3 form-control">
+                <input type="text" placeholder="UN" title="Quantidade do Produto" v-model="editingPrd['product_amount']" class="col-3 form-control">
               </div>
             </div>
             <div 
@@ -50,7 +54,7 @@
             <div 
             v-if="this.editingPrd.status"
             class="d-flex col-12 justify-content-between flex-row bar-code">
-            <input type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
+            <input placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
             </div>
           </div>
           <div class="d-flex flex-column col-4 card-product">
@@ -63,7 +67,7 @@
             </div>
             <div v-if="this.editingPrd.status" 
             class="d-flex flex-row flex-wrap form-outline description">
-                <textarea v-model="editingPrd['description']" class="form-control" id="bar_code" rows="4" placeholder="Código de Barras"></textarea>
+                <textarea v-model="editingPrd['description']" class="form-control" id="bar_code" rows="4" placeholder="Descrição do Produto"></textarea>
             </div> 
           </div>
           <div class="d-flex flex-column col-4 card-product">
@@ -81,18 +85,18 @@
                 <font-awesome-icon v-if="!this.product.id"icon="arrow-right"></font-awesome-icon>
               </span>
               <span 
-              :class="`btn btn-primary ${this.disabled.copy}`"
+              :class="`btn btn-secondary ${this.disabled.copy}`"
               @click="copyProduct(!this.editingPrd.status)">
                 <font-awesome-icon icon="copy"></font-awesome-icon>
               </span>
               <span 
-              :class="`btn btn-primary ${this.disabled.edit}`"
+              :class="`btn ${this.editingPrd.status?'btn-success':'btn-warning'} ${this.disabled.edit}`"
               @click="editProduct(!this.editingPrd.status)">
                 <font-awesome-icon v-if="!this.editingPrd.status" icon="pen-to-square"></font-awesome-icon>
                 <font-awesome-icon v-if="this.editingPrd.status" icon="check"></font-awesome-icon>
               </span>
               <span 
-              :class="`btn btn-primary ${this.disabled.ban}`"
+              :class="`btn btn-danger ${this.disabled.ban}`"
               @click="banProduct">
                 <font-awesome-icon icon="ban"></font-awesome-icon>
               </span>
@@ -121,6 +125,16 @@ export default{
         edit:'disabled',
         copy:'disabled',
       }
+      }
+    },
+    async newProduct(status){
+      this.editingPrd.status=status
+      if(this.editingPrd.status){
+        this.disabled = {
+          plus:'disabled',
+          minus:'disabled',
+          copy:'disabled',
+        }
       }
     },
     async editProduct(status){
@@ -212,11 +226,24 @@ export default{
     },
     async banProduct(){
       if(this.editingPrd.status){
-        this.disabled = {
-          plus:'',
-          minus:'',
-          copy:'',
+        if(this.product.id){
+          this.disabled = {
+            plus:'',
+            minus:'',
+            copy:'',
+            ban:'',
+            edit:''
+          }
+        }else{
+          this.disabled = {
+            plus:'',
+            minus:'',
+            copy:'disabled',
+            ban:'disabled',
+            edit:'disabled'
+          }
         }
+        
         return this.editingPrd.status =false;
       }
       const result = await this.$swal.fire({
