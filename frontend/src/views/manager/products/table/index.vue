@@ -5,14 +5,14 @@
       </header>
       <br>
       <div class="d-flex col-10 flex-row justify-content-end">
-          <span class="btn btn-primary" @click="newProduct">Novo Produto</span>
+          <span class="btn btn-primary" @click="newProduct(!this.edit_status)">Novo Produto</span>
         </div>
       <div class="d-flex flex-column table-container">
         <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
             <font-awesome-icon icon="spinner" spin />
         </span>
         <div v-if="!this.spinner.status">
-          <tableComponent :product="this.product"  :products="this.products" @selected="(product) =>{selected(product)}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
+          <tableComponent :product="this.product"  :products="this.rawproducts" @selected="(product) =>{if(this.edit_status)return;selected(product)}" @hovered="(product) =>{if(this.edit_status)return;this.rawproduct=product;}"> </tableComponent>
         </div>
         <div v-if="this.products.length === 0 
               && !this.spinner.status" 
@@ -22,11 +22,11 @@
       </div>
       <div class="d-flex flex-row justify-content-center col-12 footer">
           <div class="d-flex flex-column col-3 card-product">
-            <div v-if="!this.editingPrd.status" class="d-flex flex-row justify-content-around title">
+            <div v-if="!this.edit_status" class="d-flex flex-row justify-content-around title">
               <p class="name" title="Nome">{{this.product.name ? this.product.name : this.rawproduct.name}} </p>
               <p class="id" title="ID">#{{this.product.id ? this.product.id: this.rawproduct.id}}</p>
             </div>
-            <div v-if="this.editingPrd.status" class="d-flex col-11 flex-row align-items-center justify-content-around title">
+            <div v-if="this.edit_status" class="d-flex col-11 flex-row align-items-center justify-content-around title">
               <div class="col-10">
                 <input id="name" type="text" placeholder="Nome do Produto" title="Nome" v-model="editingPrd['name']" class="col-10 form-control">
               </div>
@@ -35,7 +35,7 @@
               </div>              
             </div>
             <div 
-            v-if="!this.editingPrd.status"
+            v-if="!this.edit_status"
             class="d-flex col-12 justify-content-between flex-row details">
               <p class="sm_code" title="Código Reduzido">{{this.product.sm_code? this.product.sm_code:this.rawproduct.sm_code}}</p>
               <p>-</p>
@@ -44,25 +44,25 @@
               <p class="amount" title="Quantidade Total">{{ this.product.product_amount? this.product.product_amount:this.rawproduct.product_amount }} UN</p>
             </div>
             <div 
-            v-if="this.editingPrd.status"
+            v-if="this.edit_status"
             class="d-flex col-12 justify-content-start flex-row details">
               <div class="col-5">
                 <input id="sm_code" type="text"  placeholder="Cód. Redu" title="Código Reduzido"  v-model="editingPrd['sm_code']" class="col-5 form-control">
               </div>
-              <div class="col-3">
-                <input id="value" type="text"  placeholder="R$0" title="(R$) Preço" v-money3="config"  v-model.lazy="editingPrd['value']" class="col-3 form-control">
+              <div class="col-4">
+                <input id="value" type="number"  placeholder="R$" title="(R$) Preço" v-model.number="editingPrd['value']" class="col-4 form-control">
               </div>
               <div class="col-3">
                 <input id="product_amount" type="text" placeholder="UN" title="Quantidade do Produto" v-model="editingPrd['product_amount']" class="col-3 form-control">
               </div>
             </div>
             <div 
-            v-if="!this.editingPrd.status"
+            v-if="!this.edit_status"
             class="d-flex col-12 justify-content-between flex-row bar-code">
               <p title="Código de Barras">{{ this.product.bar_code? this.product.bar_code:this.rawproduct.bar_code }}</p>
             </div>
             <div 
-            v-if="this.editingPrd.status"
+            v-if="this.edit_status"
             class="d-flex col-12 justify-content-between flex-row bar-code">
             <input id="bar_code" placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
             </div>
@@ -71,11 +71,11 @@
             <div class="d-flex flex-row title">
               <p>Descrição do Produto:</p>
             </div>
-            <div v-if="!this.editingPrd.status" 
+            <div v-if="!this.edit_status" 
             class="d-flex flex-row flex-wrap description">
               <text>{{ this.product.description? this.product.description: this.rawproduct.description }}</text>
             </div>
-            <div v-if="this.editingPrd.status" 
+            <div v-if="this.edit_status" 
             class="d-flex flex-row flex-wrap form-outline description">
                 <textarea v-model="editingPrd['description']" class="form-control" id="description" rows="4" placeholder="Descrição do Produto"></textarea>
             </div> 
@@ -83,27 +83,45 @@
           <div class="d-flex flex-column col-4 card-product">
             <div class="d-flex align-items-center justify-content-between flex-row col-12 actions">
               <span
+              v-if="this.product.id"
               :class="`btn btn-primary ${this.disabled.plus}`"
-              @click="plusProduct">
-                <font-awesome-icon v-if="this.product.id" icon="plus"></font-awesome-icon>
-                <font-awesome-icon v-if="!this.product.id"icon="arrow-left"></font-awesome-icon>
+              @click="plussMethod">
+                <font-awesome-icon icon="plus"></font-awesome-icon>
               </span>
-              <span 
+              <span
+               v-if="!this.product.id"
+              :class="`btn btn-primary ${this.disabled.left}`"
+              @click="this.paginate(parseInt(this.currentpage)-1,7)">
+                <font-awesome-icon icon="arrow-left"></font-awesome-icon>
+              </span>
+              <span
+              v-if="this.product.id"
               :class="`btn btn-primary ${this.disabled.minus}`"
-              @click="minusProduct">
-                <font-awesome-icon v-if="this.product.id"icon="minus"></font-awesome-icon>
-                <font-awesome-icon v-if="!this.product.id"icon="arrow-right"></font-awesome-icon>
+              @click="minussMethod">
+                <font-awesome-icon icon="minus"></font-awesome-icon>
+              </span>
+              <span
+              v-if="!this.product.id"
+              :class="`btn btn-primary ${this.disabled.right}`"
+              @click="this.paginate(parseInt(this.currentpage)+1,7)">
+                <font-awesome-icon icon="arrow-right"></font-awesome-icon>
               </span>
               <span 
               :class="`btn btn-secondary ${this.disabled.copy}`"
-              @click="copyProduct(!this.editingPrd.status)">
+              @click="copyProduct(!this.edit_status)">
                 <font-awesome-icon icon="copy"></font-awesome-icon>
               </span>
-              <span 
-              :class="`btn ${this.editingPrd.status?'btn-success':'btn-warning'} ${this.disabled.edit}`"
-              @click="editProduct(!this.editingPrd.status)">
-                <font-awesome-icon v-if="!this.editingPrd.status" icon="pen-to-square"></font-awesome-icon>
-                <font-awesome-icon v-if="this.editingPrd.status" icon="check"></font-awesome-icon>
+              <span
+              v-if="!this.edit_status"
+              :class="`btn btn-warning ${this.disabled.edit}`"
+              @click="editMethod(!this.edit_status)">
+                <font-awesome-icon icon="pen-to-square"></font-awesome-icon>
+              </span>
+              <span
+              v-if="this.edit_status"
+              :class="`btn btn-success ${this.disabled.check}`"
+              @click="checkMethod(!this.edit_status)">
+                <font-awesome-icon icon="check"></font-awesome-icon>
               </span>
               <span 
               :class="`btn btn-danger ${this.disabled.ban}`"
@@ -121,75 +139,206 @@ import logoComponent from '@/components/vue/logoComponent.vue';
 import tableComponent from  "@/components/vue/tableComponent/index.vue"
 import FloatingVue from 'floating-vue';
 export default{
+  async created(){
+    this.paginate(this.currentpage, 7);
+  },
   components:{logoComponent, tableComponent, FloatingVue},
-  methods:{
-    async selected(product){
-      if(this.product.id!=product.id){
-        this.product=product;
-        this.disabled={plus:'', minus:'', edit:'', copy:'',ban:''}
-      }else if(this.product.id==product.id){
-        this.product={};
-        this.disabled = {
-        plus: this.page==1?'disabled' :'',
-        ban:'disabled',
-        edit:'disabled',
-        copy:'disabled',
+  watch:{
+    product(newValue){
+      if(Object.keys(this.product).length==0){
+        if(this.currentpage==1)
+        this.disabled.left='disabled';
+        if(this.currentpage==this.lastpage)
+        this.disabled.right='disabled';
       }
+    },
+    currentpage(newValue){
+      if(this.currentpage==1)
+        this.disabled.left='disabled';
+      if(this.currentpage==this.lastpage)
+        this.disabled.right='disabled';
+    }
+  },
+  methods:{
+    async enabledAll(){
+        this.disabled.plus=""
+        this.disabled.minus=""
+        this.disabled.edit=""
+        this.disabled.ban=""
+        this.disabled.copy=""
+        this.disabled.left=""
+        this.disabled.right=""
+        this.disabled.check=""
+    },
+    async disabledAll(){
+        this.disabled.plus="disabled"
+        this.disabled.minus="disabled"
+        this.disabled.edit="disabled"
+        this.disabled.ban="disabled"
+        this.disabled.copy="disabled"
+        this.disabled.left="disabled"
+        this.disabled.right="disabled"
+        this.disabled.check="disabled"
+    },
+    async paginate(index,$perpage){
+      this.spinner.status=true;
+      try{
+        this.disabledAll();
+        const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
+        this.rawproducts = data.data;
+        this.currentpage = data.current_page;
+        this.lastpage = data.last_page
+        this.totalpage = data.total
+      }catch(err){
+        console.error('Erro ao carregar produtos:', err);
+      }finally {
+        this.spinner.status=false;
+        this.enabledAll();
+          if(Object.keys(this.product).length==0){
+            if(this.currentpage===1) this.disabled.left='disabled';
+            else this.disabled.left='';
+            if(this.currentpage==this.lastpage || this.products.length==0) this.disabled.right='disabled';
+            else this.disabled.right='';
+            this.disabled.ban="disabled";
+            this.disabled.edit="disabled";
+            this.disabled.copy="disabled";
+            this.disabled.check="disabled";
+          }
+      }
+      
+    },
+    async minussMethod(){
+      if(this.product.product_amount){
+        try{
+          this.disabledAll();
+          this.spinner.status=!this.spinner.status;
+          this.product.product_amount--
+          const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
+        }catch(err){console.log}
+        finally{
+          this.spinner.status=!this.spinner.status;
+          this.enabledAll();
+        }
+      }
+    },
+    async plussMethod(){
+      if(this.product.product_amount){
+        try{
+          this.disabledAll();
+          this.spinner.status=!this.spinner.status;
+          this.product.product_amount++
+          const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
+        }catch(err){console.log}
+        finally{
+          this.spinner.status=!this.spinner.status;
+          this.enabledAll();
+        }
+      }
+    },
+    async selected(product){
+      if(Object.keys(this.product).length==0){
+        this.product=product
+        this.disabled.plus=""
+        this.disabled.minus=""
+        this.disabled.edit=""
+        this.disabled.ban=""
+        this.disabled.copy=""
+      }else{
+        if(this.product.id===product.id){
+          this.product={}
+          if(this.currentpage==1) this.disabled.plus='disabled';
+          else this.disabled.plus='';
+          if(this.lastpage==0||this.currentpage==this.lastpage) this.disabled.minus='disabled';
+          else this.disabled.minus='';
+          this.disabled.edit="disabled"
+          this.disabled.ban="disabled"
+          this.disabled.copy="disabled"
+        }else{
+          this.product=product
+          this.disabled.plus=""
+          this.disabled.minus=""
+          this.disabled.edit=""
+          this.disabled.ban=""
+          this.disabled.copy=""
+        }
       }
     },
     async newProduct(status){
-      this.editingPrd.status=status
-      if(this.editingPrd.status){
-        this.disabled = {
+      this.edit_status=status
+      if(this.edit_status){
+        if(Object.keys(this.product)!=0){
+          this.product={};
+        }
+        this.disabledAll();
+        this.disabled.check=''
+        this.disabled.ban=''
+        this.product_copy=true;
+      }else{
+        this.paginate(this.currentpage, 7)
+        this.edit_status=false;
+      }
+    },
+    async checkMethod(status){
+      this.edit_status=status
+      if(!this.edit_status&&this.product_copy){
+        this.copyProduct(this.edit_status)
+      }else if(!this.edit_status&&!this.product_copy){
+        this.editMethod(this.edit_status)
+      }
+    },
+    async editMethod(status){
+      this.edit_status=status
+      if(this.edit_status){
+          this.disabled = {
           plus:'disabled',
           minus:'disabled',
           copy:'disabled',
+          }
+          this.product_copy = false;
+          const keys = Object.keys(this.product);
+          keys.forEach(key =>{
+            this.editingPrd[key] = this.product[key]
+          });
+      }else if(!this.edit_status&&!this.product_copy){
+        try {
+          this.spinner.status=true;
+          const {data} = await axios.post('manager/products/update/'+this.product.id,this.editingPrd);
+          this.edit_status = false;
+          this.product = data.data
+        } catch (err) {
+          console.log(err)
+        } finally{
+          if(!this.edit_status){
+            this.paginate(this.currentpage,7);
+            this.spinner.status=false;
+          }
         }
       }
     },
-    async editProduct(status){
-      this.editingPrd.status=status
-      if(this.editingPrd.status){
-        this.disabled = {
-        plus:'disabled',
-        minus:'disabled',
-        copy:'disabled',
-      }
+    async copyProduct(status){
+      this.edit_status=status
+      if(this.edit_status){
+        this.disabledAll();
+        this.disabled.check='';
+        this.disabled.ban='';
+        this.product.id = 0;
+        this.product_copy = true;
         const keys = Object.keys(this.product);
         keys.forEach(key =>{
           this.editingPrd[key] = this.product[key]
-        })
-      }else if(!this.editingPrd.status && this.product.id){
-        this.spinner.status=!this.spinner.status;
-        try {
-          delete this.editingPrd['status'];
-          const {data} = await axios.post('manager/products/update/'+this.product.id,this.editingPrd);
-          this.disabled = {
-            plus:'',
-            minus:'',
-            copy:'',
-          }
-          this.editingPrd.status =false;
-          this.product = data.data
-          return this.paginate(parseInt(this.currentpage), 7)
-        } catch (err) {
-          console.error('Erro ao carregar produtos:', err);
-        }finally{
-          this.spinner.status=!this.spinner.status;
-        }
-        
+        });
       }
-      else {
-        this.spinner.status=!this.spinner.status;
+      else if(!this.edit_status&&this.product_copy){
+        this.spinner.status=true;
         try {
-          if(this.editingPrd.bar_code===''){
+          if(this.editingPrd.bar_code===''||!this.editingPrd.bar_code){
             this.editingPrd.bar_code="000000000000"
           }
           let error=false;
           let emptyFields = [];
           const keys = Object.keys(this.editingPrd);
             keys.forEach(key =>{
-            if(key!='bar_code'&&key!='status'){
+            if(key!='bar_code'&&key!='status'&&key!='id'){
               if(this.editingPrd[key]==""){
                 console.log("KEYNULL")
                 $(`input#${key}`).css("borderColor", "red");
@@ -207,93 +356,37 @@ export default{
               icon: 'warning',
               confirmButtonText: 'OK'
             });
-            return this.editingPrd.status=true; // Interrompe a execução da função se houver erro
+            return this.edit_status=true; // Interrompe a execução da função se houver erro
           }
-          console.log(this.editProduct);
-          this.editingPrd.value=this.editingPrd.value.substr(2);
           const {data} = await axios.post('manager/products/insert/',this.editingPrd);
-          if(data.status==200){
-            this.$swal.fire({
-              title: 'Produto criado com sucesso',
-              text: `${data.data.name} - R$${data.data.value}`,
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
-          }
-          this.disabled = {
-            plus:'',
-            minus:'',
-            copy:'',
-          }
-          this.editingPrd.status =false;
-          this.product=data.data;
-          this.paginate(parseInt(this.lastpage), 7)
-        } catch (err) {
-          console.error('Erro ao carregar produtos:', err);
+
+        } catch (error) {
+          console.log(error)
         }finally{
-          this.spinner.status=!this.spinner.status;
+          if(!this.edit_status){
+            this.product={};this.paginate(this.lastpage,7);this.spinner.status=false;
+          }else{
+            this.disabledAll();
+            this.disabled.check=''
+            this.disabled.ban=''
+            this.spinner.status=false;
+          }
         }
-      }
-    },
-    async copyProduct(status){
-      this.editingPrd.status=status
-      if(this.editingPrd.status){
-        this.disabled = {
-        plus:'disabled',
-        minus:'disabled',
-        copy:'disabled',
-      }
-        this.product.id = 0;
-        const keys = Object.keys(this.product);
-        keys.forEach(key =>{
-          this.editingPrd[key] = this.product[key]
-        })
       }
 
     },
-    async plusProduct(){
-      if(!this.product.id) {
-        this.currentpage = parseInt(this.currentpage)-1
-        if(this.currentpage==1) this.disabled.plus='disabled';
-        if(this.currentpage<this.lastpage) this.disabled.minus='';
-        return this.paginate(parseInt(this.currentpage), 7)
-      }
-      this.product.product_amount++
-      const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
-      return console.log('plus',data)
-    },
-    async minusProduct(){
-      if(!this.product.id) {
-        this.currentpage = parseInt(this.currentpage)+1
-        if(this.currentpage>1) this.disabled.plus='';
-        if(this.currentpage===this.lastpage) this.disabled.minus='disabled';
-        return this.paginate(parseInt(this.currentpage), 7)
-      }
-      this.product.product_amount--
-      const {data} = await axios.post('manager/products/update/'+this.product.id,{'product_amount': parseInt(this.product.product_amount)});
-      return console.log('minus',data)
-    },
     async banProduct(){
-      if(this.editingPrd.status){
-        if(this.product.id){
-          this.disabled = {
-            plus:'',
-            minus:'',
-            copy:'',
-            ban:'',
-            edit:''
-          }
+      if(this.edit_status){
+        if(Object.keys(this.product).length==0){
+          this.disabledAll();
+          this.paginate(this.currentpage,7)
         }else{
-          this.disabled = {
-            plus:'',
-            minus:'',
-            copy:'disabled',
-            ban:'disabled',
-            edit:'disabled'
-          }
+          this.enabledAll();
+          this.paginate(this.currentpage,7)
         }
-        
-        return this.editingPrd.status =false;
+        this.editingPrd = {};
+        this.product = {};
+        return this.edit_status =false;
       }
       const result = await this.$swal.fire({
         title: 'Deseja excluir o produto ou só desativá-lo do sistema?',
@@ -356,27 +449,7 @@ export default{
           confirmButtonText: 'OK',
         });
       }
-    },
-    async paginate(index,$perpage){
-      this.spinner.status=!this.spinner.status;
-      try{
-        const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
-        this.rawproducts = data.data;
-        this.currentpage = data.current_page;
-        this.lastpage = data.last_page
-        console.log(data);
-      }catch(err){
-        console.error('Erro ao carregar produtos:', err);
-      }finally {
-        // Desativa o spinner após a conclusão da requisição
-        this.spinner.status=!this.spinner.status;
-      }
-      
     }
-  },
-  async created(){
-    if(this.currentpage==1) this.disabled.plus='disabled';
-    this.paginate(this.currentpage, 7);
   },
   computed:{
     products(){
@@ -385,11 +458,9 @@ export default{
         const key = `${product.bar_code}-${product.sm_code}-${product.name}`;
         if (productMap.has(key)) {
           const prd = productMap.get(key);
-          prd.quantity += 1;
         } else {
             productMap.set(key, {
-              ...product,
-              quantity: 1
+              ...product
             });
           }
       });
@@ -398,12 +469,14 @@ export default{
   },
   data(){
     return{
+      totalpage:0,
+      edit_status:false,
+      product_copy:false,
       spinner:{status:false},
       rawproducts:[],
       rawproduct:{},
       product:{},
       editingPrd:{
-        status:false,
         name:"",
         sm_code:"",
         bar_code:"",
@@ -412,28 +485,19 @@ export default{
         product_amount:""
       },
       disabled:{
-        plus:'',
-        minus:'',
+        plus:'disabled',
+        minus:'disabled',
         edit:'disabled',
         copy:'disabled',
-        ban:'disabled'
+        ban:'disabled',
+        left:'disabled',
+        right:'disabled',
+        check:'disabled'
       },
       currentpage:1,
       lastpage:0,
       config: {
-          prefix: 'R$',
-          suffix: '',
-          thousands: ',',
-          decimal: '.',
-          precision: 2,
-          disableNegative: false,
-          disabled: false,
-          min: null,
-          max: null,
-          allowBlank: false,
-          minimumNumberOfCharacters: 0,
-          shouldRound: true,
-          focusOnRight: false,
+          prefix: 'R$'
         }
     }
   }
