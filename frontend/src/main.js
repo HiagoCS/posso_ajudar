@@ -10,7 +10,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import '@/api/axios.js';
 import FloatingVue from 'floating-vue';
 import 'floating-vue/dist/style.css';
-
+import VueTheMask from 'vue-the-mask'
+import money from 'v-money3'
 import { createI18n } from 'vue-i18n'
 import {pt_BR} from '@/components/locales/pt_BR'
 import {en} from '@/components/locales/en'
@@ -35,6 +36,7 @@ Vue.createApp(App)
     .use(VueSweetalert2);
 
 app.use(router)
+app.use(VueTheMask);
 app.use(FloatingVue);
-
+app.use(money);
 app.mount('#app')

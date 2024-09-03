@@ -26,11 +26,13 @@
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-    tr:hover{
-      *{
-        background-color: $background-blue-nav;
-        border-color: $background-blue-nav;
-      }
+    tr:hover td {
+      background-color: $background-blue-nav;
+      border-color: $background-blue-nav;
+    }
+    tr td.active {
+      background-color: $background-blue-nav !important;
+      border-color: $background-blue-nav !important;
     }
     tr {
       display: table;

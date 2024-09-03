@@ -8,7 +8,17 @@
           <span class="btn btn-primary" @click="newProduct">Novo Produto</span>
         </div>
       <div class="d-flex flex-column table-container">
-        <tableComponent :products="this.products" @selected="(product) =>{selected(product)}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
+        <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
+            <font-awesome-icon icon="spinner" spin />
+        </span>
+        <div v-if="!this.spinner.status">
+          <tableComponent :product="this.product"  :products="this.products" @selected="(product) =>{selected(product)}" @hovered="(product) =>{this.rawproduct=product;}"> </tableComponent>
+        </div>
+        <div v-if="this.products.length === 0 
+              && !this.spinner.status" 
+              class="d-flex flex-row justify-content-center align-items-center">
+          <h4>Nenhum produto disponível no momento</h4>
+        </div>
       </div>
       <div class="d-flex flex-row justify-content-center col-12 footer">
           <div class="d-flex flex-column col-3 card-product">
@@ -18,7 +28,7 @@
             </div>
             <div v-if="this.editingPrd.status" class="d-flex col-11 flex-row align-items-center justify-content-around title">
               <div class="col-10">
-                <input type="text" placeholder="Nome do Produto" title="Nome" v-model="editingPrd['name']" class="col-10 form-control">
+                <input id="name" type="text" placeholder="Nome do Produto" title="Nome" v-model="editingPrd['name']" class="col-10 form-control">
               </div>
               <div class="d-flex flex-row justify-content-end col-3">
                 <p class="id" title="ID">#{{this.product.id ? this.product.id: this.rawproduct.id}}</p>
@@ -37,13 +47,13 @@
             v-if="this.editingPrd.status"
             class="d-flex col-12 justify-content-start flex-row details">
               <div class="col-5">
-                <input type="text"  placeholder="Cód. Redu" title="Código Reduzido"  v-model="editingPrd['sm_code']" class="col-5 form-control">
+                <input id="sm_code" type="text"  placeholder="Cód. Redu" title="Código Reduzido"  v-model="editingPrd['sm_code']" class="col-5 form-control">
               </div>
               <div class="col-3">
-                <input type="text"  placeholder="R$0" title="(R$) Preço" v-model="editingPrd['value']" class="col-3 form-control">
+                <input id="value" type="text"  placeholder="R$0" title="(R$) Preço" v-money3="config"  v-model.lazy="editingPrd['value']" class="col-3 form-control">
               </div>
               <div class="col-3">
-                <input type="text" placeholder="UN" title="Quantidade do Produto" v-model="editingPrd['product_amount']" class="col-3 form-control">
+                <input id="product_amount" type="text" placeholder="UN" title="Quantidade do Produto" v-model="editingPrd['product_amount']" class="col-3 form-control">
               </div>
             </div>
             <div 
@@ -54,7 +64,7 @@
             <div 
             v-if="this.editingPrd.status"
             class="d-flex col-12 justify-content-between flex-row bar-code">
-            <input placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
+            <input id="bar_code" placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
             </div>
           </div>
           <div class="d-flex flex-column col-4 card-product">
@@ -67,7 +77,7 @@
             </div>
             <div v-if="this.editingPrd.status" 
             class="d-flex flex-row flex-wrap form-outline description">
-                <textarea v-model="editingPrd['description']" class="form-control" id="bar_code" rows="4" placeholder="Descrição do Produto"></textarea>
+                <textarea v-model="editingPrd['description']" class="form-control" id="description" rows="4" placeholder="Descrição do Produto"></textarea>
             </div> 
           </div>
           <div class="d-flex flex-column col-4 card-product">
@@ -149,42 +159,81 @@ export default{
         keys.forEach(key =>{
           this.editingPrd[key] = this.product[key]
         })
-      }else if(!this.editingPrd.status && this.product.id != '0'){
-        delete this.editingPrd['status'];
-        const {data} = await axios.post('manager/products/update/'+this.product.id,this.editingPrd);
-        this.disabled = {
-          plus:'',
-          minus:'',
-          copy:'',
+      }else if(!this.editingPrd.status && this.product.id){
+        this.spinner.status=!this.spinner.status;
+        try {
+          delete this.editingPrd['status'];
+          const {data} = await axios.post('manager/products/update/'+this.product.id,this.editingPrd);
+          this.disabled = {
+            plus:'',
+            minus:'',
+            copy:'',
+          }
+          this.editingPrd.status =false;
+          this.product = data.data
+          return this.paginate(parseInt(this.currentpage), 7)
+        } catch (err) {
+          console.error('Erro ao carregar produtos:', err);
+        }finally{
+          this.spinner.status=!this.spinner.status;
         }
-        this.editingPrd.status =false;
-        this.product = data.data
-        return this.$swal.fire({
-          title: `Produto #${data.data.id}\n${data.data.name}\nAtualizado com sucesso!`,
-          icon:'success',
-          confirmButtonText: 'OK',
-        });
         
       }
       else {
-        delete this.editingPrd['status'];
-        const {data} = await axios.post('manager/products/insert/',this.editingPrd);
-        this.disabled = {
-          plus:'',
-          minus:'',
-          copy:'',
+        this.spinner.status=!this.spinner.status;
+        try {
+          if(this.editingPrd.bar_code===''){
+            this.editingPrd.bar_code="000000000000"
+          }
+          let error=false;
+          let emptyFields = [];
+          const keys = Object.keys(this.editingPrd);
+            keys.forEach(key =>{
+            if(key!='bar_code'&&key!='status'){
+              if(this.editingPrd[key]==""){
+                console.log("KEYNULL")
+                $(`input#${key}`).css("borderColor", "red");
+                if(key==='description')$(`#${key}`).css("borderColor", "red");
+                emptyFields.push(key); 
+                error=true
+              }else $(`input#${key}`).css("borderColor", "black");
+            }
+          })
+          if(error===true) {
+            //Crie aqui um sweetalert para avisar dos campos que estão vazios
+            this.$swal.fire({
+              title: 'Campos obrigatórios vazios',
+              text: `Os seguintes campos estão vazios:\n${emptyFields.join(', ')}`,
+              icon: 'warning',
+              confirmButtonText: 'OK'
+            });
+            return this.editingPrd.status=true; // Interrompe a execução da função se houver erro
+          }
+          console.log(this.editProduct);
+          this.editingPrd.value=this.editingPrd.value.substr(2);
+          const {data} = await axios.post('manager/products/insert/',this.editingPrd);
+          if(data.status==200){
+            this.$swal.fire({
+              title: 'Produto criado com sucesso',
+              text: `${data.data.name} - R$${data.data.value}`,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+          }
+          this.disabled = {
+            plus:'',
+            minus:'',
+            copy:'',
+          }
+          this.editingPrd.status =false;
+          this.product=data.data;
+          this.paginate(parseInt(this.lastpage), 7)
+        } catch (err) {
+          console.error('Erro ao carregar produtos:', err);
+        }finally{
+          this.spinner.status=!this.spinner.status;
         }
-        this.editingPrd.status =false;
-        this.product=data.data;
-        this.paginate(parseInt(this.currentpage), 7)
-        return this.$swal.fire({
-          title: `Produto \n${data.data.name}\nCriado com sucesso!`,
-          icon:'success',
-          confirmButtonText: 'OK',
-        });
-        
       }
-
     },
     async copyProduct(status){
       this.editingPrd.status=status
@@ -256,48 +305,49 @@ export default{
         cancelButtonText: 'Cancelar'
       });
       if (result.isConfirmed) {
-        // Código para excluir o produto
         if(this.product.status===0){
-          const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '1' });
-          this.product.status = 1;
-          return this.$swal.fire({
-          title: `Produto #${data.data.id}\n${data.data.name}\nAtivado com sucesso!`,
-          icon:'success',
-          confirmButtonText: 'OK',
-        });
+          try{
+            const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '1' });
+            this.product.status = 1;
+          }catch(err){console.log(err)}
+          finally{
+              this.paginate(parseInt(this.currentpage), 7)
+          }
         }
         else{
-          const { data } = await axios.delete('manager/products/delete/' + this.product.id);
-          this.product = {};
-          this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === data.data.id), 1);
-          return this.$swal.fire({
-          title: `Produto #${data.data.id}\n${data.data.name}\nDeletado com sucesso!`,
-          icon:'success',
-          confirmButtonText: 'OK',
-        });
+          try {
+            const { data } = await axios.delete('manager/products/delete/' + this.product.id);
+            this.product = {};
+            this.rawproducts.splice(this.rawproducts.findIndex(raw => raw.id === data.data.id), 1);
+          } catch (err) {
+            console.log(err)
+          }finally{
+            this.paginate(parseInt(this.currentpage), 7)
+          }
         }
       } else if (result.isDenied) {
         // Código para desativar o produto
         if(this.product.status===0){
-          const { data } = await axios.delete('manager/products/delete/' + this.product.id);
-          this.product = {};
-          const response = await axios.get('manager/products')
-          this.rawproducts = response.data;
-          this.$forceUpdate();
-          return this.$swal.fire({
-            title: `Produto ${data.data.name}#${data.data.id} deletado com sucesso!`,
-            icon:'success',
-            confirmButtonText: 'OK',
-          });
+          try{
+            const { data } = await axios.delete('manager/products/delete/' + this.product.id);
+            this.product = {};
+            const response = await axios.get('manager/products')
+            this.rawproducts = response.data;
+            this.$forceUpdate();
+          }catch(err){
+
+          }finally{
+            this.paginate(parseInt(this.currentpage), 7)
+          }
         }
         else{
-          const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '0' });
+          try{
+            const { data } = await axios.post('manager/products/update/' + this.product.id, { status: '0' });
           this.product.status = 0;
-          return this.$swal.fire({
-            title: `Produto #${data.data.id}\n${data.data.name}\nDesativado com sucesso!`,
-            icon:'success',
-            confirmButtonText: 'OK',
-          });
+          }catch(err){console.log(err)}
+          finally{
+            this.paginate(parseInt(this.currentpage), 7)
+          }
         }
       } else {
         return this.$swal.fire({
@@ -308,12 +358,20 @@ export default{
       }
     },
     async paginate(index,$perpage){
-      console.log(this.currentpage)
-      const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
-      this.rawproducts = data.data;
-      this.currentpage = data.current_page;
-      this.lastpage = data.last_page
-      console.log(data);
+      this.spinner.status=!this.spinner.status;
+      try{
+        const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
+        this.rawproducts = data.data;
+        this.currentpage = data.current_page;
+        this.lastpage = data.last_page
+        console.log(data);
+      }catch(err){
+        console.error('Erro ao carregar produtos:', err);
+      }finally {
+        // Desativa o spinner após a conclusão da requisição
+        this.spinner.status=!this.spinner.status;
+      }
+      
     }
   },
   async created(){
@@ -340,10 +398,19 @@ export default{
   },
   data(){
     return{
+      spinner:{status:false},
       rawproducts:[],
       rawproduct:{},
       product:{},
-      editingPrd:{status: false},
+      editingPrd:{
+        status:false,
+        name:"",
+        sm_code:"",
+        bar_code:"",
+        description:"",
+        value:"",
+        product_amount:""
+      },
       disabled:{
         plus:'',
         minus:'',
@@ -352,7 +419,22 @@ export default{
         ban:'disabled'
       },
       currentpage:1,
-      lastpage:0
+      lastpage:0,
+      config: {
+          prefix: 'R$',
+          suffix: '',
+          thousands: ',',
+          decimal: '.',
+          precision: 2,
+          disableNegative: false,
+          disabled: false,
+          min: null,
+          max: null,
+          allowBlank: false,
+          minimumNumberOfCharacters: 0,
+          shouldRound: true,
+          focusOnRight: false,
+        }
     }
   }
 }

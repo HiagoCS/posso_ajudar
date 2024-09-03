@@ -86,6 +86,34 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    .spinner {
+      position: absolute;
+      
+      &.active {
+        opacity: 100%;
+        top: 45%;
+        left: 53%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5em;
+        color: #000; /* Ajuste a cor conforme necessário */
+        font-size: 50px;
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        animation-name: spin;
+        animation-duration: 2000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+      }
+      opacity: 0;
+    }
     .action-menu-container{
       .action-button {
         cursor: pointer;
