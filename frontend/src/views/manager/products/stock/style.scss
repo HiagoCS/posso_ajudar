@@ -1,0 +1,17 @@
+.container-fluid{
+    display: flex;
+    flex-direction: column;
+    
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    .logo-container {
+        width: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+    }
+}

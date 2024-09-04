@@ -1,0 +1,94 @@
+<template>
+    <table class="stock-table col-12">
+          <thead>
+            <tr style="font-family:'Quicksand-Bold'">
+              <th> # </th>
+              <th>Nome</th>
+              <th>R$</th>
+              <th style="font-size: 14px;">Quantidade (Total)</th>
+              <th style="background-color: #2fa9fe;border-color: #2fa9fe;color:white">
+                <i style="color:black"><font-awesome-icon icon="right-to-bracket"></font-awesome-icon></i>
+                <i style="color:white;font-size: 14px;"> Ultima Entrada</i>
+              </th>
+              <th style="background-color: #1e9234;border-color: #1e9234;">
+                <i style="color:black;font-size: 14px;"><font-awesome-icon icon="arrow-up"></font-awesome-icon>
+                  <font-awesome-icon icon="dollar-sign"></font-awesome-icon>
+                </i>
+                <i style="color:white;font-size: 14px;"> Ultima Venda</i>
+              </th>
+              <!---->
+              <th style="background-color: #e13333;border-color: #e13333;color:white">
+                <i style="color:black"><font-awesome-icon icon="outdent"></font-awesome-icon></i>
+                <i style="color:white;"> Ultima Saída</i>
+              </th>
+            </tr>
+          </thead>
+        <tbody>
+          <tr v-for="(stock, index) in this.stocks" :key="index"  
+            @mouseover="$emit('hovered', stock)" 
+            @mouseleave="$emit('hovered', {})" 
+            @click="selectProduct(stock)">
+            <td :style="`font-family:Quicksand-Regular`">
+                {{ stock.id }}
+            </td>
+            <td :style="`font-family:Quicksand-Regular`">
+                {{ stock.name }}
+            </td>
+            <td :style="`font-family:Quicksand-Regular`">
+                {{ stock.value }}
+            </td>
+            <td :style="`font-family:Quicksand-Regular`">
+                {{ stock.amount }}
+            </td>
+            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+                <i style="color: #2fa9fe;font-family:'Quicksand-Bold'">+ {{ stock.last_entry.qunt_toAdd }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_entry.dt_entry }}</i>
+            </td>
+            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+                <i style="color: #1e9234;font-family:'Quicksand-Bold'">- {{ stock.last_sale.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_sale.dt_sale }}</i>
+            </td>
+            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+              <i style="color: #e13333;font-family:'Quicksand-Bold'">- {{ stock.last_out.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_out.dt_out }}</i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+</template>
+<style src="./style.scss" lang="scss" scoped></style>
+<script>
+    export default{
+        props: {
+            stocks: {
+                type: Array,
+                required: false
+            },
+            stock:{
+              type:Object,
+              required:false
+            }
+        },
+        data(){
+          return{
+            selected:null,
+            stk:{
+              id:0,
+              status:''
+            }
+          }
+        },
+        methods:{
+          selectProduct(stock) {
+            if(!this.stk.id || this.stk.id!=stock.id){
+              this.selected = stock;
+              this.stk.status = 'active';
+              this.stk.id = stock.id;
+              this.$emit('selected', stock);
+            }else{
+              this.stock = {};
+              this.stk.status = '';
+              this.stk.id = null;
+              this.$emit('selected', stock);
+            }
+          }
+        }
+    }
+</script>
