@@ -4,6 +4,7 @@ namespace App\Models\Storage;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Storage\PrdStockModel;
 
 class ProductsModel extends Model
 {
@@ -19,6 +20,11 @@ class ProductsModel extends Model
         'product_amount',
         'status',
       ];
+
+      public function productsStock()
+    {
+        return $this->hasMany(PrdStockModel::class, 'id_product', 'id');
+    }
 
     public $timestamps = false;
     public function searchId($search){

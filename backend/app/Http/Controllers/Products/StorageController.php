@@ -5,22 +5,48 @@ namespace App\Http\Controllers\Products;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Storage\ProductsModel;
+use App\Models\Storage\PrdOutModel;
+use App\Models\Storage\PrdEntryModel;
+use App\Models\Storage\PrdStockModel;
 use App\Models\Account\RolesModel;
+use Carbon\Carbon;
 
 class StorageController extends Controller
 {
-    /* if(!$roles->bossAccess($request->user()))
-            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"; */
-    public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles){
-        if(!$roles->admAccess($request->user()))
-            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
-        $products = $prdModel->paginate($perpage, ['*'], 'page', $index);
-        return response()->json($products); 
-        /* $array = [];
-        foreach($products as $prd){
-            if($prd['id'] == 2) return response()->json($array); 
-            array_push($array, $prd);
-        } */
+    public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
+        if (!$roles->admAccess($request->user())) {
+            return response()->json([
+                'status' => 403,
+                'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
+            ], 403);
+        }
+    
+        try {
+            // Paginação dos produtos
+            $products = $prdModel->paginate($perpage, ['*'], 'page', $index);
+    
+            // Adiciona informações de entrada e saída para cada produto
+            $products->getCollection()->transform(function ($product) use ($prdEntryModel, $prdStockModel, $prdOutModel) {
+                // Obtém a entrada de estoque para o produto
+                $product->entries = $prdEntryModel->where('id_product', $product->id)->get();
+    
+                // Obtém as saídas de estoque por venda
+                $product->sales_out = $prdStockModel->where('id_product', $product->id)->get();
+    
+                // Obtém as saídas de estoque por retirada direta
+                $product->direct_out = $prdOutModel->where('id_product', $product->id)->get();
+    
+                return $product;
+            });
+    
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 500,
+                'msg' => 'Erro ao buscar produtos e informações de estoque',
+                'data' => $th->getMessage()
+            ], 500);
+        }
     }
     public function search($term, $search, ProductsModel $prdModel){
         /* $search = $request->all(); */
@@ -33,22 +59,57 @@ class StorageController extends Controller
         return response()->json($results);
     }
     public function insert(Request $request, ProductsModel $prdModel, RolesModel $roles){
-        if(!$roles->admAccess($request->user()))
-            return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
-        try{
-            $products = $request->all();
-            if($prdModel->create($products)) 
+        if (!$roles->admAccess($request->user())) {
+            return response()->json([
+                'status' => 403,
+                'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
+            ], 403);
+        }
+    
+        try {
+            // Extrai dados do request
+            $productData = $request->only(['sm_code', 'bar_code', 'name', 'description', 'value', 'product_amount', 'status']);
+            
+            // Verifica se o produto já existe
+            $existingProduct = $prdModel->where('sm_code', $productData['sm_code'])
+                                        ->orWhere('bar_code', $productData['bar_code'])
+                                        ->first();
+    
+            if ($existingProduct) {
                 return response()->json([
-                    "status" => 200,
-                    'msg' => "Produto ".$products['name']." inserido com sucesso!",
-                    'data' => $products
-                ]);
+                    'status' => 400,
+                    'msg' => "Produto já existente com o código fornecido!",
+                    'data' => $existingProduct
+                ], 400);
+            }
+    
+            // Cria o novo produto
+            $product = $prdModel->create($productData);
+    
+            // Obtém a data atual usando Carbon
+            $currentDate = Carbon::now()->toDateString(); // ou toDateTimeString() se precisar do horário
+    
+            // Prepara os dados da entrada
+            $entryData = [
+                'id_product' => $product->id,
+                'qunt_toAdd' => $product->product_amount, // Quantidade a adicionar no estoque
+                'dt_entry' => $currentDate // Data da entrada
+            ];
+    
+            // Cria o registro de entrada de estoque
+            $prdEntryModel->create($entryData);
+    
+            return response()->json([
+                "status" => 200,
+                'msg' => "Produto " . $product->name . " inserido com sucesso!",
+                'data' => $product
+            ]);
         } catch (\Throwable $th) {
-        return response()->json([
-            'status' => 500,
-            'data' => 'Erro no registro de Produtos - ManagerController',
-            'msg' => $th->getMessage()
-        ], 500);
+            return response()->json([
+                'status' => 500,
+                'data' => 'Erro no registro de Produtos - ManagerController',
+                'msg' => $th->getMessage()
+            ], 500);
         }
     }
     public function update($id, Request $request, ProductsModel $prdModel, RolesModel $roles){

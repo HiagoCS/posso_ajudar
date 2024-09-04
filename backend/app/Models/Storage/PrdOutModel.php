@@ -4,29 +4,25 @@ namespace App\Models\Storage;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Storage\ProductsModel;
-use App\Models\Storage\CashierSaleModel;
 
-class PrdStockModel extends Model
+class PrdOutModel extends Model
 {
     use HasFactory;
-    protected $table = 'products_stock';
+    
+    protected $table = 'products_stock_out';
     protected $primaryKey = "id";
+    
     protected $fillable = [
-        "id_sale",
-        "id_product",
-        "qunt_remove",
-        "dt_sale"
+        'id_product',
+        'qunt_remove',
+        'dt_out'
     ];
 
     public $timestamps = false;
 
+    // Relacionamento com a tabela products
     public function product()
     {
         return $this->belongsTo(ProductsModel::class, 'id_product', 'id');
-    }
-    public function sale()
-    {
-        return $this->belongsTo(CashierSaleModel::class, 'id_sale', 'id');
     }
 }
