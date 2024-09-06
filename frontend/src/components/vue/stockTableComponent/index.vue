@@ -28,25 +28,32 @@
             @mouseover="$emit('hovered', stock)" 
             @mouseleave="$emit('hovered', {})" 
             @click="selectProduct(stock)">
-            <td :style="`font-family:Quicksand-Regular`">
+            <td :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular`">
                 {{ stock.id }}
             </td>
-            <td :style="`font-family:Quicksand-Regular`">
+            <td :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular`">
                 {{ stock.name }}
             </td>
-            <td :style="`font-family:Quicksand-Regular`">
-                {{ stock.value }}
+            <td  :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular`">
+                R${{ stock.value }}
             </td>
-            <td :style="`font-family:Quicksand-Regular`">
+            <td  :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular`">
                 {{ stock.amount }}
             </td>
-            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+            <td :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular;font-size:15px`">
                 <i style="color: #2fa9fe;font-family:'Quicksand-Bold'">+ {{ stock.last_entry.qunt_toAdd }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_entry.dt_entry }}</i>
             </td>
-            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+            <td  :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular;font-size:15px`">
                 <i style="color: #1e9234;font-family:'Quicksand-Bold'">- {{ stock.last_sale.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_sale.dt_sale }}</i>
             </td>
-            <td :style="`font-family:Quicksand-Regular;font-size:15px`">
+            <td  :class="this.stk.id===stock.id?this.stk.status:''" 
+            :style="`font-family:Quicksand-Regular;font-size:15px`">
               <i style="color: #e13333;font-family:'Quicksand-Bold'">- {{ stock.last_out.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_out.dt_out }}</i>
             </td>
           </tr>
@@ -56,6 +63,19 @@
 <style src="./style.scss" lang="scss" scoped></style>
 <script>
     export default{
+      created(){
+        if(this.stock.id){
+          this.selected = this.stock;
+          this.stk.status = 'active';
+          this.stk.id = this.stock.id;
+        }
+      },
+      watch:{
+        stock(newValue){
+          if(Object.keys(newValue).length==0)
+            console.log('stock', newValue)
+        }
+      },
         props: {
             stocks: {
                 type: Array,
@@ -63,7 +83,8 @@
             },
             stock:{
               type:Object,
-              required:false
+              required:false,
+              default:{}
             }
         },
         data(){
@@ -83,10 +104,9 @@
               this.stk.id = stock.id;
               this.$emit('selected', stock);
             }else{
-              this.stock = {};
               this.stk.status = '';
               this.stk.id = null;
-              this.$emit('selected', stock);
+              this.$emit('selected', {});
             }
           }
         }

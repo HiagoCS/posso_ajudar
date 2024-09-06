@@ -43,15 +43,18 @@
             font-family: 'Quicksand-Bold';
           }
           .amount{
-            color:rgb(218, 61, 55);
+            color:#da3d37;
             font-family: 'Quicksand-Bold';
           }
-          .value{
-            color:rgb(50, 192, 50);
+          .cost{
+            color:rgb(89, 92, 89);
             font-family: 'Quicksand-Bold';
           }
       }
-      
+      .value{
+        color:#32c032;
+        font-family: 'Quicksand-Bold';
+      }
       .description{
         height: 100px;
         overflow: auto;

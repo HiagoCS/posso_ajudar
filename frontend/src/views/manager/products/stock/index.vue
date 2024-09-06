@@ -8,7 +8,35 @@
             <font-awesome-icon icon="spinner" spin />
         </span>
         <div v-if="!this.spinner.status">
-          <tableComponent :stock="this.stock"  :stocks="productstocks" @selected="(stock) =>{if(this.edit_status)return;selected(stock)}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableComponent>
+          <tableComponent :stock="this.productstock"  :stocks="productstocks" @selected="(stock) =>{this.productstock=stock}" @hovered="(stock) =>{this.rawproductstock=stock;}"> </tableComponent>
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center col-12 footer">
+        <div class="d-flex flex-column col-4 card-product">
+            <div  class="d-flex flex-row justify-content-around title">
+              <p class="name" title="Nome">{{this.productstock.name ? this.productstock.name : this.rawproductstock.name}} </p>
+              <p class="id" title="ID">#{{this.productstock.id ? this.productstock.id: this.rawproductstock.id}}</p>
+            </div>
+            <div class="d-flex col-12 justify-content-between flex-row details">
+              <p class="cost" title="(R$) Custo do Produto">R${{this.productstock.cost? this.productstock.cost:this.rawproductstock.cost}}</p>
+              <p>-</p>
+              <p class="value" title="(R$) Valor do Produto">R${{this.productstock.value? this.productstock.value:this.rawproductstock.value}}</p>
+              <p>-</p>
+              <p class="amount" title="Quantidade Total">{{ this.productstock.amount? this.productstock.amount:this.rawproductstock.product_amount }} UN</p>
+            </div>
+            <div class="d-flex col-12 justify-content-between flex-row details total_sales" style="font-size: 15px;">
+                <i class="title">Total de Vendas: </i>
+                <i class="unity" title="Quantidade Vendas (UN)" >{{ this.productstock.total_sales ? this.productstock.total_sales : '0' }}UN</i>
+                X<i class="value" title="Valor Produto (R$)" > R${{ this.productstock.value ? this.productstock.value:this.rawproductstock.value }}</i>
+                <i title="Total de Venda (R$)">= R${{ this.productstock.total_sales? parseInt((this.productstock.total_sales * this.productstock.value)).toFixed(2):""  }}</i>
+            </div>
+        </div>
+        <div class="d-flex flex-column col-4 card-product">
+            
+        </div>
+
+        <div class="d-flex flex-column col-4 card-product">
+            <h4>HelloWorld</h4>
         </div>
     </div>
 </main>
@@ -25,24 +53,37 @@ import axios from 'axios';
                 const stockMap = new Map();
                 this.rawproductstocks.forEach(product => {
                     // Extrair o último objeto dos arrays "direct_out", "entries" e "sales_out"
-                    const lastOut = product.direct_out.reduce((latest, current) => 
-                        new Date(current.dt_out) > new Date(latest.dt_out) ? current : latest);
+                    const lastOut = product.direct_out.length !=0 ? product.direct_out.reduce((latest, current) => 
+                        new Date(current.dt_out) > new Date(latest.dt_out) ? current : latest) : [];
 
-                    const lastEntry = product.entries.reduce((latest, current) => 
-                        new Date(current.dt_entry) > new Date(latest.dt_entry) ? current : latest);
+                    const lastEntry = product.entries.length !=0 ? product.entries.reduce((latest, current) => 
+                        new Date(current.dt_entry) > new Date(latest.dt_entry) ? current : latest) : [];
 
-                    const lastSale = product.sales_out.reduce((latest, current) => 
-                        new Date(current.dt_sale) > new Date(latest.dt_sale) ? current : latest);
+                    const lastSale = product.sales_out.length !=0 ? product.sales_out.reduce((latest, current) => 
+                        new Date(current.dt_sale) > new Date(latest.dt_sale) ? current : latest) : [];
 
-                    const key = `${product.id}-${product.name}-${product.value}-${product.last_entry}-${product.last_sale}-${product.last_out}`;
+                    const totalSales = product.sales_out.length !=0 ? product.sales_out.reduce((total, current) => 
+                        total + current.qunt_remove, 0) : 0;
+
+                    const salesAfterEntry = product.sales_out.length !=0 ? product.sales_out
+                        .filter(sale => new Date(sale.dt_sale) >= new Date(lastEntry.dt_entry)) // Filtra as vendas após a última entrada
+                        .reduce((total, current) => total + current.qunt_remove, 0) : 0;
+
+                    const key = `${product.id}-${product.name}-${product.value}-${product.product_amount}-${product.cost}-${product.last_entry}-${product.last_sale}-${product.last_out}`;
                     product = {
                         id: product.id,      // ID do produto
                         name: product.name,          // Nome do produto
                         value: product.value,        // Valor do produto
-                        amount: product.product_amount,      // Quantidade do produto
-                        last_entry: lastEntry,       // Última entrada
+                        amount: product.product_amount,
+                        cost:product.cost,      // Quantidade do produto
+                        last_entry: {
+                            ...lastEntry,
+                            sales_after_entry: salesAfterEntry 
+                        },    
                         last_sale: lastSale,         // Última venda
-                        last_out: lastOut            // Última saída direta
+                        last_out: lastOut,// Última saída direta
+                        total_sales:totalSales,
+                        total_cost: (lastEntry.qunt_toAdd * product.cost) 
                     }
                     if (stockMap.has(key)) {
                         const prd = stockMap.get(key);
@@ -106,30 +147,14 @@ import axios from 'axios';
                 }
             },
             async selected(stock){
-                if(Object.keys(this.productstock).length==0){
-                    this.productstock=stock
-                    this.disabled.plus=""
-                    this.disabled.minus=""
-                    this.disabled.edit=""
-                    this.disabled.ban=""
-                    this.disabled.copy=""
+                this.productstock=stock;
+                if(Object.keys(this.product).length==0){
+                    this.product=product
                 }else{
-                    if(this.productstock.id===productstock.id){
-                        this.stock={}
-                        if(this.currentpage==1) this.disabled.plus='disabled';
-                        else this.disabled.plus='';
-                        if(this.lastpage==0||this.currentpage==this.lastpage) this.disabled.minus='disabled';
-                        else this.disabled.minus='';
-                        this.disabled.edit="disabled"
-                        this.disabled.ban="disabled"
-                        this.disabled.copy="disabled"
+                    if(this.product.id===product.id){
+                        this.product={}
                     }else{
-                        this.stock=stock
-                        this.disabled.plus=""
-                        this.disabled.minus=""
-                        this.disabled.edit=""
-                        this.disabled.ban=""
-                        this.disabled.copy=""
+                        this.product=product
                     }
                 }
             },

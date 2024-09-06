@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Storage\ProductsModel;
-use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductsSeed extends Seeder
 {
-    /**
+     /**
      * Run the database seeds.
      *
      * @return void
@@ -17,88 +16,318 @@ class ProductsSeed extends Seeder
     public function run()
     {
         $products = [
-            ['name' => 'Bolacha Maria', 'description' => 'Bolacha Maria tradicional, pacote de 400g', 'value' => 3.99, 'product_amount' => 150, 'sm_code' => 'BMT400G'],
-            ['name' => 'Refrigerante Coca-Cola', 'description' => 'Refrigerante Coca-Cola 2L', 'value' => 7.49, 'product_amount' => 200, 'sm_code' => 'RFCC2L'],
-            ['name' => 'Refrigerante Guaraná Antártica', 'description' => 'Refrigerante Guaraná Antártica 2L', 'value' => 6.99, 'product_amount' => 180, 'sm_code' => 'RFGA2L'],
-            ['name' => 'Chocolate Lacta Ao Leite', 'description' => 'Barra de Chocolate Lacta Ao Leite 170g', 'value' => 8.99, 'product_amount' => 120, 'sm_code' => 'CLAL170G'],
-            ['name' => 'Margarina Qualy', 'description' => 'Margarina Qualy 500g', 'value' => 4.79, 'product_amount' => 90, 'sm_code' => 'MQ500G'],
-            ['name' => 'Pão de Forma Pullman', 'description' => 'Pão de Forma Pullman Tradicional 500g', 'value' => 6.49, 'product_amount' => 80, 'sm_code' => 'PFPT500G'],
-            ['name' => 'Creme Dental Colgate', 'description' => 'Creme Dental Colgate Total 12, 90g', 'value' => 3.29, 'product_amount' => 160, 'sm_code' => 'CDCT90G'],
-            ['name' => 'Sabão em Pó Omo', 'description' => 'Sabão em Pó Omo 1kg', 'value' => 10.99, 'product_amount' => 130, 'sm_code' => 'SPO1K'],
-            ['name' => 'Café Pilão', 'description' => 'Café Pilão Torrado e Moído 500g', 'value' => 12.49, 'product_amount' => 70, 'sm_code' => 'CPT500G'],
-            ['name' => 'Arroz Tio João', 'description' => 'Arroz Branco Tio João Tipo 1, 1kg', 'value' => 5.99, 'product_amount' => 200, 'sm_code' => 'ATJ1K'],
-            ['name' => 'Feijão Carioca Kicaldo', 'description' => 'Feijão Carioca Kicaldo 1kg', 'value' => 7.89, 'product_amount' => 190, 'sm_code' => 'FCK1K'],
-            ['name' => 'Açúcar União', 'description' => 'Açúcar Refinado União 1kg', 'value' => 4.29, 'product_amount' => 210, 'sm_code' => 'AU1K'],
-            ['name' => 'Macarrão Instantâneo Nissin', 'description' => 'Macarrão Instantâneo Nissin Lámen Galinha 85g', 'value' => 1.99, 'product_amount' => 300, 'sm_code' => 'MINLG85G'],
-            ['name' => 'Molho de Tomate Elefante', 'description' => 'Extrato de Tomate Elefante 340g', 'value' => 2.99, 'product_amount' => 140, 'sm_code' => 'MT340G'],
-            ['name' => 'Óleo de Soja Soya', 'description' => 'Óleo de Soja Soya 900ml', 'value' => 8.49, 'product_amount' => 110, 'sm_code' => 'OSS900ML'],
-            ['name' => 'Refrigerante Fanta Laranja', 'description' => 'Refrigerante Fanta Laranja 2L', 'value' => 6.79, 'product_amount' => 170, 'sm_code' => 'RFL2L'],
-            ['name' => 'Maionese Hellmann\'s', 'description' => 'Maionese Hellmann\'s Tradicional 500g', 'value' => 10.49, 'product_amount' => 100, 'sm_code' => 'MH500G'],
-            ['name' => 'Farinha de Trigo Dona Benta', 'description' => 'Farinha de Trigo Dona Benta 1kg', 'value' => 4.79, 'product_amount' => 150, 'sm_code' => 'FTDB1K'],
-            ['name' => 'Leite Integral Parmalat', 'description' => 'Leite Integral Parmalat 1L', 'value' => 3.49, 'product_amount' => 130, 'sm_code' => 'LIP1L'],
-            ['name' => 'Creme de Leite Nestlé', 'description' => 'Creme de Leite Nestlé 200g', 'value' => 4.99, 'product_amount' => 140, 'sm_code' => 'CLN200G'],
-            ['name' => 'Biscoito Recheado Bono', 'description' => 'Biscoito Recheado Bono Chocolate 130g', 'value' => 4.49, 'product_amount' => 80, 'sm_code' => 'BRB130G'],
-            ['name' => 'Detergente Ypê', 'description' => 'Detergente Ypê 500ml', 'value' => 2.99, 'product_amount' => 160, 'sm_code' => 'DY500ML'],
-            ['name' => 'Sabonete Dove', 'description' => 'Sabonete Dove Hidratante 90g', 'value' => 2.79, 'product_amount' => 200, 'sm_code' => 'SDH90G'],
-            ['name' => 'Fralda Pampers', 'description' => 'Fralda Pampers Comfort Sec Tamanho M', 'value' => 34.99, 'product_amount' => 60, 'sm_code' => 'FPCS-M'],
-            ['name' => 'Shampoo Seda', 'description' => 'Shampoo Seda Anti-Queda 400ml', 'value' => 8.99, 'product_amount' => 100, 'sm_code' => 'SSAQ400ML'],
-            ['name' => 'Condicionador Seda', 'description' => 'Condicionador Seda Anti-Queda 400ml', 'value' => 8.99, 'product_amount' => 100, 'sm_code' => 'CSAQ400ML'],
-            ['name' => 'Aspirina', 'description' => 'Aspirina Adulto 20 Comprimidos', 'value' => 5.49, 'product_amount' => 70, 'sm_code' => 'AA20C'],
-            ['name' => 'Vitamina C', 'description' => 'Vitamina C 60 Cápsulas', 'value' => 15.99, 'product_amount' => 50, 'sm_code' => 'VC60C'],
-            ['name' => 'Cereal Kellogg\'s', 'description' => 'Cereal Kellogg\'s Corn Flakes 300g', 'value' => 6.49, 'product_amount' => 90, 'sm_code' => 'CKCF300G'],
-            ['name' => 'Amaciante Downy', 'description' => 'Amaciante Downy 1L', 'value' => 7.29, 'product_amount' => 110, 'sm_code' => 'AD1L'],
-            ['name' => 'Desinfetante Pinho Sol', 'description' => 'Desinfetante Pinho Sol 500ml', 'value' => 4.99, 'product_amount' => 140, 'sm_code' => 'DPS500ML'],
-            ['name' => 'Sopa Instantânea Knorr', 'description' => 'Sopa Instantânea Knorr Galinha 65g', 'value' => 1.79, 'product_amount' => 200, 'sm_code' => 'SIK65G'],
-            ['name' => 'Queijo Parmesão', 'description' => 'Queijo Parmesão Ralado 150g', 'value' => 9.99, 'product_amount' => 80, 'sm_code' => 'QPR150G'],
-            ['name' => 'Maionese Heinz', 'description' => 'Maionese Heinz 400g', 'value' => 6.49, 'product_amount' => 100, 'sm_code' => 'MH400G'],
-            ['name' => 'Café Expresso', 'description' => 'Café Expresso Tradicional 250g', 'value' => 11.99, 'product_amount' => 90, 'sm_code' => 'CET250G'],
-            ['name' => 'Lata de Atum', 'description' => 'Lata de Atum Gomes da Costa 170g', 'value' => 4.29, 'product_amount' => 110, 'sm_code' => 'LAGC170G'],
-            ['name' => 'Barrinha de Cereal', 'description' => 'Barrinha de Cereal Nutry 120g', 'value' => 5.49, 'product_amount' => 150, 'sm_code' => 'BCN120G'],
-            ['name' => 'Purê de Tomate', 'description' => 'Purê de Tomate 340g', 'value' => 3.29, 'product_amount' => 130, 'sm_code' => 'PT340G'],
-            ['name' => 'Papel Toalha', 'description' => 'Papel Toalha Scott 2 Rolos', 'value' => 6.99, 'product_amount' => 100, 'sm_code' => 'PTS2R'],
-            ['name' => 'Cerveja Skol', 'description' => 'Cerveja Skol 350ml', 'value' => 2.79, 'product_amount' => 200, 'sm_code' => 'CS350ML'],
-            ['name' => 'Refrigerante Pepsi', 'description' => 'Refrigerante Pepsi 2L', 'value' => 7.99, 'product_amount' => 180, 'sm_code' => 'RP2L'],
-            ['name' => 'Biscoito Salgado', 'description' => 'Biscoito Salgado Treloso 250g', 'value' => 3.59, 'product_amount' => 160, 'sm_code' => 'BST250G'],
-            ['name' => 'Pasta de Dente Sensodyne', 'description' => 'Pasta de Dente Sensodyne 90g', 'value' => 7.49, 'product_amount' => 140, 'sm_code' => 'PDS90G'],
-            ['name' => 'Cereal Integral Nestlé', 'description' => 'Cereal Integral Nestlé 500g', 'value' => 8.49, 'product_amount' => 110, 'sm_code' => 'CIN500G'],
-            ['name' => 'Suco de Laranja Del Valle', 'description' => 'Suco de Laranja Del Valle 1L', 'value' => 5.99, 'product_amount' => 120, 'sm_code' => 'SLDV1L'],
-            ['name' => 'Alho Picado', 'description' => 'Alho Picado 100g', 'value' => 2.29, 'product_amount' => 180, 'sm_code' => 'AP100G'],
-            ['name' => 'Grão de Bico', 'description' => 'Grão de Bico 500g', 'value' => 4.29, 'product_amount' => 160, 'sm_code' => 'GB500G'],
-            ['name' => 'Salsicha Viena', 'description' => 'Salsicha Viena 500g', 'value' => 9.99, 'product_amount' => 90, 'sm_code' => 'SV500G'],
-            ['name' => 'Queijo Prato', 'description' => 'Queijo Prato 200g', 'value' => 7.49, 'product_amount' => 110, 'sm_code' => 'QP200G'],
-            ['name' => 'Sopa de Legumes', 'description' => 'Sopa de Legumes 500g', 'value' => 4.99, 'product_amount' => 140, 'sm_code' => 'SL500G'],
-            ['name' => 'Bolacha de Água e Sal', 'description' => 'Bolacha de Água e Sal 150g', 'value' => 2.49, 'product_amount' => 200, 'sm_code' => 'BAS150G'],
-            ['name' => 'Suco de Uva Integral', 'description' => 'Suco de Uva Integral 1L', 'value' => 6.49, 'product_amount' => 100, 'sm_code' => 'SU1L'],
-            ['name' => 'Leite Condensado Moça', 'description' => 'Leite Condensado Moça 395g', 'value' => 5.99, 'product_amount' => 130, 'sm_code' => 'LCM395G'],
-            ['name' => 'Molho Shoyu', 'description' => 'Molho Shoyu 300ml', 'value' => 3.29, 'product_amount' => 140, 'sm_code' => 'MS300ML'],
-            ['name' => 'Queijo Frescal', 'description' => 'Queijo Frescal 300g', 'value' => 7.99, 'product_amount' => 100, 'sm_code' => 'QF300G'],
-            ['name' => 'Cerveja Brahma', 'description' => 'Cerveja Brahma 350ml', 'value' => 2.99, 'product_amount' => 200, 'sm_code' => 'CB350ML'],
-            ['name' => 'Ketchup Heinz', 'description' => 'Ketchup Heinz 397g', 'value' => 6.49, 'product_amount' => 120, 'sm_code' => 'KH397G'],
-            ['name' => 'Purê de Abóbora', 'description' => 'Purê de Abóbora 400g', 'value' => 4.29, 'product_amount' => 150, 'sm_code' => 'PA400G'],
-            ['name' => 'Pipoca para Micro-ondas', 'description' => 'Pipoca para Micro-ondas 100g', 'value' => 3.49, 'product_amount' => 180, 'sm_code' => 'PM100G'],
-            ['name' => 'Tempero em Pó', 'description' => 'Tempero em Pó 50g', 'value' => 2.79, 'product_amount' => 200, 'sm_code' => 'TP50G'],
-            ['name' => 'Granola', 'description' => 'Granola 400g', 'value' => 8.99, 'product_amount' => 90, 'sm_code' => 'G400G'],
-            ['name' => 'Caldo de Carne Knorr', 'description' => 'Caldo de Carne Knorr 6 Cubos', 'value' => 5.49, 'product_amount' => 130, 'sm_code' => 'CCK6C'],
-            ['name' => 'Cereal Infantil', 'description' => 'Cereal Infantil 250g', 'value' => 4.99, 'product_amount' => 100, 'sm_code' => 'CI250G'],
-            ['name' => 'Maçã Fuji', 'description' => 'Maçã Fuji Unidade', 'value' => 1.79, 'product_amount' => 150, 'sm_code' => 'MFU'],
-            ['name' => 'Laranja Pera', 'description' => 'Laranja Pera Unidade', 'value' => 1.49, 'product_amount' => 200, 'sm_code' => 'LP'],
-            ['name' => 'Banana Prata', 'description' => 'Banana Prata Unidade', 'value' => 1.29, 'product_amount' => 180, 'sm_code' => 'BP'],
-            ['name' => 'Cenoura', 'description' => 'Cenoura Unidade', 'value' => 0.89, 'product_amount' => 220, 'sm_code' => 'CEN'],
-            ['name' => 'Batata Doce', 'description' => 'Batata Doce Unidade', 'value' => 1.59, 'product_amount' => 160, 'sm_code' => 'BD'],
-            ['name' => 'Tomate', 'description' => 'Tomate Unidade', 'value' => 2.49, 'product_amount' => 200, 'sm_code' => 'TOM'],
-            ['name' => 'Pepino', 'description' => 'Pepino Unidade', 'value' => 1.19, 'product_amount' => 150, 'sm_code' => 'PEP'],
-            ['name' => 'Refrigerante Sprite', 'description' => 'Refrigerante Sprite 2L', 'value' => 7.49, 'product_amount' => 170, 'sm_code' => 'RS2L'],
-            ['name' => 'Biscoito de Maisena', 'description' => 'Biscoito de Maisena 300g', 'value' => 3.99, 'product_amount' => 140, 'sm_code' => 'BM300G'],
-            ['name' => 'Creme de Avelã', 'description' => 'Creme de Avelã 350g', 'value' => 10.99, 'product_amount' => 110, 'sm_code' => 'CA350G'],
-            ['name' => 'Achocolatado', 'description' => 'Achocolatado 400g', 'value' => 9.49, 'product_amount' => 120, 'sm_code' => 'AC400G'],
-            ['name' => 'Refrigerante Guaraná', 'description' => 'Refrigerante Guaraná 1L', 'value' => 5.99, 'product_amount' => 180, 'sm_code' => 'RG1L'],
-            ['name' => 'Bolacha de Chocolate', 'description' => 'Bolacha de Chocolate 150g', 'value' => 4.29, 'product_amount' => 130, 'sm_code' => 'BCC150G'],
-            ['name' => 'Maçã Gala', 'description' => 'Maçã Gala Unidade', 'value' => 2.49, 'product_amount' => 150, 'sm_code' => 'MGU']
+            [
+                'name' => 'Arroz Branco',
+                'sm_code' => 'ARBR',
+                'description' => 'Arroz branco tipo 1, 5kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 15.50,
+                'value' => $this->calculateValue(15.50),
+                'product_amount' => 100,
+                'status' => 1
+            ],
+            [
+                'name' => 'Feijão Carioca',
+                'sm_code' => 'FECA',
+                'description' => 'Feijão carioca tipo 1, 1kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 8.90,
+                'value' => $this->calculateValue(8.90),
+                'product_amount' => 150,
+                'status' => 1
+            ],
+            [
+                'name' => 'Macarrão Espaguete',
+                'sm_code' => 'MAES',
+                'description' => 'Macarrão espaguete, 500g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 4.80,
+                'value' => $this->calculateValue(4.80),
+                'product_amount' => 200,
+                'status' => 1
+            ],
+            [
+                'name' => 'Óleo de Soja',
+                'sm_code' => 'OESO',
+                'description' => 'Óleo de soja, 900ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 7.20,
+                'value' => $this->calculateValue(7.20),
+                'product_amount' => 180,
+                'status' => 1
+            ],
+            [
+                'name' => 'Leite Integral',
+                'sm_code' => 'LEIN',
+                'description' => 'Leite integral, 1 litro.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 4.50,
+                'value' => $this->calculateValue(4.50),
+                'product_amount' => 250,
+                'status' => 1
+            ],
+            [
+                'name' => 'Café Torrado',
+                'sm_code' => 'CATO',
+                'description' => 'Café torrado e moído, 500g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 12.30,
+                'value' => $this->calculateValue(12.30),
+                'product_amount' => 120,
+                'status' => 1
+            ],
+            [
+                'name' => 'Açúcar Cristal',
+                'sm_code' => 'ACCR',
+                'description' => 'Açúcar cristal, 1kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 3.70,
+                'value' => $this->calculateValue(3.70),
+                'product_amount' => 300,
+                'status' => 1
+            ],
+            [
+                'name' => 'Sal Refinado',
+                'sm_code' => 'SARE',
+                'description' => 'Sal refinado, 1kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 2.50,
+                'value' => $this->calculateValue(2.50),
+                'product_amount' => 280,
+                'status' => 1
+            ],
+            [
+                'name' => 'Farinha de Trigo',
+                'sm_code' => 'FATR',
+                'description' => 'Farinha de trigo, 1kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 4.20,
+                'value' => $this->calculateValue(4.20),
+                'product_amount' => 150,
+                'status' => 1
+            ],
+            [
+                'name' => 'Creme de Leite',
+                'sm_code' => 'CRLE',
+                'description' => 'Creme de leite, 200g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 3.90,
+                'value' => $this->calculateValue(3.90),
+                'product_amount' => 110,
+                'status' => 1
+            ],
+            [
+                'name' => 'Leite Condensado',
+                'sm_code' => 'LECO',
+                'description' => 'Leite condensado, 395g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 6.50,
+                'value' => $this->calculateValue(6.50),
+                'product_amount' => 95,
+                'status' => 1
+            ],
+            [
+                'name' => 'Margarina com Sal',
+                'sm_code' => 'MASA',
+                'description' => 'Margarina com sal, 500g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 5.60,
+                'value' => $this->calculateValue(5.60),
+                'product_amount' => 180,
+                'status' => 1
+            ],
+            [
+                'name' => 'Biscoito Recheado',
+                'sm_code' => 'BIRE',
+                'description' => 'Biscoito recheado sabor chocolate, 130g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 2.90,
+                'value' => $this->calculateValue(2.90),
+                'product_amount' => 140,
+                'status' => 1
+            ],
+            [
+                'name' => 'Achocolatado em Pó',
+                'sm_code' => 'ACPO',
+                'description' => 'Achocolatado em pó, 400g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 7.50,
+                'value' => $this->calculateValue(7.50),
+                'product_amount' => 130,
+                'status' => 1
+            ],
+            [
+                'name' => 'Sabão em Pó',
+                'sm_code' => 'SAPO',
+                'description' => 'Sabão em pó, 1kg.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 12.90,
+                'value' => $this->calculateValue(12.90),
+                'product_amount' => 160,
+                'status' => 1
+            ],
+            [
+                'name' => 'Detergente Líquido',
+                'sm_code' => 'DELI',
+                'description' => 'Detergente líquido, 500ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 2.20,
+                'value' => $this->calculateValue(2.20),
+                'product_amount' => 210,
+                'status' => 1
+            ],
+            [
+                'name' => 'Amaciante de Roupas',
+                'sm_code' => 'AMRO',
+                'description' => 'Amaciante de roupas, 2 litros.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 8.60,
+                'value' => $this->calculateValue(8.60),
+                'product_amount' => 85,
+                'status' => 1
+            ],
+            [
+                'name' => 'Papel Higiênico',
+                'sm_code' => 'PAHI',
+                'description' => 'Papel higiênico, pacote com 4 rolos.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 6.30,
+                'value' => $this->calculateValue(6.30),
+                'product_amount' => 140,
+                'status' => 1
+            ],
+            [
+                'name' => 'Creme Dental',
+                'sm_code' => 'CRDE',
+                'description' => 'Creme dental, 90g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 3.80,
+                'value' => $this->calculateValue(3.80),
+                'product_amount' => 120,
+                'status' => 1
+            ],
+            [
+                'name' => 'Sabonete Líquido',
+                'sm_code' => 'SALI',
+                'description' => 'Sabonete líquido, 250ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 4.50,
+                'value' => $this->calculateValue(4.50),
+                'product_amount' => 75,
+                'status' => 1
+            ],
+            [
+                'name' => 'Desodorante Aerosol',
+                'sm_code' => 'DEAER',
+                'description' => 'Desodorante aerosol, 150ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 12.40,
+                'value' => $this->calculateValue(12.40),
+                'product_amount' => 50,
+                'status' => 1
+            ],
+            [
+                'name' => 'Shampoo',
+                'sm_code' => 'SHAM',
+                'description' => 'Shampoo para cabelos normais, 400ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 14.90,
+                'value' => $this->calculateValue(14.90),
+                'product_amount' => 60,
+                'status' => 1
+            ],
+            [
+                'name' => 'Condicionador',
+                'sm_code' => 'COND',
+                'description' => 'Condicionador para cabelos normais, 400ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 16.90,
+                'value' => $this->calculateValue(16.90),
+                'product_amount' => 50,
+                'status' => 1
+            ],
+            [
+                'name' => 'Água Sanitária',
+                'sm_code' => 'AGSA',
+                'description' => 'Água sanitária, 2 litros.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 3.60,
+                'value' => $this->calculateValue(3.60),
+                'product_amount' => 220,
+                'status' => 1
+            ],
+            [
+                'name' => 'Desinfetante',
+                'sm_code' => 'DESE',
+                'description' => 'Desinfetante multiuso, 500ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 5.20,
+                'value' => $this->calculateValue(5.20),
+                'product_amount' => 200,
+                'status' => 1
+            ],
+            [
+                'name' => 'Sabonete em Barra',
+                'sm_code' => 'SABA',
+                'description' => 'Sabonete em barra, 85g.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 1.90,
+                'value' => $this->calculateValue(1.90),
+                'product_amount' => 400,
+                'status' => 1
+            ],
+            [
+                'name' => 'Esponja de Aço',
+                'sm_code' => 'ESAC',
+                'description' => 'Esponja de aço, pacote com 8 unidades.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 3.50,
+                'value' => $this->calculateValue(3.50),
+                'product_amount' => 230,
+                'status' => 1
+            ],
+            [
+                'name' => 'Limpador Multiuso',
+                'sm_code' => 'LIMU',
+                'description' => 'Limpador multiuso, 500ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 6.90,
+                'value' => $this->calculateValue(6.90),
+                'product_amount' => 180,
+                'status' => 1
+            ],
+            [
+                'name' => 'Sabão Líquido',
+                'sm_code' => 'SALIQ',
+                'description' => 'Sabão líquido, 1 litro.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 10.90,
+                'value' => $this->calculateValue(10.90),
+                'product_amount' => 160,
+                'status' => 1
+            ],
+            [
+                'name' => 'Água Mineral',
+                'sm_code' => 'AGMI',
+                'description' => 'Água mineral sem gás, 500ml.',
+                'bar_code' => $this->generateBarcode(),
+                'cost' => 1.50,
+                'value' => $this->calculateValue(1.50),
+                'product_amount' => 500,
+                'status' => 1
+            ]
         ];
-        $faker = Faker::create();
-        foreach ($products as $product) {
-            $product['bar_code'] =  $faker->unique()->numerify('789#########');
-            ProductsModel::create($product);
-        }
+
+        DB::table('products')->insert($products);
+    }
+
+    private function generateBarcode()
+    {
+        return Str::random(12);
+    }
+
+    private function calculateValue($cost)
+    {
+        return round($cost * 1.7, 2); // Margem de 70%
     }
 }

@@ -39,7 +39,7 @@
             class="d-flex col-12 justify-content-between flex-row details">
               <p class="sm_code" title="Código Reduzido">{{this.product.sm_code? this.product.sm_code:this.rawproduct.sm_code}}</p>
               <p>-</p>
-              <p class="value" title="Valor do Produto">R${{this.product.value? this.product.value:this.rawproduct.value}}</p>
+              <p class="cost" title="(R$) Custo do Produto">R${{this.product.cost? this.product.cost:this.rawproduct.cost}}</p>
               <p>-</p>
               <p class="amount" title="Quantidade Total">{{ this.product.product_amount? this.product.product_amount:this.rawproduct.product_amount }} UN</p>
             </div>
@@ -50,21 +50,29 @@
                 <input id="sm_code" type="text"  placeholder="Cód. Redu" title="Código Reduzido"  v-model="editingPrd['sm_code']" class="col-5 form-control">
               </div>
               <div class="col-4">
-                <input id="value" type="number"  placeholder="R$" title="(R$) Preço" v-model.number="editingPrd['value']" class="col-4 form-control">
+                <input id="cost" type="number"  placeholder="Custo" title="(R$) Custo do Produto" v-model.number="editingPrd['cost']" class="col-4 form-control">
               </div>
               <div class="col-3">
                 <input id="product_amount" type="text" placeholder="UN" title="Quantidade do Produto" v-model="editingPrd['product_amount']" class="col-3 form-control">
               </div>
             </div>
-            <div 
+            <div class="d-flex flex-row col-12">
+              <div 
             v-if="!this.edit_status"
-            class="d-flex col-12 justify-content-between flex-row bar-code">
+            class="d-flex col-8 justify-content-between flex-row bar-code">
               <p title="Código de Barras">{{ this.product.bar_code? this.product.bar_code:this.rawproduct.bar_code }}</p>
+            </div>
+            <div v-if="!this.edit_status" class="d-flex col-4 justify-content-between flex-row value">
+              <p title="(R$) Valor">R${{ this.product.value? this.product.value:this.rawproduct.value }}</p>
             </div>
             <div 
             v-if="this.edit_status"
-            class="d-flex col-12 justify-content-between flex-row bar-code">
-            <input id="bar_code" placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-12 form-control">
+            class="d-flex col-8 justify-content-between flex-row bar-code">
+            <input id="bar_code" placeholder="Código de Barras" title="Código de Barras" type="text" v-model="editingPrd['bar_code']" class="col-8 form-control">
+            </div>
+            <div v-if="this.edit_status" class="d-flex col-4 justify-content-between flex-row value">
+              <input id="value" type="number"  placeholder="Valor" title="(R$) Valor do Produto" v-model.number="editingPrd['value']" class="col-4 form-control">
+            </div>
             </div>
           </div>
           <div class="d-flex flex-column col-4 card-product">

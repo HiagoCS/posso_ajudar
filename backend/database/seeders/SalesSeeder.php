@@ -1,69 +1,54 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Storage\ProductsModel;
-use App\Models\Storage\PrdEntryModel;
-use App\Models\Storage\PrdOutModel;
-use App\Models\Storage\CashierSaleModel;
-use App\Models\Storage\PrdStockModel; // Adicionado para incluir a model PrdStock
-use App\Models\Account\Client;
-use App\Models\Account\PGModel;
-use Faker\Factory as Faker;
+use Carbon\Carbon;
 
 class SalesSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        $faker = Faker::create();
+        $products = \App\Models\Storage\ProductsModel::all();
+        $entries = []; // Corrigir o nome para refletir múltiplas entradas
 
-        // Cria alguns produtos fictícios
-        $products = ProductsModel::all();
-
-        // Cria alguns clientes fictícios
-        $clients = [];
-        for ($i = 0; $i < 5; $i++) {
-            $clients[] = Client::create([
-                'name' => $faker->name,
-                'cpf' => $faker->unique()->numerify('###########'), // CPF fictício
-                'id_fav_pg_method' => PGModel::inRandomOrder()->first()->id // Associa com um método de pagamento existente
-            ]);
-        }
-
-        // Cria algumas vendas fictícias
-        foreach ($clients as $client) {
-            $sale = CashierSaleModel::create([
-                'total_value' => $faker->randomFloat(2, 50, 200), // Valor total da venda
-                'id_pg_method' => PGModel::inRandomOrder()->first()->id, // Método de pagamento
-                'id_client' => $client->id, // Cliente associado
-                'dt_sale' => $faker->date('Y-m-d') // Data da venda
-            ]);
-
-            // Adiciona saídas de produtos
-            foreach ($products as $product) {
-                // Simula entrada de produto
-                PrdEntryModel::create([
-                    'id_product' => $product->id,
-                    'qunt_toAdd' => $faker->numberBetween(1, 10), // Quantidade adicionada
-                    'dt_entry' => $faker->date('Y-m-d') // Data da entrada
-                ]);
-
-                // Simula saída de produto
-                PrdOutModel::create([
-                    'id_product' => $product->id,
-                    'qunt_remove' => $faker->numberBetween(1, 10), // Quantidade removida
-                    'dt_out' => $faker->date('Y-m-d') // Data da saída
-                ]);
-
-                // Simula a saída de produtos por venda
-                PrdStockModel::create([
-                    'id_sale' => $sale->id,
-                    'id_product' => $product->id,
-                    'qunt_remove' => $faker->numberBetween(1, 10), // Quantidade removida
-                    'dt_sale' => $faker->date('Y-m-d') // Data da venda
+        for ($i = 0; $i <= 10; $i++) {
+            for($ia = 1; $ia <= 1; $ia++) {
+                array_push($entries, [
+                    "id_product" => $products[$i]->id,
+                    "qunt_remove" => rand(1, 10)
                 ]);
             }
         }
+
+        for ($i = 0; $i <= 10; $i++) {
+            $date = new Carbon('2024-0'.rand(5, 9).'-'.rand(1, 28)); // Garante datas válidas
+            $cashiersale = \App\Models\Storage\CashierSaleModel::create([
+                'total_value' => $products[rand(1, 29)]->value * rand(1, 5),
+                'id_pg_method' => rand(1, 4),
+                'id_client' => null,
+                'dt_sale' => $date->format("Y-m-d")
+            ]);
+
+            // Adiciona as informações da venda ao array de entradas
+            foreach($entries as $key => $entry) {
+                if (!isset($entries[$key]['id_sale'])) {
+                    $entries[$key]['id_sale'] = $cashiersale->id;
+                    $entries[$key]['dt_sale'] = $cashiersale->dt_sale;
+
+                    $prd = \App\Models\Storage\ProductsModel::find($entries[$key]['id_product']);
+                    
+                    $prd->update(['product_amount' => strval(intval($prd['product_amount']) - intval($entries[$key]['qunt_remove']))]);
+                    break;
+                }
+            }
+        }
+
+        // Inserir todas as entradas de uma vez
+        \App\Models\Storage\PrdStockModel::insert($entries);
     }
 }

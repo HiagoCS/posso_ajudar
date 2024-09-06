@@ -8,7 +8,8 @@
               <th>Produto</th>
               <th>Descrição</th>
               <th>Quantidade</th>
-              <th>R$</th>
+              <th>Custo (R$)</th>
+              <th>Valor (R$)</th>
             </tr>
           </thead>
         <tbody>
@@ -39,6 +40,10 @@
             <td :class="this.prd.id===product.id?this.prd.status:''" 
                 :style="`color:${product.status===0?'#8b8a8a':'black'};font-family:${product.status===0?'Quicksand-Regular-Oblique':'Quicksand-Regular'}`">
                 {{ product.product_amount }}
+            </td>
+            <td :class="this.prd.id===product.id?this.prd.status:''" 
+                :style="`color:${product.status===0?'#8b8a8a':'black'};font-family:${product.status===0?'Quicksand-Regular-Oblique':'Quicksand-Regular'}`">
+                R${{ product.cost }}
             </td>
             <td :class="this.prd.id===product.id?this.prd.status:''" 
                 :style="`color:${product.status===0?'#8b8a8a':'black'};font-family:${product.status===0?'Quicksand-Regular-Oblique':'Quicksand-Regular'}`">

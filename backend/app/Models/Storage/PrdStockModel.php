@@ -10,7 +10,7 @@ use App\Models\Storage\CashierSaleModel;
 class PrdStockModel extends Model
 {
     use HasFactory;
-    protected $table = 'products_stock';
+    protected $table = 'products_stock_sale';
     protected $primaryKey = "id";
     protected $fillable = [
         "id_sale",

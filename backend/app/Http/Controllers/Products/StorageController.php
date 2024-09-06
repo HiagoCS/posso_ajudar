@@ -58,7 +58,7 @@ class StorageController extends Controller
         if(empty($results)) return $prdModel->all();
         return response()->json($results);
     }
-    public function insert(Request $request, ProductsModel $prdModel, RolesModel $roles){
+    public function insert(Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
         if (!$roles->admAccess($request->user())) {
             return response()->json([
                 'status' => 403,
@@ -68,20 +68,7 @@ class StorageController extends Controller
     
         try {
             // Extrai dados do request
-            $productData = $request->only(['sm_code', 'bar_code', 'name', 'description', 'value', 'product_amount', 'status']);
-            
-            // Verifica se o produto já existe
-            $existingProduct = $prdModel->where('sm_code', $productData['sm_code'])
-                                        ->orWhere('bar_code', $productData['bar_code'])
-                                        ->first();
-    
-            if ($existingProduct) {
-                return response()->json([
-                    'status' => 400,
-                    'msg' => "Produto já existente com o código fornecido!",
-                    'data' => $existingProduct
-                ], 400);
-            }
+            $productData = $request->only(['sm_code', 'bar_code', 'name', 'description', 'value', 'product_amount', 'status', 'cost']);
     
             // Cria o novo produto
             $product = $prdModel->create($productData);

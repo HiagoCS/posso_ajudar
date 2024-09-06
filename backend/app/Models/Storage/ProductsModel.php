@@ -18,6 +18,7 @@ class ProductsModel extends Model
         'description',
         'value',
         'product_amount',
+        'cost',
         'status',
       ];
 
