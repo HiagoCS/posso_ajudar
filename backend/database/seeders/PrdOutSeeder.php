@@ -23,7 +23,7 @@ class PrdOutSeeder extends Seeder
             $outs[] = [
                 'id_product' => $product->id,
                 'qunt_remove' => rand(1, 10),
-                'dt_out' => Carbon::createFromFormat('Y-m-d', '2024-0'.rand(5, 9).'-'.rand(1, 28))->format('Y-m-d')
+                'dt_out' => Carbon::createFromFormat('Y-m-d', '2024-0'.rand(5, 9).'-'.rand(1, 6))->format('Y-m-d')
             ];
             $product->update([
                 'product_amount' => max(0, intval($product->product_amount) - intval($outs[$i]['qunt_remove'])) // Garante que não tenha valor negativo

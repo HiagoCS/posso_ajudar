@@ -112,6 +112,23 @@ class StorageController extends Controller
                         'data' => 'Erro, código de barras não validado!! - ManagerController'
                     ], 500);
             }
+            if(intval($request['product_amount']) > intval($product['product_amount'])){
+                $date = Carbon::now()->format('Y-m-d');
+                $entry = \App\Models\Storage\PrdEntryModel::create([
+                    'id_product' => $product->id,
+                    'qunt_toAdd' => intval($request['product_amount'])-intval($product['product_amount']),
+                    'dt_entry' => $date
+                ]);
+            }
+            if(intval($request['product_amount']) < intval($product['product_amount'])){
+                $date = Carbon::now()->format('Y-m-d');
+                $out = \App\Models\Storage\PrdOutModel::create([
+                    'id_product' => $product->id,
+                    'qunt_remove' => intval($product['product_amount'])-intval($request['product_amount']),
+                    'dt_out' => $date
+                ]);
+            }
+           
             if($product->update($request->all())) 
                 return response()->json([
                     "status" => 200,

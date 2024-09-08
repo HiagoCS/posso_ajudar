@@ -17,20 +17,41 @@ export default{
   },
   async created(){
     await this.userData();
-    if(!this.$root.isLoggedIn &&
-    this.$router.currentRoute.value.name != "home") this.$router.push("login");
+    
   },
   methods:{
     async userData(){
-      if(this.isLoggedIn){
-        const {data} = await axios.get('user', {headers:{'Authorization':`Bearer ${VueCookie.get('token')}`}});
-        this.user = data.user;
-        this.roles = data.roles_nm;
-        console.log("DATA", data);
-        return data;
-      }else {this.user = {}; return {}};
+      if (this.isLoggedIn) {
+        try {
+          const {data} = await axios.get('user', {headers:{'Authorization':`Bearer ${VueCookie.get('token')}`}});
+          this.user = data.user;
+          this.roles = data.roles_nm;
+          console.log("DATA", data);
+        } catch (error) {
+            // Aqui você pode tratar erros como 401 ou outros
+           console.error("Erro ao buscar dados do usuário:", error);
+        }
+      } else{
+        // Verifica se o usuário não está logado e se ele não está na rota "login"
+        const route = await this.$route.name 
+        console.log(route)
+    if (!window.location.pathname.includes('login')) {
+      this.$swal({
+        title: 'Usuário não está logado',
+        text: 'Por favor, faça login para continuar.',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        this.$router.push({ name: 'login' });
+      });
+    } else {
+      // Se o usuário já estiver na rota "login", apenas limpar os dados sem redirecionar ou alertar
+      this.user = {};
+      return {};
     }
+      }
   }
+}
 }
 </script>
 

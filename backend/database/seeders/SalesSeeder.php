@@ -26,7 +26,7 @@ class SalesSeeder extends Seeder
         }
 
         for ($i = 0; $i <= 10; $i++) {
-            $date = new Carbon('2024-0'.rand(5, 9).'-'.rand(1, 28)); // Garante datas válidas
+            $date = new Carbon('2024-0'.rand(5, 9).'-'.rand(1, 6)); // Garante datas válidas
             $cashiersale = \App\Models\Storage\CashierSaleModel::create([
                 'total_value' => $products[rand(1, 29)]->value * rand(1, 5),
                 'id_pg_method' => rand(1, 4),

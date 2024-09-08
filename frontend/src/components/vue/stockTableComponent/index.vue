@@ -36,25 +36,30 @@
             :style="`font-family:Quicksand-Regular`">
                 {{ stock.name }}
             </td>
-            <td  :class="this.stk.id===stock.id?this.stk.status:''" 
-            :style="`font-family:Quicksand-Regular`">
+            <td  :class="`${this.stk.id===stock.id?this.stk.status:''}`" 
+            :style="`font-family:Quicksand-Regular`"
+            :title="`#${stock.id} - ${stock.name} = R$${stock.value}`">
                 R${{ stock.value }}
             </td>
             <td  :class="this.stk.id===stock.id?this.stk.status:''" 
-            :style="`font-family:Quicksand-Regular`">
+            :style="`font-family:Quicksand-Regular`"
+            :title="`#${stock.id} - ${stock.name} = ${stock.amount}UN`">
                 {{ stock.amount }}
             </td>
             <td :class="this.stk.id===stock.id?this.stk.status:''" 
-            :style="`font-family:Quicksand-Regular;font-size:15px`">
-                <i style="color: #2fa9fe;font-family:'Quicksand-Bold'">+ {{ stock.last_entry.qunt_toAdd }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_entry.dt_entry }}</i>
+            :style="`font-family:Quicksand-Regular;font-size:15px`"
+            :title="`#${stock.id} - ${stock.name} = ${this.formatDate(stock.last_entry.dt_entry)}`">
+                <i style="color: #2fa9fe;font-family:'Quicksand-Bold'">+ {{ stock.last_entry.qunt_toAdd }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ this.formatDate(stock.last_entry.dt_entry) }}</i>
             </td>
             <td  :class="this.stk.id===stock.id?this.stk.status:''" 
-            :style="`font-family:Quicksand-Regular;font-size:15px`">
-                <i style="color: #1e9234;font-family:'Quicksand-Bold'">- {{ stock.last_sale.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_sale.dt_sale }}</i>
+            :style="`font-family:Quicksand-Regular;font-size:15px`"
+            :title="`#${stock.id} - ${stock.name} = ${this.formatDate(stock.last_sale.dt_sale)}`">
+                <i style="color: #1e9234;font-family:'Quicksand-Bold'">- {{ stock.last_sale.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ this.formatDate(stock.last_sale.dt_sale) }}</i>
             </td>
             <td  :class="this.stk.id===stock.id?this.stk.status:''" 
-            :style="`font-family:Quicksand-Regular;font-size:15px`">
-              <i style="color: #e13333;font-family:'Quicksand-Bold'">- {{ stock.last_out.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ stock.last_out.dt_out }}</i>
+            :style="`font-family:Quicksand-Regular;font-size:15px`"
+            :title="`#${stock.id} - ${stock.name} = ${this.formatDate(stock.last_out.dt_out)}`">
+              <i style="color: #e13333;font-family:'Quicksand-Bold'">- {{ stock.last_out.qunt_remove }}</i> || <i style="font-family:'Quicksand-Regular-Oblique'">{{ this.formatDate(stock.last_out.dt_out) }}</i>
             </td>
           </tr>
         </tbody>
@@ -62,6 +67,7 @@
 </template>
 <style src="./style.scss" lang="scss" scoped></style>
 <script>
+import dayjs from 'dayjs';
     export default{
       created(){
         if(this.stock.id){
@@ -97,16 +103,28 @@
           }
         },
         methods:{
+          formatDate(date){
+            const datestr = dayjs(date);
+                // Then specify how you want your dates to be formatted
+            return datestr.format('DD/MM/YYYY');
+            },
           selectProduct(stock) {
             if(!this.stk.id || this.stk.id!=stock.id){
               this.selected = stock;
               this.stk.status = 'active';
               this.stk.id = stock.id;
               this.$emit('selected', stock);
-            }else{
+            }else if(this.stk.id===stock.id){
+              console.log(this.stk.id, stock.id)
               this.stk.status = '';
               this.stk.id = null;
-              this.$emit('selected', {});
+              this.$emit('selected', {
+                    last_entry:{
+                      dt_entry:'0000-00-00',
+                    }
+                });
+              console.log("vazio")
+
             }
           }
         }
