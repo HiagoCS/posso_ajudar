@@ -8,7 +8,8 @@
             <font-awesome-icon icon="spinner" spin />
         </span>
         <div v-if="!this.spinner.status">
-          <tableComponent :stock="this.productstock"  :stocks="productstocks" @selected="(stock) =>{if(this.edit_status)return;this.productstock=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableComponent>
+          <tableComponent v-if="Object.keys(stockproduct).length === 0" :stock="this.productstock"  :stocks="productstocks" @selected="(stock) =>{if(this.edit_status)return;this.productstock=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableComponent>
+          <tableMovimentComponent v-if="Object.keys(stockproduct).length !== 0" :stock="this.stockproduct"  :stocks="this.stockproduct.stockMovements" @selected="(stock) =>{if(this.edit_status)return;this.stockproduct.stockMovements=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableMovimentComponent>
         </div>
     </div>
     <div class="d-flex flex-row justify-content-center col-12 footer">
@@ -129,7 +130,7 @@
                v-if="!this.edit_status"
               title="Exibir tudo (entradas, saídas e vendas)"
               :class="`btn btn-primary ${this.disabled.lines}`"
-              @click="">
+              @click="allMoviments(this.productstock)">
                 <font-awesome-icon icon="file-lines"></font-awesome-icon>
               </span>
               
@@ -168,10 +169,11 @@
 <script>
 import logoComponent from '@/components/vue/logoComponent.vue';
 import tableComponent from "@/components/vue/stockTableComponent/index.vue"
-import axios from 'axios';
+import tableMovimentComponent from "@/components/vue/stockMovimentsTableComponent/index.vue"
+import axios from 'axios'; 
 import dayjs from 'dayjs';
     export default{
-        components:{logoComponent,tableComponent},
+        components:{logoComponent,tableComponent,tableMovimentComponent},
         watch:{
             edit_status(newValue){
                 this.add_entry = newValue;
@@ -203,6 +205,50 @@ import dayjs from 'dayjs';
             }
         },
         computed:{
+            stockproducts() {
+        const stockMap = new Map();
+
+        this.rawproductstocks.forEach(product => {
+            // Função para agrupar por data e somar os valores
+            const groupByDateAndSum = (items, dateField, sumField, type) => {
+                return items.reduce((acc, item) => {
+                    const date = new Date(item[dateField]).toISOString().split('T')[0]; // Comparar apenas a data
+                    if (!acc[date]) {
+                        acc[date] = { 
+                            date,
+                            type, 
+                            quantity: item[sumField]
+                        };
+                    } else {
+                        acc[date].quantity += item[sumField]; // Somar os valores do campo de quantidade
+                    }
+                    return acc;
+                }, {});
+            };
+
+            // Agrupando entradas, saídas e vendas
+            const groupedEntries = groupByDateAndSum(product.entries, 'dt_entry', 'qunt_toAdd', 'entry');
+            const groupedOut = groupByDateAndSum(product.direct_out, 'dt_out', 'qunt_remove', 'out');
+            const groupedSales = groupByDateAndSum(product.sales_out, 'dt_sale', 'qunt_remove', 'sale');
+
+            // Mesclar todos os grupos em um único array
+            const mergedStock = Object.values({ ...groupedEntries, ...groupedOut, ...groupedSales });
+
+            // Ordenar pela data
+            const sortedStock = mergedStock.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Inserir no Map do produto
+            stockMap.set(product.id, {
+                id: product.id,
+                name: product.name,
+                value: product.value,
+                amount: product.product_amount,
+                cost: product.cost,
+                stockMovements: sortedStock  // Armazena os movimentos de estoque
+            });
+        });
+        return Array.from(stockMap.values());
+    },
             productstocks() {
                 const stockMap = new Map();
                 this.rawproductstocks.forEach(product => {
@@ -276,6 +322,7 @@ import dayjs from 'dayjs';
                 entry_data:{},
                 edit_status:false,
                 spinner:{status:false},
+                stockproduct:{}, 
                 productstock:{last_entry:{dt_entry:'0000-00-00'}},
                 rawproductstocks:[],
                 rawproductstock:{
@@ -312,6 +359,25 @@ import dayjs from 'dayjs';
             
         },
         methods:{
+            async allMoviments(stock){
+                this.stockproduct = this.stockproducts[this.stockproducts.findIndex(raw => raw.id === stock.id)];
+                const array = [];
+                this.stockproduct.stockMovements.forEach(st =>{
+                    array.push({
+                        id: this.stockproduct.id,
+                        name: this.stockproduct.name,
+                        value: this.stockproduct.value,
+                        amount: this.stockproduct.product_amount,
+                        cost: this.stockproduct.cost,
+                        date: st.date,
+                        quantity:st.quantity,
+                        type:st.type
+                    })
+                    
+                });
+                this.stockproduct.stockMovements = array;
+                return console.log(this.stockproduct.stockMovements);;
+            },
             async newEntry(status, entry){
                 if(!entry){
                     this.edit_status = status;
