@@ -83,23 +83,41 @@ class StorageController extends Controller
     }
 }
 
-    public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
-        if (!$roles->admAccess($request->user())) {
-            return response()->json([
-                'status' => 403,
-                'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
-            ], 403);
-        }
-    
-        try {
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 500,
-                'msg' => 'Erro ao buscar produtos e informações de estoque',
-                'data' => $th->getMessage()
-            ], 500);
-        }
+public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
+    if (!$roles->admAccess($request->user())) {
+        return response()->json([
+            'status' => 403,
+            'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
+        ], 403);
     }
+
+    try {
+        // Paginação dos produtos
+        $products = $prdModel->paginate($perpage, ['*'], 'page', $index);
+
+        // Adiciona informações de entrada e saída para cada produto
+        $products->getCollection()->transform(function ($product) use ($prdEntryModel, $prdStockModel, $prdOutModel) {
+            // Obtém a entrada de estoque para o produto
+            $product->entries = $prdEntryModel->where('id_product', $product->id)->get();
+
+            // Obtém as saídas de estoque por venda
+            $product->sales_out = $prdStockModel->where('id_product', $product->id)->get();
+
+            // Obtém as saídas de estoque por retirada direta
+            $product->direct_out = $prdOutModel->where('id_product', $product->id)->get();
+
+            return $product;
+        });
+
+        return response()->json($products);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 500,
+            'msg' => 'Erro ao buscar produtos e informações de estoque',
+            'data' => $th->getMessage()
+        ], 500);
+    }
+}
     public function search($term, $search, ProductsModel $prdModel){
         /* $search = $request->all(); */
         $results = [];
