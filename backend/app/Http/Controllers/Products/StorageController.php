@@ -13,6 +13,76 @@ use Carbon\Carbon;
 
 class StorageController extends Controller
 {
+    public function stock($id, $index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel)
+{
+    if (!$roles->admAccess($request->user())) {
+        return response()->json([
+            'status' => 403,
+            'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
+        ], 403);
+    }
+
+    try {
+        // Busca o produto específico pelo id
+        $product = $prdModel->find($id);
+        
+        if (!$product) {
+            return response()->json([
+                'status' => 404,
+                'msg' => 'Produto não encontrado'
+            ], 404);
+        }
+
+        // Busca entradas de estoque do produto
+        $entries = $prdEntryModel->where('id_product', $id)->get()->map(function ($entry) {
+            return [
+                'type' => 'entry',
+                'quantity' => $entry->qunt_toAdd,
+                'date' => $entry->dt_entry
+            ];
+        });
+
+        // Busca saídas de estoque por venda
+        $sales_out = $prdStockModel->where('id_product', $id)->get()->map(function ($sale) {
+            return [
+                'type' => 'sale',
+                'quantity' => $sale->qunt_remove,
+                'date' => $sale->dt_sale
+            ];
+        });
+
+        // Busca saídas de estoque por retirada direta
+        $direct_out = $prdOutModel->where('id_product', $id)->get()->map(function ($out) {
+            return [
+                'type' => 'direct_out',
+                'quantity' => $out->qunt_remove,
+                'date' => $out->dt_out
+            ];
+        });
+
+        // Junta todas as entradas e saídas
+        $stockMovements = $entries->concat($sales_out)->concat($direct_out);
+
+        // Ordena pelo campo 'date' de forma decrescente (mais recentes primeiro)
+        $sortedMovements = $stockMovements->sortByDesc('date')->values();
+
+        // Adiciona as informações ao produto
+        $product->movements = $sortedMovements;
+
+        // Retorna o produto com suas movimentações de estoque paginadas
+        return response()->json([
+            'product' => $product
+        ]);
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 500,
+            'msg' => 'Erro ao buscar informações de estoque',
+            'data' => $th->getMessage()
+        ], 500);
+    }
+}
+
     public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
         if (!$roles->admAccess($request->user())) {
             return response()->json([
@@ -22,24 +92,6 @@ class StorageController extends Controller
         }
     
         try {
-            // Paginação dos produtos
-            $products = $prdModel->paginate($perpage, ['*'], 'page', $index);
-    
-            // Adiciona informações de entrada e saída para cada produto
-            $products->getCollection()->transform(function ($product) use ($prdEntryModel, $prdStockModel, $prdOutModel) {
-                // Obtém a entrada de estoque para o produto
-                $product->entries = $prdEntryModel->where('id_product', $product->id)->get();
-    
-                // Obtém as saídas de estoque por venda
-                $product->sales_out = $prdStockModel->where('id_product', $product->id)->get();
-    
-                // Obtém as saídas de estoque por retirada direta
-                $product->direct_out = $prdOutModel->where('id_product', $product->id)->get();
-    
-                return $product;
-            });
-    
-            return response()->json($products);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 500,

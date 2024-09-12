@@ -39,6 +39,9 @@ Route::middleware('auth:sanctum')->
             Route::delete('/delete/{id}', 'App\Http\Controllers\Products\StorageController@delete');
 
             Route::get('/search/{term}/{search}', 'App\Http\Controllers\Products\StorageController@search');
+            Route::prefix('stock')->group(function(){
+                Route::get('/{id}/{index}/{perpage}', 'App\Http\Controllers\Products\StorageController@stock');
+            });
         });
     });
     
