@@ -8,6 +8,7 @@ import RegisterView from '../views/register/index.vue'
 import LoginView from '../views/login/index.vue'
 import ProductsGeneral from '../views/manager/products/table/index.vue'
 import ProductsStock from '../views/manager/products/stock/index.vue'
+import StockDetails from '../views/manager/products/stock/details/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,12 @@ const router = createRouter({
       path:'/products/stock',
       name:'products-stock',
       component:ProductsStock,
+      props:true
+    },
+    {
+      path:'/products/stock/:id',
+      name:'stocks-details',
+      component:StockDetails,
       props:true
     },
     {

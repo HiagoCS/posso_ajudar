@@ -1,17 +1,18 @@
 <template>
-<main class="container-fluid d-flex flex-column align-items-center">
-    <header class="logo-container" >
-        <logoComponent module="products - stock"></logoComponent>
-    </header>
-    <div class="d-flex flex-column table-container">
-        <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
-            <font-awesome-icon icon="spinner" spin />
-        </span>
-        <div v-if="!this.spinner.status">
-          <tableComponent v-if="Object.keys(stockproduct).length === 0" :stock="this.productstock"  :stocks="productstocks" @selected="(stock) =>{if(this.edit_status)return;this.productstock=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableComponent>
+    <main class="container-fluid d-flex flex-column align-items-center">
+        <header class="logo-container" >
+            <logoComponent module="products - stock"></logoComponent>
+        </header>
+        <div class="d-flex flex-column table-container">
+            <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
+                <font-awesome-icon icon="spinner" spin />
+            </span>
+            <div v-if="!this.spinner.status">
+                <tableMovimentComponent  :stock="this.stockproduct"  :stocks="this.stockproduct.stockMovements" @selected="(stock) =>{if(this.edit_status)return;this.stockproduct.stockMovements.selected=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableMovimentComponent>
+            </div>
+            
         </div>
-    </div>
-    <div class="d-flex flex-row justify-content-center col-12 footer">
+        <div class="d-flex flex-row justify-content-center col-12 footer">
         <div class="d-flex flex-column col-4 card-product">
             <div  class="d-flex flex-row justify-content-around title">
               <p class="name" title="Nome">{{this.productstock.name ? this.productstock.name : this.rawproductstock.name}} </p>
@@ -130,7 +131,7 @@
                 
         </div>
     </div>
-</main>
+    </main>
 </template>
 <style src="./style.scss" lang="scss" scoped></style>
 <script>
@@ -141,7 +142,7 @@ import stockMovementsActions from "@/components/vue/stockMovimentsTableComponent
 import tableMovimentComponent from "@/components/vue/stockMovimentsTableComponent/index.vue"
 import axios from 'axios'; 
 import dayjs from 'dayjs';
-    export default{
+export default{
         components:{logoComponent,tableComponent,tableMovimentComponent, stockActions, stockMovementsActions},
         watch:{
             edit_status(newValue){
@@ -393,7 +394,7 @@ import dayjs from 'dayjs';
                 this.spinner.status=true;
                 try {
                     this.disabledAll();
-                    const {data} = await axios.get(`manager/products/${index}/${$perpage}`)
+                    const {data} = await axios.get(`manager/products/stock/${this.$route.params.id}/${index}/${$perpage}`)
                     this.rawproductstocks = data.data;
                     this.currentpage = data.current_page;
                     this.lastpage = data.last_page

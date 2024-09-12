@@ -98,11 +98,11 @@ import dayjs from 'dayjs';
               this.selected = stock;
               this.stk.status = 'active';
               this.stk.id = index;
-             /*  this.$emit('selected', stock); */
+              this.$emit('selected', this.selected);
             }else if(this.stk.id===index){
               this.stk.status = '';
               this.stk.id = null;
-              /* this.$emit('selected', {}); */
+              this.$emit('selected', {});
             }
           }
         }

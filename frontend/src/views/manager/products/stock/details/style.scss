@@ -1,0 +1,157 @@
+.container-fluid{
+    display: flex;
+    flex-direction: column;
+    
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    .logo-container {
+        width: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+    }
+    .footer{
+        width: 90%;
+        height: 160px;
+        margin-top: 1pc;
+        border-radius: 5px;
+        .card-product{
+            .actions{
+                height: 100%;
+                span.disabled{
+                  opacity: 50%;
+                  
+                }
+              }
+        }
+        .cost-details{
+            padding-top: 20px;
+            .input-group{
+                position: relative;
+                border: black solid 3px;
+                border-radius: 5px;
+                label{
+                    position: absolute;
+                    top:50%;
+                    left: 5px;
+                    transform: translateY(-50%);
+                    padding: 0 5px;
+                    pointer-events: none;
+                    z-index: 1;
+                    transition: 0.3s;
+                    font-size: 20px;
+                    color: #000;
+                }
+                input{
+                    z-index: 0;
+                    &:focus~label,
+                    &:valid~label{
+                        font-size: 15px;
+                        top: -13px;
+                        left: 60px;
+                        color: #000;
+                        font-family: "Quicksand-Bold";
+                    }
+                }
+            }
+            .input-group.opz{
+                position: relative;
+                border: black solid 3px;
+                border-radius: 5px;
+                label{
+                    position: absolute;
+                    top:50%;
+                    left: 5px;
+                    transform: translateY(-50%);
+                    padding: 0 5px;
+                    pointer-events: none;
+                    z-index: 1;
+                    transition: 0.3s;
+                    font-size: 20px;
+                    color: #000;
+                }
+                input.disabled~label{
+                    opacity: 0;
+                        top: -13px;
+                        color: #000;
+                        font-family: "Quicksand-Bold";
+                }
+                input{
+                    z-index: 0;
+                    &:focus~label,
+                    &:valid~label{
+                        opacity: 0;
+                        top: -13px;
+                        color: #000;
+                        font-family: "Quicksand-Bold";
+                    }
+                }
+            }
+            .cost-title{
+                .title{
+                    font-family: 'Quicksand-Bold'; 
+                    font-size: 16px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .dt_entry{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+            .cost-values{
+                
+                .column{
+                    
+                    height: 90px;
+                    margin-bottom: 30px;
+                    font-weight: 300;
+                        font-family: 'Quicksand-Bold';
+                    .row{
+                        width: 90px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                    .row:hover{
+                        background-color: rgb(199, 199, 199);
+                    }
+                    .row.cost{
+                        color: #595c59;
+                    }
+                    .row.value{
+                        color: #32c032;
+                    }
+                    .row.unity{
+                        color: #da3d37;;
+                    }
+                    .simbol{
+                        font-size: 16px;
+                        &:hover{
+                            background-color: transparent !important;
+                        }
+                    }
+                }
+            }
+        }
+        .profit{
+            height: 130px;
+        }
+        .details{
+            &.total_sales{
+                font-size: 15px !important;
+                .title{
+                    font-size: 14px !important;
+                }
+                .unity{
+                    color: #da3d37;
+                }
+            }
+        }
+    }
+}
