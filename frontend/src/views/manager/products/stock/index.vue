@@ -324,6 +324,10 @@ import dayjs from 'dayjs';
                 }else{
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{cost:entry.cost,value:entry.value,product_amount:parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd)});
                     this.edit_status=false;
+                    const updatedProduct = data.data;
+                    this.productstock.name = updatedProduct.name
+                    this.productstock.value = updatedProduct.value
+                    this.productstock.cost = updatedProduct.cost
                     this.productstock.amount = parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd);
                     this.paginate(this.currentpage, 7)
                 }
@@ -338,6 +342,10 @@ import dayjs from 'dayjs';
                 }else{
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{product_amount:parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove)});
                     this.edit_status=status;
+                    const updatedProduct = data.data;
+                    this.productstock.name = updatedProduct.name
+                    this.productstock.value = updatedProduct.value
+                    this.productstock.cost = updatedProduct.cost
                     this.productstock.amount = parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove);
                     this.paginate(this.currentpage, 7)
                 }
