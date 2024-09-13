@@ -19,4 +19,8 @@ class UpdateEntryModel extends Model
         "cost",
         "quantity"
     ];
+    public function stockEntry()
+    {
+        return $this->belongsTo(PrdEntryModel::class, 'id_stock_entry', 'id');
+    }
 }

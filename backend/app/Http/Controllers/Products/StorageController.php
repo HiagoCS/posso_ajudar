@@ -10,13 +10,25 @@ use App\Models\Storage\ProductsModel;
 use App\Models\Storage\PrdOutModel;
 use App\Models\Storage\PrdEntryModel;
 use App\Models\Storage\PrdStockModel;
+use App\Models\Storage\UpdateEntryModel;
+use App\Models\Storage\UpdateOutModel;
+use App\Models\Storage\UpdateSaleModel;
 use App\Models\Account\RolesModel;
 use Carbon\Carbon;
 
 class StorageController extends Controller
 {
-    public function stock($id, $index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel)
-{
+    public function stock($id, $index, $perpage, 
+    Request $request, 
+    ProductsModel $prdModel, 
+    RolesModel $roles, 
+    PrdEntryModel $prdEntryModel, 
+    PrdOutModel $prdOutModel, 
+    PrdStockModel $prdStockModel,
+    UpdateEntryModel $updateEntryModel,
+    UpdateOutModel $updateOutModel,
+    UpdateSaleModel $updateSaleModel
+    ){
     if (!$roles->admAccess($request->user())) {
         return response()->json([
             'status' => 403,
@@ -36,32 +48,52 @@ class StorageController extends Controller
         }
 
         // Busca entradas de estoque do produto
-        $entries = $prdEntryModel->where('id_product', $id)->get()->map(function ($entry) {
+        $entries = $prdEntryModel->where('id_product', $id)->get()->map(function ($entry) use ($updateEntryModel) {
+            $update = $updateEntryModel->where('id_stock_entry', $entry->id)->first();
             return [
                 'type' => 'entry',
                 'quantity' => $entry->qunt_toAdd,
-                'date' => $entry->dt_entry
+                'date' => $entry->dt_entry,
+                'state' => $update ? [
+                    'name' => $update->name,
+                    'value' => $update->value,
+                    'cost' => $update->cost,
+                    'quantity' => $update->quantity
+                ] : null
             ];
         });
 
         // Busca saídas de estoque por venda
-        $sales_out = $prdStockModel->where('id_product', $id)->get()->map(function ($sale) {
+        $sales_out = $prdStockModel->where('id_product', $id)->get()->map(function ($sale) use ($updateSaleModel) {
+            $update = $updateSaleModel->where('id_stock_sale', $sale->id)->first();
             return [
                 'type' => 'sale',
                 'quantity' => $sale->qunt_remove,
-                'date' => $sale->dt_sale
+                'date' => $sale->dt_sale,
+                'state' => $update ? [
+                    'name' => $update->name,
+                    'value' => $update->value,
+                    'cost' => $update->cost,
+                    'quantity' => $update->quantity
+                ] : null
             ];
         });
 
         // Busca saídas de estoque por retirada direta
-        $direct_out = $prdOutModel->where('id_product', $id)->get()->map(function ($out) {
+        $direct_out = $prdOutModel->where('id_product', $id)->get()->map(function ($out) use ($updateOutModel) {
+            $update = $updateOutModel->where('id_stock_out', $out->id)->first();
             return [
                 'type' => 'direct_out',
                 'quantity' => $out->qunt_remove,
-                'date' => $out->dt_out
+                'date' => $out->dt_out,
+                'state' => $update ? [
+                    'name' => $update->name,
+                    'value' => $update->value,
+                    'cost' => $update->cost,
+                    'quantity' => $update->quantity
+                ] : null
             ];
         });
-
         // Junta todas as entradas e saídas
         $stockMovements = $entries->concat($sales_out)->concat($direct_out);
 

@@ -18,4 +18,8 @@ class UpdateOutModel extends Model
         "cost",
         "quantity"
     ];
+    public function stockOut()
+    {
+        return $this->belongsTo(PrdOutModel::class, 'id_stock_out', 'id');
+    }
 }

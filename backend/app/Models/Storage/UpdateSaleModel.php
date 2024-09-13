@@ -18,4 +18,8 @@ class UpdateSaleModel extends Model
         "cost",
         "quantity"
     ];
+    public function stockSale()
+    {
+        return $this->belongsTo(PrdStockModel::class, 'id_stock_sale', 'id');
+    }
 }
