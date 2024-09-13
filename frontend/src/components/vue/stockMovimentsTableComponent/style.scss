@@ -30,6 +30,15 @@
       background-color: $background-blue;
       border-color: $background-blue;
     }
+    tr td.entry {
+      background-color: #2fa9fe;
+    }
+    tr td.out {
+      background-color: #e13333;
+    }
+    tr td.sale {
+      background-color: #1e9234;
+    }
     tr td.active {
       background-color: $background-blue !important;
       border-color: $background-blue !important;
@@ -39,6 +48,10 @@
       width: 100%;
       table-layout: fixed; /* Mantém a largura das colunas fixa */
       height: calc(100% / 7); /* Altura mínima para comportar 7 itens */
+      td.moves{
+        font-family: 'Quicksand-Bold'; 
+        color: white;
+      }
     }
     display: block; 
     height: calc(100% - 45px);

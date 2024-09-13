@@ -7,29 +7,42 @@
             <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
                 <font-awesome-icon icon="spinner" spin />
             </span>
-            <div v-if="!this.spinner.status">
-                <tableMovimentComponent  :stock="this.stockproduct"  :stocks="this.stockproduct.stockMovements" @selected="(stock) =>{if(this.edit_status)return;this.stockproduct.stockMovements.selected=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableMovimentComponent>
+            <div v-if="!this.spinner.status" style="table-layout: fixed;">
+                <tableMovimentComponent :stock="this.stockproduct"  :stocks="this.stockproduct.movements" @selected="(stock) =>{if(this.edit_status)return;this.selected=stock;}" @hovered="(stock) =>{if(this.edit_status)return;this.rawproductstock=stock;}"> </tableMovimentComponent>
             </div>
-            
         </div>
         <div class="d-flex flex-row justify-content-center col-12 footer">
         <div class="d-flex flex-column col-4 card-product">
             <div  class="d-flex flex-row justify-content-around title">
-              <p class="name" title="Nome">{{this.productstock.name ? this.productstock.name : this.rawproductstock.name}} </p>
-              <p class="id" title="ID">#{{this.productstock.id ? this.productstock.id: this.rawproductstock.id}}</p>
+              <p class="name" title="Nome">{{this.stockproduct.name ? this.stockproduct.name : '----------'}} </p>
+              <p class="id" title="ID">#{{this.stockproduct.id ? this.stockproduct.id : '00'}}</p>
             </div>
-            <div class="d-flex col-12 justify-content-between flex-row details">
-              <p class="cost" title="(R$) Custo do Produto">R${{this.productstock.cost? this.productstock.cost:this.rawproductstock.cost}}</p>
-              <p>-</p>
-              <p class="value" title="(R$) Valor do Produto">R${{this.productstock.value? this.productstock.value:this.rawproductstock.value}}</p>
-              <p>-</p>
-              <p class="amount" title="Quantidade Total">{{ this.productstock.amount? this.productstock.amount:this.rawproductstock.product_amount }} UN</p>
+            <!--Variados-->
+            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='entry'">
+              <p class="movement-title" style="color:#2fa9fe; font-size: 18px">Entrada</p>
+              <p class="simbol">||</p>
+              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
+              <p class="simbol">||</p>
+              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
             </div>
-            <div class="d-flex col-12 justify-content-between flex-row details total_sales" style="font-size: 15px;">
-                <i class="title">Total de Vendas: </i>
-                <i class="unity" title="Quantidade Vendas (UN)" >{{ this.productstock.total_sales ? this.productstock.total_sales : '0' }}UN</i>
-                X<i class="value" title="Valor Produto (R$)" > R${{ this.productstock.value ? this.productstock.value:this.rawproductstock.value }}</i>
-                <i title="Total de Venda (R$)">= R${{ this.productstock.total_sales? parseInt((this.productstock.total_sales * this.productstock.value)).toFixed(2):""  }}</i>
+            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='sale'">
+              <p class="movement-title" style="color:#1e9234; font-size: 18px">Venda</p>
+              <p class="simbol">||</p>
+              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
+              <p class="simbol">||</p>
+              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
+            </div>
+            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='direct_out'">
+              <p class="movement-title" style="color:#e13333; font-size: 18px">Saída</p>
+              <p class="simbol">||</p>
+              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
+              <p class="simbol">||</p>
+              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
+            </div>
+            <!--FIM dos Variados-->
+            <div class="d-flex col-12 justify-content-around flex-row details">
+                <p class="value">R${{ this.stockproduct.value }}</p>
+                <p class="cost">R${{ this.stockproduct.cost }}</p>
             </div>
         </div>
         <div v-if="!this.edit_status" class="d-flex flex-column justify-content-center col-4 card-product cost-details">
@@ -95,24 +108,8 @@
             </div>
         </div>
         <div class="d-flex flex-column col-4 card-product">
-            <stockActions 
-                v-if="!this.stockproduct.stockMovements"
-                @paginate="(page) =>{this.paginate(page,7)}" 
-                @newOut="(status) =>{this.newOut(status, null)}" 
-                @newEntry="(status) =>{this.newEntry(status, null)}"
-                @allMoviments="(stock) => {this.allMoviments(stock)}"
-                @newOut_obj="(status) =>{this.newOut(status, this.out_data)}"
-                @newEntry_obj="(status) =>{this.newEntry(status, this.entry_data)}"
-                @cancel="(status) =>{this.edit_status=status}"
-
-                :productstock="this.productstock" 
-                :edit_status="this.edit_status" 
-                :disabled="this.disabled" 
-                :currentpage="this.currentpage"
-                :send_data="this.send_data"
-                :out_data="this.out_data"/>
                 <stockMovementsActions 
-                v-if="this.stockproduct.stockMovements"
+                v-if="this.stockproduct"
                 @paginate="(page) =>{this.paginate(page,7)}" 
                 @newOut="(status) =>{this.newOut(status, null)}" 
                 @newEntry="(status) =>{this.newEntry(status, null)}"
@@ -121,6 +118,7 @@
                 @newEntry_obj="(status) =>{this.newEntry(status, this.entry_data)}"
                 @cancel="(status) =>{this.edit_status=status}"
 
+                :selected="this.selected"
                 :productstock="this.productstock" 
                 :stockproduct="this.stockproduct" 
                 :edit_status="this.edit_status" 
@@ -144,7 +142,53 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 export default{
         components:{logoComponent,tableComponent,tableMovimentComponent, stockActions, stockMovementsActions},
+        data(){
+            return{
+                send_data:{
+                    add_entry:false,
+                    out_entry:false,
+                },
+                out_data:{},
+                entry_data:{},
+                edit_status:false,
+                spinner:{status:false},
+                stockproduct:{}, 
+                selected:{},
+                productstock:{last_entry:{dt_entry:'0000-00-00'}},
+                rawproductstocks:[],
+                rawproductstock:{
+                    id:"0",
+                    name:"NENHUM PRODUTO SELECIONADO",
+                    value:"00,00",
+                    cost:'00,00',
+                    amount:"00",
+                    last_entry:{
+                      dt_entry:'0000-00-00',
+
+                    },
+                    last_sale:{},
+                    last_out:{}
+                },
+                disabled:{
+                    import:'disabled',
+                    export:'disabled',
+                    left:'disabled',
+                    right:'disabled',
+                    lines:'disabled',
+                    pdf:'disabled',
+                    ban:'disabled',
+                    check:'disabled',
+                    edit:'disabled',
+                    out:'disabled',
+                    entry:'disabled'
+                },
+                currentpage:1,
+                lastpage:0,
+                totalpage:0,
+            }
+        },
         watch:{
+            
             edit_status(newValue){
                 this.add_entry = newValue;
                 if(newValue){
@@ -156,14 +200,10 @@ export default{
                     this.paginate(this.currentpage, 7)
                 }
             },
-            stockproduct(newValue){
-                console.log("newcocok", newValue);
-            },
             productstock(newValue){
                
                 if(Object.keys(this.productstock).length!=1){
                     this.enabledAll()
-                    console.log("habilitadas")
                 }if(Object.keys(this.productstock).length==1){
                     this.enabledAll()
                     if(this.currentpage===1){
@@ -285,50 +325,6 @@ export default{
                 return Array.from(stockMap.values());
             }
         },
-        data(){
-            return{
-                send_data:{
-                    add_entry:false,
-                    out_entry:false,
-                },
-                out_data:{},
-                entry_data:{},
-                edit_status:false,
-                spinner:{status:false},
-                stockproduct:{}, 
-                productstock:{last_entry:{dt_entry:'0000-00-00'}},
-                rawproductstocks:[],
-                rawproductstock:{
-                    id:"0",
-                    name:"NENHUM PRODUTO SELECIONADO",
-                    value:"00,00",
-                    cost:'00,00',
-                    amount:"00",
-                    last_entry:{
-                      dt_entry:'0000-00-00',
-
-                    },
-                    last_sale:{},
-                    last_out:{}
-                },
-                disabled:{
-                    import:'disabled',
-                    export:'disabled',
-                    left:'disabled',
-                    right:'disabled',
-                    lines:'disabled',
-                    pdf:'disabled',
-                    ban:'disabled',
-                    check:'disabled',
-                    edit:'disabled',
-                    out:'disabled',
-                    entry:'disabled'
-                },
-                currentpage:1,
-                lastpage:0,
-                totalpage:0,
-            }
-        },
         async created(){
             
             this.paginate(1,7);
@@ -363,7 +359,6 @@ export default{
                     this.entry_data.value = this.productstock.value;
                     this.$forceUpdate();
                 }else{
-                    console.log(entry);
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{cost:entry.cost,value:entry.value,product_amount:parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd)});
                     this.edit_status=false;
                     this.productstock.amount = parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd);
@@ -378,7 +373,6 @@ export default{
                     this.send_data.add_entry = false;
                     this.$forceUpdate();
                 }else{
-                    console.log(out);
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{product_amount:parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove)});
                     this.edit_status=status;
                     this.productstock.amount = parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove);
@@ -395,17 +389,17 @@ export default{
                 try {
                     this.disabledAll();
                     const {data} = await axios.get(`manager/products/stock/${this.$route.params.id}/${index}/${$perpage}`)
-                    this.rawproductstocks = data.data;
-                    this.currentpage = data.current_page;
-                    this.lastpage = data.last_page
-                    this.totalpage = data.total
+                    this.stockproduct = data.product;
+                    this.currentpage = data.product.movements.current_page;
+                    this.lastpage = data.product.movements.last_page
+                    this.totalpage = data.product.movements.total
+                    this.stockproduct.movements = data.product.movements.data;
                 } catch (err) {
                     console.error('Erro ao carregar produtos:', err);
                 }finally{
                     this.spinner.status=false;
                     this.enabledAll();
                     if(Object.keys(this.productstock).length==1){
-                        
                         if(this.currentpage===1){
                             this.disabled.left="disabled"
                         }

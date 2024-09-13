@@ -2,10 +2,10 @@
     <table class="stock-table col-12">
           <thead>
             <tr style="font-family:'Quicksand-Bold'">
-              <th> # </th>
+              <th class="col-1 text-center">#</th>
               <th>Nome</th>
-              <th>R$</th>
-              <th>Custo</th>
+              <th class="col-1">R$</th>
+              <th class="col-1">Custo</th>
               <th>Data da Movimentação</th>
               <th>Movimentos</th>
             </tr>
@@ -15,36 +15,39 @@
             @mouseover="$emit('hovered', stock)" 
             @mouseleave="$emit('hovered', {})" 
             @click="selectProduct(stock, index)">
-            <td :class="this.stk.id===index?this.stk.status:''" 
+            <td :class="`${this.stk.id===index?this.stk.status:''} col-1`" 
             :style="`font-family:Quicksand-Regular`">
-                {{ index + 1 }}
+                {{ index + 1}}
             </td>
             <td :class="this.stk.id===index?this.stk.status:''"
             :style="`font-family:Quicksand-Regular`">
-                {{ stock.name }}
+                {{ this.stock.name }}
             </td>
-            <td :class="this.stk.id===index?this.stk.status:''"
+            <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
                 R${{ this.stock.value }}
             </td>
-            <td :class="this.stk.id===index?this.stk.status:''"
+            <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
                 R${{ this.stock.cost }}
             </td>
-            <td :class="this.stk.id===index?this.stk.status:''">
+            <td :class="`${this.stk.id===index?this.stk.status:''} text-center`">
               {{this.formatDate(stock.date) }}
             </td>
             <td v-if="stock.type==='entry'"
+            class="moves entry"
             style="background-color: #2fa9fe; font-family: 'Quicksand-Bold'; color: white;">
             <i style="color:black"><font-awesome-icon icon="right-to-bracket"></font-awesome-icon></i> Entrada || + {{ stock.quantity }}
             </td>
             <td v-if="stock.type==='sale'"
-            style="background-color: #1e9234; font-family: 'Quicksand-Bold'; color: white;" :title="`R$${ (this.stock.value * stock.quantity).toFixed(2) }`">
+            class="moves sale"
+            style="" :title="`R$${ (this.stock.value * stock.quantity).toFixed(2) }`">
             <i style="color:black;font-size: 14px;"><font-awesome-icon icon="arrow-up"></font-awesome-icon>
                   <font-awesome-icon icon="dollar-sign"></font-awesome-icon>
                 </i> Venda || - {{ stock.quantity }}
             </td>
-            <td v-if="stock.type==='out'"
+            <td v-if="stock.type==='direct_out'"
+            class="moves out"
             style="background-color: #e13333; font-family: 'Quicksand-Bold'; color: white;">
             <i style="color:black"><font-awesome-icon icon="outdent"></font-awesome-icon></i>
             Saída || - {{ stock.quantity }}
@@ -58,17 +61,9 @@
 import dayjs from 'dayjs';
     export default{
       created(){
-        console.log(this.stocks);
-        /* if(this.stock.id){
-          this.selected = this.stock;
-          this.stk.status = 'active';
-          this.stk.id = this.stock.id;
-        } */
-      },
-      watch:{
-        stock(newValue){
-          if(Object.keys(newValue).length==0)
-            console.log('stock', newValue)
+        if(Object.keys(this.stk).length !== 0){
+          this.selected = this.stocks[this.stk.id]
+          this.$emit('selected', this.selected);
         }
       },
         props: {
@@ -85,7 +80,10 @@ import dayjs from 'dayjs';
         data(){
           return{
             selected:null,
-            stk:{}
+            stk:{
+              id:0,
+              status:'active'
+            }
           }
         },
         methods:{
@@ -94,15 +92,22 @@ import dayjs from 'dayjs';
             return datestr.format('DD/MM/YYYY');
             },
           selectProduct(stock, index) {
-            if(!this.stk.id || this.stk.id!=index){
-              this.selected = stock;
-              this.stk.status = 'active';
-              this.stk.id = index;
-              this.$emit('selected', this.selected);
-            }else if(this.stk.id===index){
-              this.stk.status = '';
-              this.stk.id = null;
+            if(Object.keys(this.stk).length !==0 && index===this.stk.id){
+              this.stk = {}
+              this.selected = null
+              console.log('disselecte');
               this.$emit('selected', {});
+              return;
+            }
+            if(Object.keys(this.stk).length===0 || index!==this.stk.id){
+              this.selected = stock;
+              this.stk = {
+                id:index,
+                status:'active'
+              }
+              console.log('selecteddd');
+              this.$emit('selected', this.selected);
+              return;
             }
           }
         }

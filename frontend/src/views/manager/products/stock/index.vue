@@ -99,29 +99,12 @@
                 @paginate="(page) =>{this.paginate(page,7)}" 
                 @newOut="(status) =>{this.newOut(status, null)}" 
                 @newEntry="(status) =>{this.newEntry(status, null)}"
-                @allMoviments="(stock) => {this.allMoviments(stock)}"
+                @allMoviments="(stock) => {this.$router.push(`/products/stock/${stock.id}`)}"
                 @newOut_obj="(status) =>{this.newOut(status, this.out_data)}"
                 @newEntry_obj="(status) =>{this.newEntry(status, this.entry_data)}"
                 @cancel="(status) =>{this.edit_status=status}"
 
                 :productstock="this.productstock" 
-                :edit_status="this.edit_status" 
-                :disabled="this.disabled" 
-                :currentpage="this.currentpage"
-                :send_data="this.send_data"
-                :out_data="this.out_data"/>
-                <stockMovementsActions 
-                v-if="this.stockproduct.stockMovements"
-                @paginate="(page) =>{this.paginate(page,7)}" 
-                @newOut="(status) =>{this.newOut(status, null)}" 
-                @newEntry="(status) =>{this.newEntry(status, null)}"
-                @allMoviments="(stock) => {this.allMoviments(stock)}"
-                @newOut_obj="(status) =>{this.newOut(status, this.out_data)}"
-                @newEntry_obj="(status) =>{this.newEntry(status, this.entry_data)}"
-                @cancel="(status) =>{this.edit_status=status}"
-
-                :productstock="this.productstock" 
-                :stockproduct="this.stockproduct" 
                 :edit_status="this.edit_status" 
                 :disabled="this.disabled" 
                 :currentpage="this.currentpage"
@@ -155,14 +138,10 @@ import dayjs from 'dayjs';
                     this.paginate(this.currentpage, 7)
                 }
             },
-            stockproduct(newValue){
-                console.log("newcocok", newValue);
-            },
             productstock(newValue){
                
                 if(Object.keys(this.productstock).length!=1){
                     this.enabledAll()
-                    console.log("habilitadas")
                 }if(Object.keys(this.productstock).length==1){
                     this.enabledAll()
                     if(this.currentpage===1){
@@ -334,25 +313,6 @@ import dayjs from 'dayjs';
             
         },
         methods:{
-            async allMoviments(stock){
-                this.stockproduct = this.stockproducts[this.stockproducts.findIndex(raw => raw.id === stock.id)];
-                const array = [];
-                this.stockproduct.stockMovements.forEach(st =>{
-                    array.push({
-                        id: this.stockproduct.id,
-                        name: this.stockproduct.name,
-                        value: this.stockproduct.value,
-                        amount: this.stockproduct.product_amount,
-                        cost: this.stockproduct.cost,
-                        date: st.date,
-                        quantity:st.quantity,
-                        type:st.type
-                    })
-                    
-                });
-                this.stockproduct.stockMovements = array;
-                
-            },
             async newEntry(status, entry){
                 if(!entry){
                     this.edit_status = status;
@@ -362,7 +322,6 @@ import dayjs from 'dayjs';
                     this.entry_data.value = this.productstock.value;
                     this.$forceUpdate();
                 }else{
-                    console.log(entry);
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{cost:entry.cost,value:entry.value,product_amount:parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd)});
                     this.edit_status=false;
                     this.productstock.amount = parseInt(this.productstock.amount)+parseInt(this.entry_data.qunt_toAdd);
@@ -377,7 +336,6 @@ import dayjs from 'dayjs';
                     this.send_data.add_entry = false;
                     this.$forceUpdate();
                 }else{
-                    console.log(out);
                     const {data} = await axios.post("manager/products/update/"+this.productstock.id,{product_amount:parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove)});
                     this.edit_status=status;
                     this.productstock.amount = parseInt(this.productstock.amount)-parseInt(this.out_data.qunt_remove);

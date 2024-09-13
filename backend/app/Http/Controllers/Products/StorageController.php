@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use App\Models\Storage\ProductsModel;
 use App\Models\Storage\PrdOutModel;
 use App\Models\Storage\PrdEntryModel;
@@ -66,8 +68,20 @@ class StorageController extends Controller
         // Ordena pelo campo 'date' de forma decrescente (mais recentes primeiro)
         $sortedMovements = $stockMovements->sortByDesc('date')->values();
 
+        $currentPage = $index;
+        $perPage = $perpage;
+        $currentPageItems = $sortedMovements->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $paginatedMovements = new LengthAwarePaginator(
+            $currentPageItems,
+            $sortedMovements->count(), // Número total de itens
+            $perPage, // Itens por página
+            $currentPage, // Página atual
+            ['path' => request()->url(), 'query' => request()->query()] // Para manter a URL e os parâmetros de query
+        );
+
         // Adiciona as informações ao produto
-        $product->movements = $sortedMovements;
+        $product->movements = $paginatedMovements;
 
         // Retorna o produto com suas movimentações de estoque paginadas
         return response()->json([
