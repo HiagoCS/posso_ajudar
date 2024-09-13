@@ -21,15 +21,15 @@
             </td>
             <td :class="this.stk.id===index?this.stk.status:''"
             :style="`font-family:Quicksand-Regular`">
-                {{ this.stock.name }}
+                {{  stock.state.name }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ this.stock.value }}
+                R${{ stock.state.value }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ this.stock.cost }}
+                R${{ stock.state.cost }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} text-center`">
               {{this.formatDate(stock.date) }}
