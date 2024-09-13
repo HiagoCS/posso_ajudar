@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(\Database\Seeders\ProductsSeed::class);
         $this->call(PgSeeder::class);
         $this->call(PrdEntrysSeeder::class);
-        $this->call(SalesSeeder::class);
         $this->call(PrdOutSeeder::class);
+        $this->call(SalesSeeder::class);
     }
 }

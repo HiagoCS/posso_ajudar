@@ -20,11 +20,20 @@ class PrdEntrysSeeder extends Seeder
         foreach($products as $product){
             for($i=1;$i<=1;$i++){
                 $date = new Carbon("2024-0".rand(5,9)."-".rand(0,6));
-                \App\Models\Storage\PrdEntryModel::create([
+                $entry = \App\Models\Storage\PrdEntryModel::create([
                     'id_product' => $product->id,
                     'qunt_toAdd' => $product->product_amount,
                     'dt_entry' => $date
                 ]);
+                if($entry){
+                    $updatedEntry = \App\Models\Storage\UpdateEntryModel::create([
+                        'id_stock_entry' => $entry->id,
+                        "name" =>  $product->name,
+                        "value" => $product->value,
+                        "cost" => $product->cost,
+                        "quantity" => $product->product_amount
+                    ]);
+                }
             }
         }
     }

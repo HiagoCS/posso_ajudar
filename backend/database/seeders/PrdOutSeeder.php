@@ -15,21 +15,30 @@ class PrdOutSeeder extends Seeder
      */
     public function run()
     {
-        $products = \App\Models\Storage\ProductsModel::all();
-        $outs = [];
-        for ($i = 0; $i < 10; $i++) { 
-            $product = $products[$i];
+        $products = \App\Models\Storage\ProductsModel::get()->all();
 
-            $outs[] = [
-                'id_product' => $product->id,
-                'qunt_remove' => rand(1, 10),
-                'dt_out' => Carbon::createFromFormat('Y-m-d', '2024-0'.rand(5, 9).'-'.rand(1, 6))->format('Y-m-d')
-            ];
-            $product->update([
-                'product_amount' => max(0, intval($product->product_amount) - intval($outs[$i]['qunt_remove'])) // Garante que não tenha valor negativo
-            ]);
+        foreach($products as $product){
+            for($i=1;$i<=1;$i++){
+                $date = new Carbon("2024-0".rand(5,9)."-".rand(0,6));
+                $out = \App\Models\Storage\PrdOutModel::create([
+                    'id_product' => $product->id,
+                    'qunt_remove' => rand(1, 10),
+                    'dt_out' => $date
+                ]);
+                $product->update([
+                    'product_amount' => max(0, intval($product->product_amount) - intval($out['qunt_remove'])) // Garante que não tenha valor negativo
+                ]);
+                if($out){
+                    $updatedOut = \App\Models\Storage\UpdateOutModel::create([
+                        'id_stock_out' => $out->id,
+                        "name" =>  $product->name,
+                        "value" => $product->value,
+                        "cost" => $product->cost,
+                        "quantity" => $product->product_amount
+                    ]);
+                }
+            }
         }
-        \App\Models\Storage\PrdOutModel::insert($outs);
 
     }
 }

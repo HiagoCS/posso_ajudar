@@ -203,6 +203,15 @@ public function index($index, $perpage, Request $request, ProductsModel $prdMode
                     'qunt_toAdd' => intval($request['product_amount'])-intval($product['product_amount']),
                     'dt_entry' => $date
                 ]);
+                if($entry){
+                    $updatedEntry = \App\Models\Storage\UpdateEntryModel::create([
+                        'id_stock_entry' => $entry->id,
+                        "name" => ($request['name'] ? $request['name'] : $product->name),
+                        "value" => ($request['value'] ? $request['value'] : $product->value),
+                        "cost" => ($request['cost'] ? $request['cost'] : $product->cost),
+                        "quantity" => intval($request['product_amount'])
+                    ]);
+                }
             }
             if(intval($request['product_amount']) < intval($product['product_amount'])){
                 $date = Carbon::now()->format('Y-m-d');
@@ -211,6 +220,15 @@ public function index($index, $perpage, Request $request, ProductsModel $prdMode
                     'qunt_remove' => intval($product['product_amount'])-intval($request['product_amount']),
                     'dt_out' => $date
                 ]);
+                if($out){
+                    $updatedOut = \App\Models\Storage\UpdateOutModel::create([
+                        'id_stock_out' => $out->id,
+                        "name" => ($request['name'] ? $request['name'] : $product->name),
+                        "value" => ($request['value'] ? $request['value'] : $product->value),
+                        "cost" => ($request['cost'] ? $request['cost'] : $product->cost),
+                        "quantity" => intval($request['product_amount'])
+                    ]);
+                }
             }
            
             if($product->update($request->all())) 
