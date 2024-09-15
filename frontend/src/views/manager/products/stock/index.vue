@@ -43,7 +43,7 @@
             <div class="d-flex flex-row justify-content-start col-12 cost-values">
                 <div class="d-flex flex-column offset-1 col-3 column" >
                     <p class="row cost">R${{ this.productstock.cost ? this.productstock.cost: '00,00' }}</p>
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
+                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (parseFloat(this.productstock.value) > parseFloat(this.productstock.cost) ? (this.productstock.value - this.productstock.cost) : (this.productstock.cost - this.productstock.value)).toFixed(2): '00,00' }}</p>
                     <p class="row unity">{{ this.productstock.total_sales ? this.productstock.total_sales: '00' }}UN</p>
                 </div>
                 <div class="d-flex flex-column col-1 column" >
@@ -54,7 +54,7 @@
                 <div class="d-flex flex-column col-3 column" >
                     <p class="row value">R${{ this.productstock.value ? this.productstock.value: '00,00' }}</p>
                     <p class="row cost">R${{ this.productstock.cost ? this.productstock.cost: '00,00' }}</p>
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
+                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (parseFloat(this.productstock.value) > parseFloat(this.productstock.cost) ? (this.productstock.value - this.productstock.cost) : (this.productstock.cost - this.productstock.value)).toFixed(2): '00,00' }}</p>
                 </div>
                 <div class="d-flex flex-column col-1 column" >
                     <p class="simbol">=</p>
@@ -62,9 +62,9 @@
                     <p class="simbol">=</p>
                 </div>
                 <div class="d-flex flex-column col-3 column" >
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
-                    <p class="row value">{{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2) / this.productstock.cost *100: '00,00' }}%</p>
-                    <p class="row value">R${{ this.productstock.total_sales &&this.productstock.value&&this.productstock.cost ? ((this.productstock.value - this.productstock.cost) * this.productstock.total_sales).toFixed(2): '00' }}</p>
+                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (parseFloat(this.productstock.value) > parseFloat(this.productstock.cost) ? (this.productstock.value - this.productstock.cost) : (this.productstock.cost - this.productstock.value)).toFixed(2): '00,00' }}</p>
+                    <p class="row value">{{ this.productstock.value&&this.productstock.cost ? parseFloat((parseFloat(this.productstock.value) > parseFloat(this.productstock.cost) ? (this.productstock.value - this.productstock.cost) : (this.productstock.cost - this.productstock.value)) / this.productstock.cost *100).toFixed(2): '00,00' }}%</p>
+                    <p class="row value">R${{ this.productstock.total_sales &&this.productstock.value&&this.productstock.cost ? ((parseFloat(this.productstock.value) > parseFloat(this.productstock.cost) ? (this.productstock.value - this.productstock.cost) : (this.productstock.cost - this.productstock.value)) * this.productstock.total_sales).toFixed(2): '00' }}</p>
                 </div>
             </div>
 

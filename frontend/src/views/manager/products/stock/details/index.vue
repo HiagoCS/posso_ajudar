@@ -12,37 +12,50 @@
             </div>
         </div>
         <div class="d-flex flex-row justify-content-center col-12 footer">
-        <div class="d-flex flex-column col-4 card-product">
+            <div class="d-flex flex-column col-4 card-product">
             <div  class="d-flex flex-row justify-content-around title">
-              <p class="name" title="Nome">{{this.stockproduct.name ? this.stockproduct.name : '----------'}} </p>
-              <p class="id" title="ID">#{{this.stockproduct.id ? this.stockproduct.id : '00'}}</p>
+              <p class="name" title="Nome">{{this.stockproduct.name ? this.stockproduct.name : 'NENHUM PRODUTO SELECIONADO'}} </p>
+              <p class="id" title="ID">#{{this.stockproduct.id ? this.stockproduct.id: '0'}}</p>
             </div>
-            <!--Variados-->
-            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='entry'">
-              <p class="movement-title" style="color:#2fa9fe; font-size: 18px">Entrada</p>
-              <p class="simbol">||</p>
-              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
-              <p class="simbol">||</p>
-              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
+            <div class="d-flex col-12 justify-content-between flex-row details">
+              <p class="cost" title="(R$) Custo do Produto">R${{this.stockproduct.cost? parseFloat(this.stockproduct.cost).toFixed(2):'00,00'}}</p>
+              <p>-</p>
+              <p class="value" title="(R$) Valor do Produto">R${{this.stockproduct.value? parseFloat(this.stockproduct.value).toFixed(2):'00,00'}}</p>
+              <p>-</p>
+              <p class="amount" title="Quantidade Total">{{ this.stockproduct.product_amount ? (parseInt(this.stockproduct.product_amount) < 10 ? `0${parseInt(this.stockproduct.product_amount)}`:parseInt(this.stockproduct.product_amount)):'00' }} UN</p>
             </div>
-            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='sale'">
-              <p class="movement-title" style="color:#1e9234; font-size: 18px">Venda</p>
-              <p class="simbol">||</p>
-              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
-              <p class="simbol">||</p>
-              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
-            </div>
-            <div class="d-flex col-12 justify-content-between flex-row details" v-if="this.selected.type==='direct_out'">
-              <p class="movement-title" style="color:#e13333; font-size: 18px">Saída</p>
-              <p class="simbol">||</p>
-              <p class="movement-date" style="font-size: 18px">{{ this.formatDate(this.selected.date) }}</p>
-              <p class="simbol">||</p>
-              <p class="movement-quantity" style="font-size: 18px">+ {{ this.selected.quantity }}</p>
-            </div>
-            <!--FIM dos Variados-->
-            <div class="d-flex col-12 justify-content-around flex-row details">
-                <p class="value">R${{ this.stockproduct.value }}</p>
-                <p class="cost">R${{ this.stockproduct.cost }}</p>
+            <div v-if="Object.keys(this.selected).length != 0"
+             class="d-flex col-12 justify-content-between flex-row details total_sales" style="font-size: 15px;">
+                <div class="d-flex col-12 justify-content-between flex-row" v-if="this.selected.type==='sale'">
+                    <i class="title">Total de Vendas: </i>
+                    <i class="unity" title="Quantidade Vendas (UN)" >{{ this.selected.quantity ? this.selected.quantity : '0' }}UN</i>
+                    X<i class="value" title="Valor Produto (R$)" > R${{ this.selected.state.value ? this.selected.state.value: '00,00'}}</i>
+                    <i title="Total de Venda (R$)">= 
+                        <i class="value">
+                            + R${{ this.selected.quantity && this.selected.state.value ? parseInt((this.selected.quantity * this.selected.state.value)).toFixed(2):""  }}
+                        </i>
+                    </i>
+                </div>
+                <div class="d-flex col-12 justify-content-between flex-row" v-if="this.selected.type==='entry'">
+                    <i class="title">Total de Gastos: </i>
+                    <i class="unity" title="Quantidade Entrada (UN)" >{{ this.selected.quantity ? this.selected.quantity : '0' }}UN</i>
+                    X<i class="cost" title="Custo do Produto (R$)" > R${{ this.selected.state.cost ? parseFloat(this.selected.state.cost).toFixed(2):'00,00' }}</i>
+                    <i title="Total de Custo (R$)">= 
+                        <i class="unity">
+                            - R${{ this.selected.quantity && this.selected.state.cost ? parseInt((this.selected.quantity * this.selected.state.cost)).toFixed(2):""  }}
+                        </i>
+                    </i>
+                </div>
+                <div class="d-flex col-12 justify-content-between flex-row" v-if="this.selected.type==='direct_out'">
+                    <i class="title">Total Removidos: </i>
+                    <i class="unity" title="Quantidade Vendas (UN)" >{{ this.selected.quantity ? this.selected.quantity : '0' }}UN</i>
+                    X<i class="cost" title="Valor Produto (R$)" > R${{ this.selected.state.cost ? parseFloat(this.selected.state.cost).toFixed(2):'00,00' }}</i>
+                    <i title="Total de Perca (R$)">= 
+                        <i class="unity">
+                            - R${{ this.selected.quantity && this.selected.state.cost ? parseInt((this.selected.quantity * this.selected.state.cost)).toFixed(2):""  }}
+                        </i>
+                    </i>
+                </div>
             </div>
         </div>
         <div v-if="!this.edit_status" class="d-flex flex-column justify-content-center col-4 card-product cost-details">
@@ -51,34 +64,29 @@
                     <p>Percentual de Lucro (%)</p>
                 </div>
                 <div class="d-flex justify-content-end col-4 dt_entry">
-                    <p>{{ this.productstock.last_entry.dt_entry==='0000-00-00' ? '00/00/0000' : this.formatDate(this.productstock.last_entry.dt_entry) }}</p>
+                    <p>{{ !this.selected.date? '00/00/0000' : this.formatDate(this.selected.date) }}</p>
                 </div>  
             </div>
             <div class="d-flex flex-row justify-content-start col-12 cost-values">
                 <div class="d-flex flex-column offset-1 col-3 column" >
-                    <p class="row cost">R${{ this.productstock.cost ? this.productstock.cost: '00,00' }}</p>
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
-                    <p class="row unity">{{ this.productstock.total_sales ? this.productstock.total_sales: '00' }}UN</p>
+                    <p class="row cost">R${{ Object.keys(this.selected).length === 0 ? parseFloat(this.stockproduct.cost).toFixed(2) : parseFloat(this.selected.state.cost).toFixed(2) }}</p>
+                    <p class="row value">R${{ Object.keys(this.selected).length === 0 ? (parseFloat(this.stockproduct.cost) > parseFloat(this.stockproduct.value) ? parseFloat(this.stockproduct.cost) - parseFloat(this.stockproduct.value) : parseFloat(this.stockproduct.value) - parseFloat(this.stockproduct.cost)).toFixed(2) : (parseFloat(this.selected.state.cost) > parseFloat(this.selected.state.value) ? parseFloat(this.selected.state.cost) - parseFloat(this.selected.state.value) : parseFloat(this.selected.state.value) - parseFloat(this.selected.state.cost)).toFixed(2) }}</p>
                 </div>
                 <div class="d-flex flex-column col-1 column" >
                     <p class="simbol ">-</p>
                     <p class="simbol ">/</p>
-                    <p class="simbol ">X</p>
                 </div>
                 <div class="d-flex flex-column col-3 column" >
-                    <p class="row value">R${{ this.productstock.value ? this.productstock.value: '00,00' }}</p>
-                    <p class="row cost">R${{ this.productstock.cost ? this.productstock.cost: '00,00' }}</p>
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
+                    <p class="row value">R${{ Object.keys(this.selected).length === 0 ? parseFloat(this.stockproduct.value).toFixed(2) : parseFloat(this.selected.state.value).toFixed(2) }}</p>
+                    <p class="row cost">R${{ Object.keys(this.selected).length === 0 ? parseFloat(this.stockproduct.cost).toFixed(2) : parseFloat(this.selected.state.cost).toFixed(2) }}</p>
                 </div>
                 <div class="d-flex flex-column col-1 column" >
                     <p class="simbol">=</p>
                     <p class="simbol">=</p>
-                    <p class="simbol">=</p>
                 </div>
                 <div class="d-flex flex-column col-3 column" >
-                    <p class="row value">R${{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2): '00,00' }}</p>
-                    <p class="row value">{{ this.productstock.value&&this.productstock.cost ? (this.productstock.value - this.productstock.cost).toFixed(2) / this.productstock.cost *100: '00,00' }}%</p>
-                    <p class="row value">R${{ this.productstock.total_sales &&this.productstock.value&&this.productstock.cost ? ((this.productstock.value - this.productstock.cost) * this.productstock.total_sales).toFixed(2): '00' }}</p>
+                    <p class="row value">R${{ Object.keys(this.selected).length === 0 ? (parseFloat(this.stockproduct.cost) > parseFloat(this.stockproduct.value) ? parseFloat(this.stockproduct.cost) - parseFloat(this.stockproduct.value) : parseFloat(this.stockproduct.value) - parseFloat(this.stockproduct.cost)).toFixed(2) : (parseFloat(this.selected.state.cost) > parseFloat(this.selected.state.value) ? parseFloat(this.selected.state.cost) - parseFloat(this.selected.state.value) : parseFloat(this.selected.state.value) - parseFloat(this.selected.state.cost)).toFixed(2) }}</p>
+                    <p class="row value">{{ Object.keys(this.selected).length === 0 ? (parseFloat(this.stockproduct.cost) > parseFloat(this.stockproduct.value) ? ((parseFloat(this.stockproduct.cost) - parseFloat(this.stockproduct.value)) / this.stockproduct.cost * 100) : ((parseFloat(this.stockproduct.value) - parseFloat(this.stockproduct.cost)) / this.stockproduct.cost * 100)).toFixed(2) : (parseFloat(this.selected.state.cost) > parseFloat(this.selected.state.value) ? ((parseFloat(this.selected.state.cost) - parseFloat(this.selected.state.value)) / this.selected.state.cost * 100) : ((parseFloat(this.selected.state.value) - parseFloat(this.selected.state.cost)) / this.selected.state.cost * 100)).toFixed(2)}}%</p>
                 </div>
             </div>
 

@@ -25,11 +25,11 @@
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ stock.state.value }}
+                R${{ parseFloat(stock.state.value).toFixed(2) }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ stock.state.cost }}
+                R${{ parseFloat(stock.state.cost).toFixed(2) }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} text-center`">
               {{this.formatDate(stock.date) }}
@@ -80,10 +80,7 @@ import dayjs from 'dayjs';
         data(){
           return{
             selected:null,
-            stk:{
-              id:0,
-              status:'active'
-            }
+            stk:{}
           }
         },
         methods:{
