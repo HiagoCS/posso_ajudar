@@ -18,117 +18,6 @@ use Carbon\Carbon;
 
 class StorageController extends Controller
 {
-    public function stock($id, $index, $perpage, 
-    Request $request, 
-    ProductsModel $prdModel, 
-    RolesModel $roles, 
-    PrdEntryModel $prdEntryModel, 
-    PrdOutModel $prdOutModel, 
-    PrdStockModel $prdStockModel,
-    UpdateEntryModel $updateEntryModel,
-    UpdateOutModel $updateOutModel,
-    UpdateSaleModel $updateSaleModel
-    ){
-    if (!$roles->admAccess($request->user())) {
-        return response()->json([
-            'status' => 403,
-            'msg' => "SEM PERMISSÃO PARA ESSA REQUISIÇÃO"
-        ], 403);
-    }
-
-    try {
-        // Busca o produto específico pelo id
-        $product = $prdModel->find($id);
-        
-        if (!$product) {
-            return response()->json([
-                'status' => 404,
-                'msg' => 'Produto não encontrado'
-            ], 404);
-        }
-
-        // Busca entradas de estoque do produto
-        $entries = $prdEntryModel->where('id_product', $id)->get()->map(function ($entry) use ($updateEntryModel) {
-            $update = $updateEntryModel->where('id_stock_entry', $entry->id)->first();
-            return [
-                'type' => 'entry',
-                'quantity' => $entry->qunt_toAdd,
-                'date' => $entry->dt_entry,
-                'state' => $update ? [
-                    'name' => $update->name,
-                    'value' => $update->value,
-                    'cost' => $update->cost,
-                    'quantity' => $update->quantity
-                ] : null
-            ];
-        });
-
-        // Busca saídas de estoque por venda
-        $sales_out = $prdStockModel->where('id_product', $id)->get()->map(function ($sale) use ($updateSaleModel) {
-            $update = $updateSaleModel->where('id_stock_sale', $sale->id)->first();
-            return [
-                'type' => 'sale',
-                'quantity' => $sale->qunt_remove,
-                'date' => $sale->dt_sale,
-                'state' => $update ? [
-                    'name' => $update->name,
-                    'value' => $update->value,
-                    'cost' => $update->cost,
-                    'quantity' => $update->quantity
-                ] : null
-            ];
-        });
-
-        // Busca saídas de estoque por retirada direta
-        $direct_out = $prdOutModel->where('id_product', $id)->get()->map(function ($out) use ($updateOutModel) {
-            $update = $updateOutModel->where('id_stock_out', $out->id)->first();
-            return [
-                'type' => 'direct_out',
-                'quantity' => $out->qunt_remove,
-                'date' => $out->dt_out,
-                'state' => $update ? [
-                    'name' => $update->name,
-                    'value' => $update->value,
-                    'cost' => $update->cost,
-                    'quantity' => $update->quantity
-                ] : null
-            ];
-        });
-        // Junta todas as entradas e saídas
-        $stockMovements = $entries->concat($sales_out)->concat($direct_out);
-
-        // Ordena pelo campo 'date' de forma decrescente (mais recentes primeiro)
-        $sortedMovements = $stockMovements->sortByDesc('date')->values();
-
-        $currentPage = $index;
-        $perPage = $perpage;
-        $currentPageItems = $sortedMovements->slice(($currentPage - 1) * $perPage, $perPage)->values();
-
-        $paginatedMovements = new LengthAwarePaginator(
-            $currentPageItems,
-            $sortedMovements->count(), // Número total de itens
-            $perPage, // Itens por página
-            $currentPage, // Página atual
-            ['path' => request()->url(), 'query' => request()->query()] // Para manter a URL e os parâmetros de query
-        );
-
-        // Adiciona as informações ao produto
-        $product->movements = $paginatedMovements;
-
-        // Retorna o produto com suas movimentações de estoque paginadas
-        return response()->json([
-            'product' => $product
-        ]);
-
-    } catch (\Throwable $th) {
-        return response()->json([
-            'status' => 500,
-            'msg' => 'Erro ao buscar informações de estoque',
-            'data' => $th->getMessage()
-        ], 500);
-    }
-}
-
 public function index($index, $perpage, Request $request, ProductsModel $prdModel, RolesModel $roles, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel){
     if (!$roles->admAccess($request->user())) {
         return response()->json([
@@ -299,6 +188,6 @@ public function index($index, $perpage, Request $request, ProductsModel $prdMode
                 'data' => 'Erro na exclusão de Produtos - ManagerController',
                 'msg' => $th->getMessage()
             ], 500);
-            }
+        }
     }
 }

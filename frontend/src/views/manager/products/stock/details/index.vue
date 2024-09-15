@@ -124,6 +124,7 @@
                 @allMoviments="(stock) => {this.allMoviments(stock)}"
                 @newOut_obj="(status) =>{this.newOut(status, this.out_data)}"
                 @newEntry_obj="(status) =>{this.newEntry(status, this.entry_data)}"
+                @delete="(selected) =>{this.delete(selected)}"
                 @cancel="(status) =>{this.edit_status=status}"
 
                 :selected="this.selected"
@@ -339,6 +340,24 @@ export default{
             
         },
         methods:{
+            async delete(selected){
+                const result = await this.$swal.fire({
+                    title: 'Deseja realmente excluir o registro?',
+                    text:'o registro será removido permanentemente!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText:'Excluir',
+                    cancelButtonText: 'Cancelar'
+                });
+                if(result.isConfirmed){
+                    try{
+                        const { data } = await axios.delete(`manager/products/stock/delete/${selected.id}/${selected.type}/${this.$route.params.id}`);
+                    }catch(err){console.log(err)}
+                    finally{
+                        this.paginate(parseInt(this.currentpage), 7)
+                    }
+                }
+            },
             async allMoviments(stock){
                 this.stockproduct = this.stockproducts[this.stockproducts.findIndex(raw => raw.id === stock.id)];
                 const array = [];

@@ -40,6 +40,7 @@
         <!--Fim dos Alternados-->
 
         <span
+        @click="$emit('delete',this.selected)"
             :class="`btn btn-danger ${Object.keys(this.selected).length!==0 ? '': 'disabled'}`">
             <font-awesome-icon icon="ban"></font-awesome-icon>
         </span>

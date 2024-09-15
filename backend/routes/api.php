@@ -40,7 +40,8 @@ Route::middleware('auth:sanctum')->
 
             Route::get('/search/{term}/{search}', 'App\Http\Controllers\Products\StorageController@search');
             Route::prefix('stock')->group(function(){
-                Route::get('/{id}/{index}/{perpage}', 'App\Http\Controllers\Products\StorageController@stock');
+                Route::get('/{id}/{index}/{perpage}', 'App\Http\Controllers\Products\StockController@index');
+                Route::delete('/delete/{id}/{type}/{id_product}', 'App\Http\Controllers\Products\StockController@delete');
             });
         });
     });
