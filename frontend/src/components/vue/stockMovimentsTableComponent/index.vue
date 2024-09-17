@@ -21,15 +21,15 @@
             </td>
             <td :class="this.stk.id===index?this.stk.status:''"
             :style="`font-family:Quicksand-Regular`">
-                {{  stock.state.name }}
+                {{  !stock.state ? this.stock.name :stock.state.name }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ parseFloat(stock.state.value).toFixed(2) }}
+                R${{ !stock.state ? this.stock.value: parseFloat(stock.state.value).toFixed(2) }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} col-1`"
             :style="`font-family:Quicksand-Regular`">
-                R${{ parseFloat(stock.state.cost).toFixed(2) }}
+                R${{ !stock.state ? this.stock.cost : parseFloat(stock.state.cost).toFixed(2) }}
             </td>
             <td :class="`${this.stk.id===index?this.stk.status:''} text-center`">
               {{this.formatDate(stock.date) }}

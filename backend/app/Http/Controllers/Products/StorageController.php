@@ -89,7 +89,16 @@ public function index($index, $perpage, Request $request, ProductsModel $prdMode
             ];
     
             // Cria o registro de entrada de estoque
-            $prdEntryModel->create($entryData);
+            $entry = $prdEntryModel->create($entryData);
+            if($entry){
+                $updatedEntry = \App\Models\Storage\UpdateEntryModel::create([
+                    'id_stock_entry' => $entry->id,
+                    "name" => ($request['name'] ? $request['name'] : $product->name),
+                    "value" => ($request['value'] ? $request['value'] : $product->value),
+                    "cost" => ($request['cost'] ? $request['cost'] : $product->cost),
+                    "quantity" => intval($request['product_amount'])
+                ]);
+            }
     
             return response()->json([
                 "status" => 200,

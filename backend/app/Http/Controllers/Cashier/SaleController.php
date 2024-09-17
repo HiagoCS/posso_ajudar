@@ -7,61 +7,74 @@ use App\Http\Controllers\Controller;
 use App\Models\Storage\CashierSaleModel;
 use App\Models\Storage\PrdStockModel;
 use App\Models\Storage\ProductsModel;
+use App\Models\Storage\UpdateSaleModel;
 use App\Models\Account\PGModel;
 use App\Models\Account\Client;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class SaleController extends Controller
 {
-    public function insert(Request $request,CashierSaleModel $csmodel, PGModel $pgmodel, Client $clntModel, PrdStockModel $prdStockModel, ProductsModel $productsModel){
+    public function insert(Request $request, PGModel $pgmodel, Client $clntModel, CashierSaleModel $csmodel, PrdStockModel $prdStockModel, ProductsModel $productsModel){
         $sale = $request->all();
         $pg_method = $pgmodel->find($sale['id_pg_method']);
-        $client = [];
-        if($sale['client']){
-            $client = $clntModel->where(function($query) use ($sale){
-                if($sale['client']['cpf']){
-                    $query->where(function($query) use($sale){
-                        $query->where("cpf", $sale['client']['cpf'])
-                            ->orWhere("name", $sale['client']['name']);
-                        if(count($query->get()) === 0)
-                            $query->create(['name' => $sale['client']['name'], 'cpf' => $sale['client']['cpf']]);
-                        else 
-                            $query->first()->update(['name' => $sale['client']['name'], 'cpf' => $sale['client']['cpf']]);
-                    });
-                }else if(!$sale['client']['cpf'] && $sale['client']['name']){
-                    $query->where("name", $sale['client']['name']);
-                    if(count($query->get()) === 0) $query->create(['name' => $sale['client']['name'], 'cpf' => null]);
-                }
-            })->get();
-        }
-        if(!$pg_method) return response()->json(["error" => "payment method invalid!!"],500);
-        if(count($client) == 0){
-            $csdata = $csmodel->create([
-                "total_value" => floatval($sale['total_value']),
-                "id_pg_method" => $pg_method->id,
-                "id_client" => null
-            ]);
-        }else{
-            $csdata = $csmodel->create([
-                "total_value" => floatval($sale['total_value']),
-                "id_pg_method" => $pg_method->id,
-                "id_client" => $client[0]->id
-            ]);
-        }
-        foreach($sale['products'] as $products){
-            $prdStock = $prdStockModel->create([
-                "id_sale" => $csdata->id,
-                "id_product" => $products['id'],
-                "qunt_remove" =>$products['qunt']
-            ]);
-            if($prdStock){
-                $product = $productsModel->find($prdStock->id_product);
-                $product->update(["product_amount" => (floatval($product['product_amount']) - floatval($prdStock['qunt_remove']))]);
-            }
+        $date = Carbon::now();
 
+        // Validação do método de pagamento
+        if (!$pg_method) {
+            return response()->json(["error" => "Método de pagamento inválido!"], 500);
         }
-        
-        return $csdata;
+
+        // Busca ou cria cliente
+        $client = null;
+        if (isset($sale['client'])) {
+            $client = $clntModel->firstOrCreate(
+                ['cpf' => $sale['client']['cpf']],
+                ['name' => $sale['client']['name']]
+            );
+        }
+
+        // Criação da venda no caixa
+        $csdata = $csmodel->create([
+            'dt_sale' => $date->format("Y-m-d"),
+            'total_value' => floatval($sale['total_value']),
+            'id_pg_method' => $pg_method->id,
+            'id_client' => $client ? $client->id : null
+        ]);
+
+        // Processa cada produto vendido
+        foreach ($sale['products'] as $productData) {
+            // Atualiza o estoque do produto
+            $prdStock = $prdStockModel->create([
+                'dt_sale' => $date->format("Y-m-d"),
+                'id_sale' => $csdata->id,
+                'id_product' => $productData['id'],
+                'qunt_remove' => $productData['qunt']
+            ]);
+
+            if ($prdStock) {
+                $product = $productsModel->find($productData['id']);
+
+                // Atualiza a quantidade do produto no estoque
+                $newQuantity = floatval($product->product_amount) - floatval($prdStock->qunt_remove);
+                $product->update(['product_amount' => $newQuantity]);
+
+                // Registra o estado do produto no momento da venda
+                UpdateSaleModel::create([
+                    'id_stock_sale' => $prdStock->id,
+                    'name' => $product->name,
+                    'value' => $product->value,
+                    'cost' => $product->cost,
+                    'quantity' => $newQuantity
+                ]);
+            }
+        }
+
+        // Retorna a venda registrada
+        return response()->json([
+            'sale' => $csdata,
+            'message' => 'Venda registrada com sucesso!'
+        ], 200);
     }
     public function getPayments(){
         return PGModel::all();

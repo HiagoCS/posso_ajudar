@@ -421,6 +421,7 @@ export default{
                     this.lastpage = data.product.movements.last_page
                     this.totalpage = data.product.movements.total
                     this.stockproduct.movements = data.product.movements.data;
+                    console.log(this.stockproduct)
                 } catch (err) {
                     console.error('Erro ao carregar produtos:', err);
                 }finally{

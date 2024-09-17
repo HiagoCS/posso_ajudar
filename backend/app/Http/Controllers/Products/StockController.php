@@ -131,6 +131,9 @@ class StockController extends Controller
         ], 500);
     }
 }
+public function update($id, $type, $id_product, Request $request, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel, RolesModel $roles, UpdateEntryModel $updateEntryModel, UpdateOutModel $updateOutModel, UpdateSaleModel $updateSaleModel){
+        
+}
 public function delete($id, $type, $id_product, Request $request, PrdEntryModel $prdEntryModel, PrdOutModel $prdOutModel, PrdStockModel $prdStockModel, RolesModel $roles, UpdateEntryModel $updateEntryModel, UpdateOutModel $updateOutModel, UpdateSaleModel $updateSaleModel){
     if(!$roles->admAccess($request->user()))
             return "SEM PERMISSÃO PARA ESSA REQUISIÇÃO";
