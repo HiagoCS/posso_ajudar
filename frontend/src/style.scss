@@ -1,13 +1,31 @@
-.main-div{
-    font-family: 'Quicksand-Regular';
-    background: $gradientbg-blue-orange;
-    height: 100vh; 
-    width: 100vw;
-    .nav-div{
-      border-right: 1px white solid;
-    }
-    .pages-div{
-      background: $background-black;
-      background: $gradientbg-blue-orange;
-    }
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; // Impede que qualquer conteúdo vaze fora da viewport
+  min-width:1000px !important;
+  .side-navbar {
+    flex: 0 0 50px; // Define a largura da navbar lateral
+    border-right: 1px solid white;
+    background-color: $gradientbg-blue-orange; // Usar sua variável para cor
   }
+
+  .content-area {
+    flex: 1;
+    overflow-y: auto; // Permite rolagem no eixo Y se necessário
+    background-color: $gradientbg-blue-orange; // Definir cor de fundo
+    /* align-content: center; */
+
+  }
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-family: 'Quicksand-Book' !important;
+  background: $gradientbg-blue-orange;
+}

@@ -1,9 +1,7 @@
 <template>
     <main>
       <div class="d-flex flex-column col-12">
-        <div class="d-flex flex-row col-12">
-          <logoComponent :module="this.$route.name"></logoComponent>
-        </div>
+        
         <div class="d-flex flex-row col-12">
           <!--SELETOR DE MESA-->
         </div>

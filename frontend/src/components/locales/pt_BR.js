@@ -13,7 +13,7 @@ export const pt_BR = {
             manager: "gerente",
             cashier: "caixa",
             bar: "copa",
-            "products - general":"Produtos - Geral",
-            "products - stock":"Produtos - Estoque",
+            "products-general":"Produtos - Geral",
+            "products-stock":"Produtos - Estoque",
         }
 }

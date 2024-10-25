@@ -1,8 +1,5 @@
 <template>
-    <div class="d-flex flex-column justify-content-center align-items-center col-12">
-        <!-- <div class="d-flex justify-content-end col-12">
-            <h1 class="title">motoBuddy</h1>
-        </div> -->
+    <div class="d-flex flex-column justify-content-center align-items-center col-12" style="height: 100vh">
         <div class="col-4 form">
             <div class="d-flex flex-column align-items-center col-12">
                 <div class="d-flex flex-row justify-content-center col-12 form-title">

@@ -1,9 +1,5 @@
   <template>
     <main class="container-fluid d-flex flex-column align-items-center">
-      <header class="logo-container" >
-        <logoComponent module="products - general"></logoComponent>
-      </header>
-      <br>
       <div class="d-flex col-10 flex-row justify-content-end">
           <span class="btn btn-primary" @click="newProduct(!this.edit_status)">Novo Produto</span>
         </div>
@@ -246,28 +242,28 @@ export default{
     async selected(product){
       if(Object.keys(this.product).length==0){
         this.product=product
-        this.disabled.plus=""
+        /* this.disabled.plus=""
         this.disabled.minus=""
         this.disabled.edit=""
         this.disabled.ban=""
-        this.disabled.copy=""
+        this.disabled.copy="" */
       }else{
         if(this.product.id===product.id){
           this.product={}
-          if(this.currentpage==1) this.disabled.plus='disabled';
+          /* if(this.currentpage==1) this.disabled.plus='disabled';
           else this.disabled.plus='';
           if(this.lastpage==0||this.currentpage==this.lastpage) this.disabled.minus='disabled';
           else this.disabled.minus='';
           this.disabled.edit="disabled"
           this.disabled.ban="disabled"
-          this.disabled.copy="disabled"
+          this.disabled.copy="disabled" */
         }else{
           this.product=product
-          this.disabled.plus=""
+          /* this.disabled.plus=""
           this.disabled.minus=""
           this.disabled.edit=""
           this.disabled.ban=""
-          this.disabled.copy=""
+          this.disabled.copy="" */
         }
       }
     },

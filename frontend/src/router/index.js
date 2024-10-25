@@ -7,6 +7,7 @@ import ConfigView from '../views/config/index.vue'
 import RegisterView from '../views/register/index.vue'
 import LoginView from '../views/login/index.vue'
 import ProductsGeneral from '../views/manager/products/table/index.vue'
+import ProductsGeneralTeste from '../views/manager/products/table/new_index.vue'
 import ProductsStock from '../views/manager/products/stock/index.vue'
 import StockDetails from '../views/manager/products/stock/details/index.vue'
 
@@ -29,6 +30,12 @@ const router = createRouter({
       path:'/products',
       name:'products-general',
       component:ProductsGeneral,
+      props:true
+    },
+    {
+      path:'/products/teste',
+      name:'products-general-teste',
+      component:ProductsGeneralTeste,
       props:true
     },
     {

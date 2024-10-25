@@ -1,0 +1,93 @@
+.new-prd{
+    margin: 2vh 0 1vh 0;
+}
+.table-container{
+    .spinner {
+        position: absolute;
+        
+        &.active {
+          opacity: 100%;
+          top: 45%;
+          left: 53%;
+          transform: translate(-50%, -50%);
+          font-size: 1.5em;
+          color: #000; /* Ajuste a cor conforme necessário */
+          font-size: 50px;
+  
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+  
+          animation-name: spin;
+          animation-duration: 2000ms;
+          animation-iteration-count: infinite;
+          animation-timing-function: linear;
+        }
+        opacity: 0;
+      }
+}
+.footer{
+    
+    .card-product{
+        margin: 1vh 1vw 1vh 1vw;
+        padding: 1vh 1vw 1vh 1vw;
+        background-color: #ddd;
+        border-radius: 5px;
+        border: 2px black solid;
+        .bar-code{
+            p{
+              font-family: 'Quicksand-Regular-Oblique';
+            }
+        }
+        .title{
+            .name{
+              width: 100%; /* Defina a largura máxima do texto */
+              white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+              overflow: hidden; /* Esconde o texto que ultrapassa o limite de largura */
+              text-overflow: ellipsis; 
+              font-family: 'Quicksand-Bold-Oblique';
+            }
+            .id{
+              font-family: 'Quicksand-Bold';
+            }        
+        }
+        .details{
+            width: 100%; /* Defina a largura máxima do texto */
+              white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+              overflow: hidden; /* Esconde o texto que ultrapassa o limite de largura */
+              text-overflow: ellipsis; 
+              font-family: 'Quicksand-Bold-Oblique';
+              .sm_code{
+                font-family: 'Quicksand-Bold';
+              }
+              .amount{
+                color:#da3d37;
+                font-family: 'Quicksand-Bold';
+              }
+              .cost{
+                color:#595c59;
+                font-family: 'Quicksand-Bold';
+              }
+        }
+        .value{
+            color:#208120;
+            font-family: 'Quicksand-Bold';
+          }
+          .description{
+            height: auto;
+            overflow: auto;
+          }
+          .actions{
+            height: 100%;
+            span.disabled{
+              opacity: 50%;
+              
+            }
+          } 
+    }
+}

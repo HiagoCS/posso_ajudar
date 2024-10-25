@@ -1,66 +1,77 @@
-.logo{
+.logo {
     background-color: $background-logo;
     border-bottom: solid 3px black;
-    width: 100vw !important;
-    position: relative;
+    width: 100%; /* Agora usa 100% ao invés de 100vw para evitar quebras */
+    padding: 10px 20px; /* Adicionei um padding para melhorar o espaçamento interno */
+    box-sizing: border-box; /* Garante que padding seja incluído no tamanho total do elemento */
     
-    i{
-        font-family: 'Quicksand-Bold'; 
-        font-size: 40px;
-        color:black;
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: white;
-        padding-left: 5vw;
-        @media (max-width: 1210px){
-            font-size: 55px;
-        }
-        @media (max-width: 1080px){
-            font-size: 50px;
-        }
-        @media (max-width: 946px){
-            font-size: 45px;
-        }
-        @media (max-width: 878px){
-            font-size: 40px;
-        }
-        @media (max-width: 816px){
-            font-size: 35px;
-        }
-        @media (max-width: 744px){
-            font-size: 30px;
-        }
-        @media (max-width: 684px){
-            font-size: 25px;
-        }
-        
+    /* Fixação responsiva */
+    @media (max-width: 1210px) {
+      padding: 8px 16px;
     }
-    h4{
-        font-family: 'Brandy'; 
-        font-size: 60px;
-        color:black;
-        text-wrap: nowrap !important;
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: white;
-        @media (max-width: 1210px){
-            font-size: 55px;
-        }
-        @media (max-width: 1080px){
-            font-size: 50px;
-        }
-        @media (max-width: 946px){
-            font-size: 45px;
-        }
-        @media (max-width: 878px){
-            font-size: 40px;
-        }
-        @media (max-width: 816px){
-            font-size: 35px;
-        }
-        @media (max-width: 744px){
-            font-size: 30px;
-        }
-        @media (max-width: 684px){
-            font-size: 25px;
-        }
+    
+    i {
+      font-family: 'Quicksand-Bold';
+      font-size: 35px; /* Ajustei o tamanho base para caber melhor */
+      color: black;
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: white;
+      padding-left: 20px;
+      white-space: nowrap; /* Garante que o texto não quebre em duas linhas */
+      
+      /* Responsividade */
+      @media (max-width: 1210px) {
+        font-size: 30px;
+      }
+      @media (max-width: 1080px) {
+        font-size: 28px;
+      }
+      @media (max-width: 946px) {
+        font-size: 26px;
+      }
+      @media (max-width: 878px) {
+        font-size: 24px;
+      }
+      @media (max-width: 816px) {
+        font-size: 22px;
+      }
+      @media (max-width: 744px) {
+        font-size: 20px;
+      }
+      @media (max-width: 684px) {
+        font-size: 18px;
+      }
     }
-}
+  
+    h4 {
+      font-family: 'Brandy';
+      font-size: 45px; /* Ajustei o tamanho base */
+      color: black;
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: white;
+      white-space: nowrap; /* Garante que o texto não quebre */
+  
+      /* Responsividade */
+      @media (max-width: 1210px) {
+        font-size: 35px;
+      }
+      @media (max-width: 1080px) {
+        font-size: 32px;
+      }
+      @media (max-width: 946px) {
+        font-size: 30px;
+      }
+      @media (max-width: 878px) {
+        font-size: 28px;
+      }
+      @media (max-width: 816px) {
+        font-size: 26px;
+      }
+      @media (max-width: 744px) {
+        font-size: 24px;
+      }
+      @media (max-width: 684px) {
+        font-size: 22px;
+      }
+    }
+  }

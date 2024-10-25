@@ -1,8 +1,5 @@
 <template>
 <main class="container-fluid d-flex flex-column align-items-center">
-    <header class="logo-container" >
-        <logoComponent module="products - stock"></logoComponent>
-    </header>
     <div class="d-flex flex-column table-container">
         <span :class="`spinner ${this.spinner.status?'active':''}`" v-if="this.spinner.status" >
             <font-awesome-icon icon="spinner" spin />

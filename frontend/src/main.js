@@ -16,6 +16,8 @@ import { createI18n } from 'vue-i18n'
 import {pt_BR} from '@/components/locales/pt_BR'
 import {en} from '@/components/locales/en'
 import $ from  'jquery'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 
