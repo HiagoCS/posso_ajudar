@@ -1,0 +1,143 @@
+.search-header{
+    /* topo | direita | inferior | esquerda */
+    padding: 1vh 1vw 1vh 1vw;
+    .act {
+        background-color: #d5e1e9;
+        height: 50px;
+        border: solid 2px black;
+        border-radius: 5px;
+        .act-btn {
+          font-size: 2pc;
+          padding: 5px 1px 5px 1px;
+          position: relative;
+    
+          input {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            outline: none;
+          }
+    
+          .dropdown {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 48px;
+            font-size: 15px;
+            right: 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+    
+            ul {
+              list-style: none;
+              padding: 0;
+              margin: 0;
+    
+              li {
+                padding: 8px 12px;
+                cursor: pointer;
+    
+                &:hover {
+                  background-color: #f1f1f1;
+                }
+              }
+            }
+          }
+        }
+      }
+    
+      &.act-footer {
+        height: 20vh;
+        background-color: #d4e1e9;
+    
+        .total-item, .troco-item {
+          .title, .total, .troco {
+            white-space: nowrap; /* Impede a quebra do texto */
+            font-size: clamp(12px, 2vw, 45px); /* Ajusta o tamanho da fonte conforme a largura da tela */
+            text-align: center; /* Centraliza o texto */
+          }
+        }
+        .total-item {
+          background-color: #bcdde6;
+          border-right: #000 solid 2px;
+    
+          .title {
+            font-family: 'Nauticus-Bold';
+            font-size: 45px;
+            text-transform: uppercase;
+          }
+    
+          .total {
+            font-family: 'Quicksand-Bold';
+            font-size: 30px;
+            color: red;
+          }
+        }
+    
+        .troco-item {
+          background-color: #bcdde6;
+          border-right: #000 solid 5px;
+    
+          .title {
+            font-family: 'Quicksand-Bold';
+            font-size: 15px;
+          }
+    
+          .troco {
+            font-family: 'Quicksand-Bold';
+            font-size: 15px;
+            color: red;
+          }
+        }
+    
+        .info-sale {
+          .input-group {
+            position: relative;
+            border: black solid 2px;
+            border-radius: 5px;
+    
+            &.autocomplete {
+              position: relative;
+            }
+    
+            label {
+              position: absolute;
+              top: -5px;
+              left: 5px;
+              padding: 10px 5px;
+              pointer-events: none;
+              z-index: 1;
+              transition: 0.3s;
+              color: #000;
+              white-space: nowrap; /* Impede a quebra do texto */
+              font-size: clamp(12px, 2vw, 20px);
+            }
+    
+            input {
+              z-index: 0;
+              font-size: clamp(12px, 2vw, 16px);
+              &:focus~label {
+                &.client-label {
+                  left: 14vw;
+                  top: 4vh;
+                  color: #000;
+                  font-family: "Quicksand-Bold";
+                }
+    
+                &.pg-label {
+                  top: -7vh;
+                  left: -0.5vw;
+                  color: #000;
+                  font-family: "Quicksand-Bold";
+                }
+              }
+    
+              &:valid~label {
+                opacity: 0;
+              }
+            }
+          }
+        }
+      }
+}

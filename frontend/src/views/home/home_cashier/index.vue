@@ -27,7 +27,7 @@
               <productsTableComponent  ref="productsTableComponent" :rawproducts="rawproducts"  :products="this.products" @index="(index)=>{this.tbIndex=index}">
                 <div class="d-flex col-12 justify-content-between flex-row ">
                   <span :class="`btn ${this.products[this.tbIndex].quantity < this.products[this.tbIndex].product_amount ? 'btn-primary' : 'btn-primary disabled'} col-3`"
-                    @click="()=>{this.rawproducts.push(this.products[this.tbIndex])}"
+                    @click="()=>{this.rawproducts.push(this.products[this.tbIndex !== 0 ?  this.tbIndex - 1 : this.tbIndex - 0])}"
                   ><font-awesome-icon icon="plus"/>
                   </span>
                   <span 
